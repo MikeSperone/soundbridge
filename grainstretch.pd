@@ -1,0 +1,8 @@
+#N canvas 596 180 474 514 10;
+#X obj 85 389 soundtouch~;
+#X obj 85 355 inlet~;
+#X obj 85 446 outlet~;
+#X obj 148 356 inlet;
+#X connect 0 0 2 0;
+#X connect 1 0 0 0;
+#X connect 3 0 0 1;
