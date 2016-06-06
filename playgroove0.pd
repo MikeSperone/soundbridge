@@ -1,4 +1,4 @@
-#N canvas 468 79 734 585 10;
+#N canvas 386 69 734 585 10;
 #X obj 27 20 inlet;
 #X obj 391 506 outlet~;
 #X obj 27 72 clip 6 33;
@@ -86,10 +86,10 @@
 #X obj 168 324 t 1 b;
 #X obj 27 102 speedlim 200;
 #X obj 27 127 change;
-#N canvas 235 226 1024 673 grooveD 0;
+#N canvas 102 114 773 427 grooveD 0;
 #X obj 31 351 outlet~;
 #X obj 452 363 outlet~;
-#N canvas 0 23 1280 751 play_pause_loop_MS 0;
+#N canvas -1 35 1024 751 play_pause_loop_MS 0;
 #X obj 215 415 phasor~;
 #X msg 369 83 0;
 #X obj 215 449 *~;
@@ -112,7 +112,7 @@
 #X msg 422 128 0;
 #X obj 256 161 t b;
 #X text 147 59 HOLD (for groove0);
-#N canvas 470 90 1280 751 hold 0;
+#N canvas 1 96 1024 751 hold 0;
 #X text -9572 -33 Voice Granulator by davidjgurney;
 #X obj -9469 349 phasor~;
 #X obj -9469 431 +~;
@@ -278,7 +278,7 @@
 #X floatatom 313 23 5 0 0 0 - - -;
 #X msg 453 129 1;
 #X msg 536 137 0;
-#N canvas 872 403 450 300 loop 0;
+#N canvas 416 307 450 300 loop 0;
 #X obj 163 275 outlet;
 #X obj 97 34 int;
 #X obj 97 59 change;
@@ -293,7 +293,7 @@
 #X msg 392 135 0.9;
 #X obj 163 222 float;
 #X obj 23 193 metro 1200;
-#X msg 97 135 0.0122348;
+#X msg 97 135 0.00840866;
 #X obj 97 112 delay 100;
 #X obj 97 85 t b f;
 #X obj 24 86 r playback;
@@ -390,7 +390,7 @@
 #X obj -9441 397 phasor~;
 #X obj -9441 479 +~;
 #X obj -9367 301 hsl 128 15 0 1 0 0 empty empty Time -2 -8 0 10 -262144
--1 -1 4521 1;
+-1 -1 0 1;
 #X obj -9346 326 r filelength;
 #X obj -9370 353 *;
 #X obj -9112 307 random 2;
@@ -614,7 +614,7 @@
 1;
 #X obj 413 213 spigot~;
 #X text 150 136 0 - L 1 - R;
-#N canvas 8 22 1239 699 play_loop_JM 1;
+#N canvas 8 22 1239 699 play_loop_JM 0;
 #X obj 146 499 s sampleSize;
 #X obj 125 543 expr 44100 / $f1;
 #X obj 125 647 phasor~;
@@ -628,7 +628,7 @@
 #X obj 163 593 s playback;
 #X obj 342 493 r playback;
 #X msg 343 520 set \$1;
-#X msg 278 591 0.0122348;
+#X msg 278 591 0.00840866;
 #X obj 278 568 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
 -1 -1;
 #X text 362 422 pause;
@@ -652,7 +652,7 @@
 #X obj 599 496 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
 1;
 #X obj 601 546 metro 1200;
-#X obj 707 494 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+#X obj 707 494 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
 1;
 #X obj 709 544 metro 1200;
 #X obj 807 493 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
@@ -841,6 +841,7 @@
 #X connect 12 0 7 0;
 #X connect 13 0 4 1;
 #X connect 14 0 3 0;
+#X connect 14 0 17 0;
 #X connect 15 0 0 0;
 #X connect 15 0 1 0;
 #X connect 16 0 17 1;
@@ -858,8 +859,8 @@
 #X obj 455 403 send 0tapoff;
 #X obj 570 403 send 0tapon;
 #N canvas 0 22 450 278 (subpatch) 0;
-#X array array0 3.60448e+06 float 2;
-#X coords 0 1 3.60448e+06 -1 200 140 1 0 0;
+#X array array0 5.24459e+06 float 2;
+#X coords 0 1 5.24459e+06 -1 200 140 1 0 0;
 #X restore 129 396 graph;
 #X msg 49 95 read -resize ./audio/carolynNR.wav array0;
 #X msg 84 121 read -resize ./audio/walter2.aif array0;
