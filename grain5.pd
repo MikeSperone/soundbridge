@@ -107,7 +107,7 @@
 #X restore 45 97 pd graingen;
 #X obj 138 75 / 34;
 #X obj 138 47 receive location5;
-#N canvas 826 182 1024 225 regularSettings5 0;
+#N canvas 519 229 1024 225 regularSettings5 0;
 #X msg 21 100 28;
 #X msg 326 101 1;
 #X obj 21 41 inlet;
@@ -178,9 +178,9 @@
 #X obj 138 151 s grainread5;
 #X obj 307 327 s grainmultiply5;
 #X obj 58 218 catch~ outFiveL;
-#X obj 157 218 catch~ outFiveR;
+#X obj 156 218 catch~ outFiveR;
 #X obj 58 299 hip~ 30;
-#X obj 157 297 hip~ 30;
+#X obj 156 297 hip~ 30;
 #X obj 284 62 loadbang;
 #X msg 263 161 \; pd dsp 1;
 #N canvas 0 34 1248 886 loadSamples 0;
@@ -391,7 +391,7 @@
 #X obj 33 13 receive settingNum;
 #X obj 58 245 *~ 0.5;
 #X obj 156 244 *~ 0.5;
-#X obj 56 334 dac~;
+#X obj 58 331 dac~;
 #X connect 0 0 9 0;
 #X connect 1 0 0 0;
 #X connect 2 0 8 0;

@@ -1,6 +1,6 @@
-#N canvas 426 328 827 420 10;
+#N canvas 468 140 827 420 10;
 #X declare -lib mrpeach;
-#X obj 64 67 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1 1
+#X obj 64 67 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0 1
 ;
 #X floatatom 96 261 5 0 0 0 - - -;
 #X obj 64 278 playgroove;
@@ -47,7 +47,7 @@
 #X restore 42 188 pd serial;
 #X obj 193 60 spigot 1;
 #X obj 193 85 sel 10;
-#X obj 193 112 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+#X obj 193 112 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
 1;
 #X obj 149 137 sel 1;
 #X msg 149 164 65;
@@ -356,9 +356,9 @@
 #X restore 280 340 pd mute;
 #X obj 155 261 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
 1;
-#X obj 301 261 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+#X obj 301 261 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
 1;
-#X obj 225 261 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+#X obj 225 261 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
 1;
 #X obj 436 73 r settingNum;
 #X floatatom 436 103 5 0 0 0 - - -;
