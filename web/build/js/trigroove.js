@@ -12,38 +12,38 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
  * Created by Mike on 9/2/16.
  */
 
-var Trigroove = function (_Play) {
-    _inherits(Trigroove, _Play);
+var Loop = function (_Play) {
+    _inherits(Loop, _Play);
 
-    function Trigroove(audio, context) {
-        _classCallCheck(this, Trigroove);
+    function Loop(audio, context) {
+        _classCallCheck(this, Loop);
 
-        var _this = _possibleConstructorReturn(this, (Trigroove.__proto__ || Object.getPrototypeOf(Trigroove)).call(this, audio, context));
+        var _this = _possibleConstructorReturn(this, (Loop.__proto__ || Object.getPrototypeOf(Loop)).call(this, audio, context));
 
         _this.audio = audio;
         _this.context = context;
         _this.position = 0;
-        //this.length = 1.2; //s
+        _this.sensorPos = null;
         _this.play();
         return _this;
     }
 
-    _createClass(Trigroove, [{
+    _createClass(Loop, [{
         key: "sensor",
         value: function sensor(val) {
             var x = Math.floor(val);
 
             if (x > 20) {
-                if (x != y) {
-                    var _y = x;
+
+                if (x !== this.sensorPos) {
+                    this.sensorPos = x;
                     this.loop(x);
                 }
-            } else if (x > 11) {
-                this.hold(x);
-            } else {
+            } else if (x < 11) {
                 // play
                 this.position = 0;
                 this.length = this.duration;
+                this.startSample(0);
             }
         }
     }, {
@@ -84,14 +84,11 @@ var Trigroove = function (_Play) {
             console.log("start: " + start);
             this.position = start;
             this.length = 1.2;
-            this.stop();
-            this.startSample();
+            this.startSample(this.position);
         }
     }, {
         key: "hold",
-        value: function hold(x) {
-            //uhhhhh....
-        }
+        value: function hold(x) {}
     }, {
         key: "delaySwitch",
         value: function delaySwitch(setting) {
@@ -110,7 +107,7 @@ var Trigroove = function (_Play) {
         }
     }]);
 
-    return Trigroove;
+    return Loop;
 }(Play);
 
 //# sourceMappingURL=trigroove.js.map
