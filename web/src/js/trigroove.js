@@ -2,14 +2,14 @@
  * Created by Mike on 9/2/16.
  */
 
-class Trigroove extends Play {
+class Loop extends Play {
 
     constructor(audio, context) {
         super(audio, context);
         this.audio = audio;
         this.context = context;
         this.position = 0;
-        //this.length = 1.2; //s
+        this.sensorPos = null;
         this.play();
     }
 
@@ -17,17 +17,18 @@ class Trigroove extends Play {
         let x = Math.floor(val);
 
         if (x > 20) {
-            if (x != y) {
-                let y = x;
+
+            if (x !== this.sensorPos) {
+                this.sensorPos = x;
                 this.loop(x);
             }
 
-        } else if (x > 11) {
-            this.hold(x);
-        } else {
+        } else if (x < 11) {
             // play
             this.position = 0;
             this.length = this.duration;
+            this.startSample(0);
+
         }
     }
 
@@ -67,13 +68,12 @@ class Trigroove extends Play {
         console.log("start: " + start);
         this.position = start;
         this.length = 1.2;
-        this.stop();
-        this.startSample();
+        this.startSample(this.position);
     }
 
 
     hold(x) {
-        //uhhhhh....
+
     }
 
     delaySwitch(setting) {

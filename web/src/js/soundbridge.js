@@ -27,16 +27,17 @@ function run(settings) {
     console.log("setting number: " + i);
 
     // set samples
-    let audioZero = 'audio/' + samples[0] + '.m4a';
-    let audioOne = 'audio/' + samples[1] + '.m4a';
-    let audioTwo = 'audio/' + samples[2] + '.m4a';
-    let audioThree = 'audio/' + samples[3] + '.m4a';
+    let audioZero = 'audio/' + samples[0] + '.mp3';
+    let audioOne = 'audio/' + samples[1] + '.mp3';
+    let audioTwo = 'audio/' + samples[2] + '.mp3';
+    let audioThree = 'audio/' + samples[3] + '.mp3';
+    let audioThreeHold = 'audio/hold/' + samples[3] + '_slow.mp3';
 
     let delayOn = true;
     let context = new AudioContext();
 
     if (samples.a !== "") {
-        let audioAmb = 'audio/' + samples.a + '.m4a';
+        let audioAmb = 'audio/' + samples.a + '.mp3';
         let ambient = new Play(audioAmb, context);
         ambient.play();
     }
@@ -53,8 +54,11 @@ function run(settings) {
     two.spread = grainSettings[2];
     two.feedback = grainSettings[3];
 
-    let three = new Trigroove(audioThree, context);
+    let three = new Loop(audioThree, context);
+    let threeHold = new Play(audioThreeHold, context);
     //three.delay(delaySettings[4]);
+
+    let threePosition = 0;
 
     let ws = new WebSocket('ws://mikesperone.com:31296');
 
@@ -75,7 +79,6 @@ function run(settings) {
                 break;
             case 'three':
                 clearTimeout(threeOut);
-                three.vol = 1;
                 break;
             default:
                 break;
@@ -96,7 +99,8 @@ function run(settings) {
                 twoOut = setTimeout(function(){ two.vol = 0; }, 5000);
                 break;
             case 'three':
-                threeOut = setTimeout(function(){ three.vol = 0; }, 5000);
+                threeOut = setTimeout(function(){ three.stop(); threeHold.stop();}, 5000);
+                threePosition = 0;
                 break;
             default:
                 break;
@@ -137,15 +141,15 @@ function run(settings) {
         //event.pageX range: 60 - 400
 
         moveHand(event, this.id, 'local');
-        ws.send('{\"data\": ["'+this.id+'", '+event.pageX+']}');
+        //ws.send('{\"data\": ["'+this.id+'", '+event.pageX+']}');
 
     });
 
     function moveHand(event, id, src) {
+
         event = (src === 'local') ? event.pageX : event;
         rate = (event/270);                   // range of .225 - 1.48
-        $('#'+id).children('.value').text(rate.toFixed(2))
-        ;
+        $('#'+id).children('.value').text(rate.toFixed(2));
 
         switch (id) {
             case 'zero':
@@ -166,7 +170,33 @@ function run(settings) {
                 two.read = rate;
                 break;
             case 'three':
-                three.sensor(event/11);
+
+                if (event > 231) {
+                    console.log('entered 3.  From ' + threePosition);
+                    if (threePosition !== 3) { threeHold.stop(); }
+                    threePosition = 3;
+                    three.sensor(event / 11);
+
+                } else if (event < 121) {
+                    console.log('entered 1.  From ' + threePosition);
+                    if (threePosition !== 1) {
+                        console.log('threePosition != 1');
+                        if (threePosition !== 1) { threeHold.stop(); }
+                        threePosition = 1;
+                        three.sensor(event / 11);
+                    }
+
+                } else {
+                    console.log('entered 2.  From ' + threePosition);
+                    if (threePosition !== 2) {
+                        three.stop();
+                        threePosition = 2;
+                        threeHold.vol = 1;
+                        threeHold.startSample(0);
+                    }
+
+                }
+
                 break;
             default:
                 break;

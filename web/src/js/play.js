@@ -33,19 +33,20 @@ class Play {
         req.send();
     }
 
-    startSample() {
+    startSample(offset) {
+
         this.src = this.context.createBufferSource();
+        this.volume = this.context.createGain();
         this.src.buffer = this.buffer;
 
         this.src.loop = true;
         this.src.loopStart = this.loopStart;
         this.src.loopEnd = this.loopEnd;
 
-        this.volume = this.context.createGain();
         this.src.connect(this.volume);
         this.volume.connect(this.context.destination);
         //this.volume.gain.value = 0;
-        this.src.start();
+        this.src.start(0, offset);
     }
 
     get duration() {
