@@ -10,14 +10,19 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var Play = function () {
     function Play(audio, context) {
+        var vol = arguments.length <= 2 || arguments[2] === undefined ? 0 : arguments[2];
+
         _classCallCheck(this, Play);
 
         this.audio = audio;
         this.context = context;
+        this.contextCreationTime = new Date();
+        this.startTime = null;
 
         this.buffer = null;
         this.loopStart = 0;
         this.loopEnd = 0;
+        this.stopped = true;
 
         var that = this;
         var req = new XMLHttpRequest();
@@ -30,8 +35,10 @@ var Play = function () {
 
             that.context.decodeAudioData(audioData, function (buffer) {
                 that.buffer = buffer;
+                that.stopped = true;
                 that.startSample();
-                that.volume.gain.value = 0;
+                that.volume.gain.value = vol;
+                that.audioLoadTimeOffset = (new Date() - that.contextCreationTime) / 1000;
             }, function (e) {
                 console.log("Error with decoding audio data" + e.err);
             });
@@ -42,8 +49,15 @@ var Play = function () {
 
     _createClass(Play, [{
         key: 'startSample',
-        value: function startSample(offset) {
+        value: function startSample() {
+            var offset = arguments.length <= 0 || arguments[0] === undefined ? 0 : arguments[0];
 
+            console.log("startSample");
+
+            offset = offset < 0 ? 0 : offset;
+            if (this.stopped === false) {
+                this.stop();
+            }
             this.src = this.context.createBufferSource();
             this.volume = this.context.createGain();
             this.src.buffer = this.buffer;
@@ -54,8 +68,10 @@ var Play = function () {
 
             this.src.connect(this.volume);
             this.volume.connect(this.context.destination);
-            //this.volume.gain.value = 0;
+            this.startTime = this.context.currentTime - offset;
+
             this.src.start(0, offset);
+            this.stopped = false;
         }
     }, {
         key: 'play',
@@ -67,7 +83,11 @@ var Play = function () {
     }, {
         key: 'stop',
         value: function stop() {
-            this.src.stop(0);
+            console.log('attempting to stop, stopped? ', this.stopped);
+            if (this.stopped === false) {
+                this.src.stop(0);
+                this.stopped = true;
+            }
         }
     }, {
         key: 'toString',
@@ -80,10 +100,15 @@ var Play = function () {
             return this.src.buffer.duration;
         }
     }, {
+        key: 'elapsedTime',
+        get: function get() {
+            return this.context.currentTime - this.startTime;
+        }
+    }, {
         key: 'position',
         set: function set(x) {
             this.loopStart = x;
-            console.log("loop start: " + this.loopStart);
+            //console.log("loop start: "+this.loopStart);
         },
         get: function get() {
             return this.loopStart;
@@ -92,7 +117,7 @@ var Play = function () {
         key: 'length',
         set: function set(x) {
             this.loopEnd = Math.min(this.position + x, this.duration);
-            console.log("loop end: " + this.loopEnd);
+            //console.log("loop end: "+this.loopEnd);
         },
         get: function get() {
             return this.src.loopEnd - this.src.loopStart;

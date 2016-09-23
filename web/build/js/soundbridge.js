@@ -27,7 +27,7 @@ function run(settings) {
     var grainSettings = settings.grain[i];
     var delaySettings = settings.delay[i];
 
-    console.log("setting number: " + i);
+    console.log("setting number: ", i + 1);
 
     // set samples
     var audioZero = 'audio/' + samples[0] + '.mp3';
@@ -36,13 +36,14 @@ function run(settings) {
     var audioThree = 'audio/' + samples[3] + '.mp3';
     var audioThreeHold = 'audio/hold/' + samples[3] + '_slow.mp3';
 
+    var time = 0;
+
     var delayOn = true;
-    var context = new AudioContext();
+    var context = new window.AudioContext();
 
     if (samples.a !== "") {
         var audioAmb = 'audio/' + samples.a + '.mp3';
-        var ambient = new Play(audioAmb, context);
-        ambient.play();
+        var ambient = new Play(audioAmb, context, 1);
     }
 
     var zero = new Playgroove(audioZero, context);
@@ -70,18 +71,18 @@ function run(settings) {
         switch (id) {
             case 'zero':
                 clearTimeout(zeroOut);
-                zero.volume.gain.value = 1;
+                zero.volume.gain.value = 0.8;
                 break;
             case 'one':
                 clearTimeout(oneOut);
-                one.volume.gain.value = 0.7;
+                one.volume.gain.value = 0.6;
                 break;
             case 'two':
                 clearTimeout(twoOut);
                 two.vol = 1;
                 break;
             case 'three':
-                clearTimeout(threeOut);
+                //clearTimeout(threeOut);
                 break;
             default:
                 break;
@@ -107,7 +108,7 @@ function run(settings) {
                 }, 5000);
                 break;
             case 'three':
-                threeOut = setTimeout(function () {
+                setTimeout(function () {
                     three.stop();threeHold.stop();
                 }, 5000);
                 threePosition = 0;
@@ -134,20 +135,21 @@ function run(settings) {
         };
     };
 
-    sensor.on("mouseover", function () {
-        over(this.id);
-        ws.send('{"over": "' + this.id + '"}');
-    });
-    sensor.on("mouseout", function () {
-        out(this.id);
-        ws.send('{"out": "' + this.id + '"}');
-    });
+    sensor.on({
+        mouseenter: function mouseenter() {
+            over(this.id);
+            //ws.send('{"over": "' + this.id + '"}');
+        },
+        mouseleave: function mouseleave() {
+            out(this.id);
+            //ws.send('{"out": "' + this.id + '"}');
+        },
+        mousemove: function mousemove(event) {
+            //event.pageX range: 60 - 400
 
-    sensor.on("mousemove", function (event) {
-        //event.pageX range: 60 - 400
-
-        moveHand(event, this.id, 'local');
-        //ws.send('{\"data\": ["'+this.id+'", '+event.pageX+']}');
+            moveHand(event, this.id, 'local');
+            //ws.send('{\"data\": ["'+this.id+'", '+event.pageX+']}');
+        }
     });
 
     function moveHand(event, id, src) {
@@ -178,7 +180,7 @@ function run(settings) {
 
                 if (event > 231) {
                     console.log('entered 3.  From ' + threePosition);
-                    if (threePosition !== 3) {
+                    if (threePosition === 2) {
                         threeHold.stop();
                     }
                     threePosition = 3;
@@ -186,20 +188,22 @@ function run(settings) {
                 } else if (event < 121) {
                     console.log('entered 1.  From ' + threePosition);
                     if (threePosition !== 1) {
-                        console.log('threePosition != 1');
-                        if (threePosition !== 1) {
-                            threeHold.stop();
-                        }
+
+                        time = threePosition === 2 ? threeHold.elapsedTime / 4 : time;
+                        threeHold.stop();
                         threePosition = 1;
-                        three.sensor(event / 11);
+                        three.sensor(event / 11, time);
                     }
                 } else {
                     console.log('entered 2.  From ' + threePosition);
                     if (threePosition !== 2) {
-                        three.stop();
+                        time = threePosition === 1 ? three.elapsedTime * 4 : time;
+                        if (threePosition !== 0) {
+                            three.stop();
+                        }
                         threePosition = 2;
                         threeHold.vol = 1;
-                        threeHold.startSample(0);
+                        threeHold.startSample(time);
                     }
                 }
 

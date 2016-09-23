@@ -24,14 +24,17 @@ var Loop = function (_Play) {
         _this.context = context;
         _this.position = 0;
         _this.sensorPos = null;
-        _this.play();
+        //this.play();
         return _this;
     }
 
     _createClass(Loop, [{
         key: "sensor",
         value: function sensor(val) {
+            var time = arguments.length <= 1 || arguments[1] === undefined ? 0 : arguments[1];
+
             var x = Math.floor(val);
+            console.log('time: ' + time);
 
             if (x > 20) {
 
@@ -43,7 +46,7 @@ var Loop = function (_Play) {
                 // play
                 this.position = 0;
                 this.length = this.duration;
-                this.startSample(0);
+                this.startSample(time);
             }
         }
     }, {
@@ -86,9 +89,6 @@ var Loop = function (_Play) {
             this.length = 1.2;
             this.startSample(this.position);
         }
-    }, {
-        key: "hold",
-        value: function hold(x) {}
     }, {
         key: "delaySwitch",
         value: function delaySwitch(setting) {

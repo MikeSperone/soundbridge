@@ -33,7 +33,6 @@ class Playgroove {
                     that.src.buffer = buffer;
                     that.src.playbackRate.value = 1;
 
-
                     that.volume.connect(context.destination);
                     that.volume.gain.value = 0;
                     that.src.loop = true;
@@ -44,10 +43,6 @@ class Playgroove {
 
         req.send();
         this.src.start(0);
-    }
-
-    toString() {
-        return [{"audio":this.audio},{"context":this.context},{"delayTime":this.delay.delayTime.value},{"delayFeedback":this.feedback.gain.value},{"rate":this.src.playbackRate.value},{"volume":this.volume.gain.value}];
     }
 
     delaySwitch(setting) {

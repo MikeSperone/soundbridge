@@ -90,7 +90,7 @@ var Playgrain = function () {
     }, {
         key: "vol",
         set: function set(w) {
-            var v = w / 3;
+            var v = w / 2;
             this.a.vol = v;
             this.b.vol = v;
             this.c.vol = v;

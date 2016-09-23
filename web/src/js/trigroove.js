@@ -10,11 +10,12 @@ class Loop extends Play {
         this.context = context;
         this.position = 0;
         this.sensorPos = null;
-        this.play();
+        //this.play();
     }
 
-    sensor(val) {
+    sensor(val, time = 0) {
         let x = Math.floor(val);
+        console.log('time: ' + time);
 
         if (x > 20) {
 
@@ -27,7 +28,7 @@ class Loop extends Play {
             // play
             this.position = 0;
             this.length = this.duration;
-            this.startSample(0);
+            this.startSample(time);
 
         }
     }
@@ -69,11 +70,6 @@ class Loop extends Play {
         this.position = start;
         this.length = 1.2;
         this.startSample(this.position);
-    }
-
-
-    hold(x) {
-
     }
 
     delaySwitch(setting) {

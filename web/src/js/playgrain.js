@@ -77,7 +77,7 @@ class Playgrain {
     }
 
     set vol(w) {
-        let v = w/3;
+        let v = w/2;
         this.a.vol = v;
         this.b.vol = v;
         this.c.vol = v;
