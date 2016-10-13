@@ -20,3 +20,11 @@ body {
   float: right;
   margin: 2px;
 }
+
+.xy-pad {
+  display: block;
+  width: 340px;
+  height: 340px;
+  border: 1px solid $primary-color;
+  margin: 60px;
+}

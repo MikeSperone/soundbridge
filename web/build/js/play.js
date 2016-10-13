@@ -83,7 +83,6 @@ var Play = function () {
     }, {
         key: 'stop',
         value: function stop() {
-            console.log('attempting to stop, stopped? ', this.stopped);
             if (this.stopped === false) {
                 this.src.stop(0);
                 this.stopped = true;
@@ -108,7 +107,6 @@ var Play = function () {
         key: 'position',
         set: function set(x) {
             this.loopStart = x;
-            //console.log("loop start: "+this.loopStart);
         },
         get: function get() {
             return this.loopStart;
@@ -117,7 +115,6 @@ var Play = function () {
         key: 'length',
         set: function set(x) {
             this.loopEnd = Math.min(this.position + x, this.duration);
-            //console.log("loop end: "+this.loopEnd);
         },
         get: function get() {
             return this.src.loopEnd - this.src.loopStart;

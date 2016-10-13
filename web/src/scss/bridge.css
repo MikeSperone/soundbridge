@@ -15,4 +15,12 @@ body {
   float: right;
   margin: 2px; }
 
+.xy-pad {
+  display: block;
+  width: 340px;
+  height: 340px;
+  border: 1px solid #333;
+  margin: 60px;
+}
+
 /*# sourceMappingURL=bridge.css.map */

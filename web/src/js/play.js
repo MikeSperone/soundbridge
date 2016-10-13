@@ -69,7 +69,6 @@ class Play {
         }
     }
     stop() {
-        console.log('attempting to stop, stopped? ', this.stopped);
         if (this.stopped === false) {
             this.src.stop(0);
             this.stopped = true;
@@ -82,14 +81,12 @@ class Play {
 
     set position(x) {
         this.loopStart = x;
-        //console.log("loop start: "+this.loopStart);
     }
     get position() {
         return this.loopStart;
     }
     set length(x) {
         this.loopEnd = Math.min((this.position + x), this.duration);
-        //console.log("loop end: "+this.loopEnd);
     }
     get length() {
         return this.src.loopEnd - this.src.loopStart;

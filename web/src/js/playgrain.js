@@ -1,4 +1,6 @@
 /**
+ * Playgrain class
+ *
  * Created by Mike on 9/1/16.
  */
 
@@ -16,14 +18,10 @@ class Playgrain {
         this.e = new Grainread(this.audio, this.context, 1);
         this.f = new Grainread(this.audio, this.context, 1);
         this.g = new Grainread(this.audio, this.context, 1);
+        this.h = new Grainread(this.audio, this.context, 1);
+        this.i = new Grainread(this.audio, this.context, 1);
+        this.j = new Grainread(this.audio, this.context, 1);
 
-        this.a.phasor();
-        this.b.phasor();
-        this.c.phasor();
-        this.d.phasor();
-        this.e.phasor();
-        this.f.phasor();
-        this.g.phasor();
     }
 
     set fade(f) {
@@ -34,6 +32,9 @@ class Playgrain {
         this.e.fade = f;
         this.f.fade = f;
         this.g.fade = f;
+        this.h.fade = f;
+        this.i.fade = f;
+        this.j.fade = f;
     }
 
     set feedback(f) {
@@ -44,6 +45,9 @@ class Playgrain {
         this.e.feedback = f;
         this.f.feedback = f;
         this.g.feedback = f;
+        this.h.feedback = f;
+        this.i.feedback = f;
+        this.j.feedback = f;
     }
 
     set read(gr) {
@@ -54,6 +58,9 @@ class Playgrain {
         this.e.read = gr;
         this.f.read = gr;
         this.g.read = gr;
+        this.h.read = gr;
+        this.i.read = gr;
+        this.j.read = gr;
     }
 
     set scatter(s) {
@@ -64,6 +71,9 @@ class Playgrain {
         this.e.scatter = s;
         this.f.scatter = s;
         this.g.scatter = s;
+        this.h.scatter = s;
+        this.i.scatter = s;
+        this.j.scatter = s;
     }
 
     set spread(s) {
@@ -74,10 +84,37 @@ class Playgrain {
         this.e.spread = s;
         this.f.spread = s;
         this.g.spread = s;
+        this.h.spread = s;
+        this.i.spread = s;
+        this.j.spread = s;
     }
 
-    set vol(w) {
-        let v = w/2;
+    start() {
+        this.a.start();
+        this.b.start();
+        this.c.start();
+        this.d.start();
+        this.e.start();
+        this.f.start();
+        this.g.start();
+        this.h.start();
+        this.i.start();
+        this.j.start();
+    }
+
+    stop() {
+        this.a.stop();
+        this.b.stop();
+        this.c.stop();
+        this.d.stop();
+        this.e.stop();
+        this.f.stop();
+        this.g.stop();
+        this.h.stop();
+        this.i.stop();
+        this.j.stop();
+    }
+    set vol(v) {
         this.a.vol = v;
         this.b.vol = v;
         this.c.vol = v;
@@ -85,6 +122,9 @@ class Playgrain {
         this.e.vol = v;
         this.f.vol = v;
         this.g.vol = v;
+        this.h.vol = v;
+        this.i.vol = v;
+        this.j.vol = v;
     }
 
 

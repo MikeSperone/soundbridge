@@ -15,6 +15,7 @@ function run(settings) {
 
     // Sensors
     let sensor = $('.sensor');
+    let xy = $('.xy-pad');
     let rate = 1;
     let zeroOut, oneOut, twoOut, threeOut;
 
@@ -40,7 +41,7 @@ function run(settings) {
 
     if (samples.a !== "") {
         let audioAmb = 'audio/' + samples.a + '.mp3';
-        let ambient = new Play(audioAmb, context, 1);
+        let ambient = new Play(audioAmb, context, 0.8);
     }
 
     let zero = new Playgroove(audioZero, context);
@@ -61,22 +62,51 @@ function run(settings) {
 
     let threePosition = 0;
 
+    let openConnection = false;
     let ws = new WebSocket('ws://mikesperone.com:31296');
 
-    let over = function(id){
+    ws.onopen = function(){
 
+        openConnection = true;
+
+        ws.onmessage = function(e){
+
+            let data = JSON.parse(e.data);
+            if (data.out) {
+                out(data.out);
+            } else if (data.over) {
+                over(data.over);
+            } else if (data.data) {
+                //id: e.data[0]
+                //value: e.data[1]
+                moveHand(data.data[1], data.data[0], 'remote');
+
+            }
+
+        };
+
+    };
+
+    function transmit(msg) {
+        if (openConnection) {
+            ws.send(msg);
+        }
+    }
+
+    let over = function(id){
         switch (id) {
             case 'zero':
-                clearTimeout(zeroOut);
-                zero.volume.gain.value = 0.8;
+                zero.volume.gain.cancelScheduledValues(context.currentTime);
+                zero.volume.gain.linearRampToValueAtTime(0.7, context.currentTime + 0.5);
                 break;
             case 'one':
+                one.volume.gain.cancelScheduledValues(context.currentTime);
+                one.volume.gain.linearRampToValueAtTime(0.7, context.currentTime + 0.5);
                 clearTimeout(oneOut);
-                one.volume.gain.value = 0.6;
                 break;
             case 'two':
                 clearTimeout(twoOut);
-                two.vol = 1;
+                two.start();
                 break;
             case 'three':
                 //clearTimeout(threeOut);
@@ -91,13 +121,14 @@ function run(settings) {
 
         switch (id) {
             case 'zero':
-                zeroOut = setTimeout(function(){ zero.vol(0); }, 5000);
+                zero.volume.gain.cancelScheduledValues(context.currentTime);
+                zero.volume.gain.linearRampToValueAtTime(0, context.currentTime + 5.0);
                 break;
             case 'one':
                 oneOut = setTimeout(function(){ one.vol(0); }, 5000);
                 break;
             case 'two':
-                twoOut = setTimeout(function(){ two.vol = 0; }, 5000);
+                twoOut = setTimeout(function(){ two.stop(); }, 5000);
                 break;
             case 'three':
                 setTimeout(function(){ three.stop(); threeHold.stop();}, 5000);
@@ -109,44 +140,49 @@ function run(settings) {
 
     }
 
-    ws.onopen = function(){
-        ws.onmessage = function(e){
-
-            let data = JSON.parse(e.data);
-            //console.log(data);
-            if (data.out) {
-                out(data.out);
-            } else if (data.over) {
-                over(data.over);
-            } else if (data.data) {
-                //id: e.data[0]
-                //value: e.data[1]
-                moveHand(data.data[1], data.data[0], 'remote');
-
-            }
-
-        };
-    };
-
     sensor.on(
         {
             mouseenter: function () {
                 over(this.id);
-                //ws.send('{"over": "' + this.id + '"}');
+                transmit('{"over": "' + this.id + '"}');
             },
             mouseleave: function () {
                 out(this.id);
-                //ws.send('{"out": "' + this.id + '"}');
+                transmit('{"out": "' + this.id + '"}');
             },
             mousemove: function(event) {
                 //event.pageX range: 60 - 400
 
                 moveHand(event, this.id, 'local');
-                //ws.send('{\"data\": ["'+this.id+'", '+event.pageX+']}');
+                transmit('{\"data\": ["'+this.id+'", '+event.pageX+']}');
 
             }
         }
     );
+
+    let xyOffset = null;
+    xy.on(
+        {
+            mouseenter: function () {
+                // TODO: create "zones" or other form of multisensor pattern
+                xyOffset = xy.offset();
+
+                // over(this.id);
+                // transmit('{"over": "' + this.id + '"}');
+            },
+            mouseleave: function () {
+                // out(this.id);
+                // transmit('{"out": "' + this.id + '"}');
+            },
+            mousemove: function(event) {
+                $(this).children('.value').text("(" + (event.pageX - xyOffset.left) + ", " + (event.pageY - xyOffset.top) + ")");
+                // moveHand(event, this.id, 'local');
+                // transmit('{\"data\": ["'+this.id+'", '+event.pageX+']}');
+
+            }
+        }
+    );
+
 
     function moveHand(event, id, src) {
 
@@ -159,7 +195,7 @@ function run(settings) {
                 zero.pbRate(rate);
                 if (delayOn) {
                     zero.delTime(event/485);      // range of .125 - .825(s)
-                    zero.delFeedback(event/808);  // range of.075 - .495
+                    zero.delFeedback(event/808);  // range of .075 - .495
                 }
                 break;
             case 'one':
@@ -170,7 +206,8 @@ function run(settings) {
                 }
                 break;
             case 'two':
-                two.read = rate;
+                console.log((event-60)/360);
+                two.read = (event - 60)/360;
                 break;
             case 'three':
 

@@ -1,11 +1,16 @@
-/**
-* Created by Mike on 8/25/16.
-*/
-"use strict";
+'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/**
+ * Grainread class
+ * a single grain for the playgrain class
+ * Created by Mike Sperone on 8/25/16.
+ *
+ *
+*/
 
 var Grainread = function () {
     function Grainread(audio, context, g_read) {
@@ -30,8 +35,14 @@ var Grainread = function () {
 
         this.audio = audio;
         this.context = context;
+        this.buffer = null;
+        this.duration = null;
+        this.stopped = true;
+
         this.src = this.context.createBufferSource();
         this.env = this.context.createGain();
+        this.panner = this.context.createStereoPanner();
+
         this.split = this.context.createChannelSplitter(2);
         this.merge = this.context.createChannelMerger(2);
         this.delayA = this.context.createDelay(0.2);
@@ -53,33 +64,68 @@ var Grainread = function () {
 
             that.context.decodeAudioData(audioData, function (buffer) {
                 that.src.buffer = buffer;
+                that.buffer = buffer;
+                that.duration = that.buffer.duration;
                 that.src.connect(that.env);
-                that.env.connect(that.split);
-                that.split.connect(that.delayA, 0);
-                that.split.connect(that.delayB, 1);
-                that.delayA.connect(that.fbkA);
-                that.delayB.connect(that.fbkB);
-                that.fbkA.connect(that.delayA);
-                that.fbkB.connect(that.delayB);
-                that.delayA.connect(that.merge, 0, 0);
-                that.delayB.connect(that.merge, 0, 1);
+
+                // that.env.connect(that.split);
+                // that.split.connect(that.delayA, 0);
+                // that.split.connect(that.delayB, 1);
+                // that.delayA.connect(that.fbkA);
+                // that.delayB.connect(that.fbkB);
+                // that.fbkA.connect(that.delayA);
+                // that.fbkB.connect(that.delayB);
+                // that.delayA.connect(that.merge, 0, 0);
+                // that.delayB.connect(that.merge, 0, 1);
+                //
+                // that.merge.connect(that.panner);
+
                 that.src.loop = true;
-                that.merge.connect(that.volume);
+                that.env.connect(that.panner);
+                that.panner.connect(that.volume);
                 that.volume.connect(context.destination);
-                that.volume.gain.value = 0;
+                that.phasor();
             }, function (e) {
                 "Error with decoding audio data" + e.err;
             });
         };
 
         req.send();
-        this.play();
     }
 
     _createClass(Grainread, [{
+        key: 'restartAtTime',
+        value: function restartAtTime(t) {
+            this.stop();
+            this.src = this.context.createBufferSource();
+            this.src.buffer = this.buffer;
+            this.src.loop = true;
+
+            this.src.connect(this.env);
+
+            this.src.start(0, t);
+            this.stopped = false;
+        }
+    }, {
         key: 'play',
         value: function play() {
             this.src.start(0);
+        }
+    }, {
+        key: 'start',
+        value: function start() {
+            if (this.stopped) {
+                this.restartAtTime(0);
+                this.stopped = false;
+            }
+        }
+    }, {
+        key: 'stop',
+        value: function stop() {
+            if (!this.stopped) {
+                this.src.stop(0);
+                this.stopped = true;
+            }
         }
     }, {
         key: 'toString',
@@ -87,33 +133,33 @@ var Grainread = function () {
             return [{ "audio": this.audio }, { "context": this.context }, { "g_read": this.g_read }, { "g_speed": this.g_speed }, { "g_multiply": this.g_multiply }, { "g_fade": this.g_fade }, { "g_speedspread": this.g_speedspread }, { "g_spread": this.g_spread }, { "g_scatter": this.g_scatter }];
         }
     }, {
-        key: 'onPhasor',
-        value: function onPhasor(t, time) {
-            "use strict";
-
-            // bottom right of GRAINREAD_Five
-
-            t.position = time;
-            t.length = t.g_read;
-            var now = t.context.currentTime;
-            var e = t.env.gain;
-            e.cancelScheduledValues(now);
-            e.setValueAtTime(0, now);
-            e.linearRampToValueAtTime(1, now + time / 2);
-            e.linearRampToValueAtTime(0, now + time);
-            //console.log("enveloped");
-            //console.log(time + ", " + t.g_read);
-        }
-    }, {
         key: 'phasor',
         value: function phasor() {
             var that = this;
 
             var internalCallback = function () {
+
                 return function () {
-                    var time = 500 / Math.random() + 100;
-                    window.setTimeout(internalCallback, time);
-                    that.onPhasor(that, time / 1000);
+
+                    var time = Math.random() * that.read * 2 + 0.1;
+                    window.setTimeout(internalCallback, time * 1000);
+
+                    if (that.stopped === false) {
+
+                        that.position = that.read * that.duration;
+                        that.length = time;
+                        that.panner.value = that.spread * 0.4 * Math.random() - 1;
+
+                        var now = that.context.currentTime;
+                        var e = that.env.gain;
+                        e.cancelScheduledValues(now);
+                        e.setValueAtTime(0.0001, now);
+
+                        that.restartAtTime(that.position);
+
+                        e.exponentialRampToValueAtTime(1, now + time / 2);
+                        e.exponentialRampToValueAtTime(0.0001, now + time);
+                    }
                 };
             }();
 
@@ -123,16 +169,25 @@ var Grainread = function () {
         key: 'vol',
         set: function set(v) {
             this.volume.gain.value = v;
+        },
+        get: function get() {
+            return this.volume.gain.value;
         }
     }, {
         key: 'delays',
         set: function set(d) {
             this.delayA.delayTime.value = d;
+        },
+        get: function get() {
+            return this.delayA.delayTime.value;
         }
     }, {
         key: 'feedback',
         set: function set(f) {
             this.fbkA.gain.value = f;
+        },
+        get: function get() {
+            return this.fbkA.gain.value;
         }
     }, {
         key: 'position',
@@ -202,12 +257,5 @@ var Grainread = function () {
 
     return Grainread;
 }();
-
-function noise(spread) {
-    "use strict";
-
-    var noise = Math.random() * spread * 20000;
-    return noise * noise;
-}
 
 //# sourceMappingURL=grainread.js.map

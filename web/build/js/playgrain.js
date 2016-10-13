@@ -5,6 +5,8 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 /**
+ * Playgrain class
+ *
  * Created by Mike on 9/1/16.
  */
 
@@ -22,17 +24,40 @@ var Playgrain = function () {
         this.e = new Grainread(this.audio, this.context, 1);
         this.f = new Grainread(this.audio, this.context, 1);
         this.g = new Grainread(this.audio, this.context, 1);
-
-        this.a.phasor();
-        this.b.phasor();
-        this.c.phasor();
-        this.d.phasor();
-        this.e.phasor();
-        this.f.phasor();
-        this.g.phasor();
+        this.h = new Grainread(this.audio, this.context, 1);
+        this.i = new Grainread(this.audio, this.context, 1);
+        this.j = new Grainread(this.audio, this.context, 1);
     }
 
     _createClass(Playgrain, [{
+        key: "start",
+        value: function start() {
+            this.a.start();
+            this.b.start();
+            this.c.start();
+            this.d.start();
+            this.e.start();
+            this.f.start();
+            this.g.start();
+            this.h.start();
+            this.i.start();
+            this.j.start();
+        }
+    }, {
+        key: "stop",
+        value: function stop() {
+            this.a.stop();
+            this.b.stop();
+            this.c.stop();
+            this.d.stop();
+            this.e.stop();
+            this.f.stop();
+            this.g.stop();
+            this.h.stop();
+            this.i.stop();
+            this.j.stop();
+        }
+    }, {
         key: "fade",
         set: function set(f) {
             this.a.fade = f;
@@ -42,6 +67,9 @@ var Playgrain = function () {
             this.e.fade = f;
             this.f.fade = f;
             this.g.fade = f;
+            this.h.fade = f;
+            this.i.fade = f;
+            this.j.fade = f;
         }
     }, {
         key: "feedback",
@@ -53,6 +81,9 @@ var Playgrain = function () {
             this.e.feedback = f;
             this.f.feedback = f;
             this.g.feedback = f;
+            this.h.feedback = f;
+            this.i.feedback = f;
+            this.j.feedback = f;
         }
     }, {
         key: "read",
@@ -64,6 +95,9 @@ var Playgrain = function () {
             this.e.read = gr;
             this.f.read = gr;
             this.g.read = gr;
+            this.h.read = gr;
+            this.i.read = gr;
+            this.j.read = gr;
         }
     }, {
         key: "scatter",
@@ -75,6 +109,9 @@ var Playgrain = function () {
             this.e.scatter = s;
             this.f.scatter = s;
             this.g.scatter = s;
+            this.h.scatter = s;
+            this.i.scatter = s;
+            this.j.scatter = s;
         }
     }, {
         key: "spread",
@@ -86,11 +123,13 @@ var Playgrain = function () {
             this.e.spread = s;
             this.f.spread = s;
             this.g.spread = s;
+            this.h.spread = s;
+            this.i.spread = s;
+            this.j.spread = s;
         }
     }, {
         key: "vol",
-        set: function set(w) {
-            var v = w / 2;
+        set: function set(v) {
             this.a.vol = v;
             this.b.vol = v;
             this.c.vol = v;
@@ -98,6 +137,9 @@ var Playgrain = function () {
             this.e.vol = v;
             this.f.vol = v;
             this.g.vol = v;
+            this.h.vol = v;
+            this.i.vol = v;
+            this.j.vol = v;
         }
     }]);
 
