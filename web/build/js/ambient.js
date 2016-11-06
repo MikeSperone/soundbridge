@@ -23,5 +23,3 @@ var Ambient = function (_Play) {
 
     return Ambient;
 }(Play);
-
-//# sourceMappingURL=ambient.js.map

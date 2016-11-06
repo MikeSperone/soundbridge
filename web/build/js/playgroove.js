@@ -51,11 +51,6 @@ var Playgroove = function () {
     }
 
     _createClass(Playgroove, [{
-        key: 'toString',
-        value: function toString() {
-            return [{ "audio": this.audio }, { "context": this.context }, { "delayTime": this.delay.delayTime.value }, { "delayFeedback": this.feedback.gain.value }, { "rate": this.src.playbackRate.value }, { "volume": this.volume.gain.value }];
-        }
-    }, {
         key: 'delaySwitch',
         value: function delaySwitch(setting) {
             if (setting) {
@@ -95,5 +90,3 @@ var Playgroove = function () {
 
     return Playgroove;
 }();
-
-//# sourceMappingURL=playgroove.js.map

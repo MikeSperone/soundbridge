@@ -80,8 +80,7 @@ function run(settings) {
             } else if (data.over) {
                 over(data.over);
             } else if (data.data) {
-                //id: e.data[0]
-                //value: e.data[1]
+
                 moveHand(data.data[1], data.data[0], 'remote');
             }
         };
@@ -162,22 +161,56 @@ function run(settings) {
     });
 
     var xyOffset = null;
+    var quadrant = null;
+    var xyWidth = 500,
+        xyHeight = 500,
+        xyHalfWidth = xyWidth / 2,
+        xyHalfHeight = xyHeight / 2;
+
     xy.on({
         mouseenter: function mouseenter() {
             // TODO: create "zones" or other form of multisensor pattern
             xyOffset = xy.offset();
 
-            // over(this.id);
+            over(this.id);
             // transmit('{"over": "' + this.id + '"}');
         },
         mouseleave: function mouseleave() {
-            // out(this.id);
+            out(this.id);
             // transmit('{"out": "' + this.id + '"}');
         },
         mousemove: function mousemove(event) {
-            $(this).children('.value').text("(" + (event.pageX - xyOffset.left) + ", " + (event.pageY - xyOffset.top) + ")");
-            // moveHand(event, this.id, 'local');
-            // transmit('{\"data\": ["'+this.id+'", '+event.pageX+']}');
+            var x = event.pageX - xyOffset.left,
+                y = event.pageY - xyOffset.top;
+
+            if (y < xyHalfHeight) {
+                // Top half
+                if (x < xyHalfWidth) {
+                    // I
+                    quadrant = "zero";
+                } else {
+                    // II
+                    x = x - xyHalfWidth;
+                    quadrant = "one";
+                }
+            } else {
+                // Bottom half
+                y = y - xyHalfHeight;
+                if (x > xyHalfWidth) {
+                    //III
+                    x = x - xyHalfWidth;
+                    quadrant = "two";
+                } else {
+                    //IV
+
+                    quadrant = "three";
+                }
+            }
+            var distance = Math.sqrt(x * x + y * y).toFixed(2);
+            //$(this).children('.value').text(quadrant + "(" + (x) + ", " + (y) + ")");
+            $(this).children('.value').text(quadrant + "(" + distance + ")");
+            moveHand(parseFloat(distance), quadrant, 'xy');
+            transmit('{\"data\": ["' + quadrant + '", ' + parseFloat(distance) + ']}');
         }
     });
 
@@ -243,5 +276,3 @@ function run(settings) {
         }
     }
 }
-
-//# sourceMappingURL=soundbridge.js.map

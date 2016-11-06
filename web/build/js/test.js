@@ -7,5 +7,3 @@ var audioThree = '';
 var audioAmb = 'audio/ambientcar_factory.m4a';
 
 var context = new AudioContext();
-
-//# sourceMappingURL=test.js.map

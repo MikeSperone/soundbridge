@@ -14,10 +14,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var Grainread = function () {
     function Grainread(audio, context, g_read) {
-        var g_multiply = arguments.length <= 3 || arguments[3] === undefined ? 1 : arguments[3];
-        var g_fade = arguments.length <= 4 || arguments[4] === undefined ? 1 : arguments[4];
-        var g_spread = arguments.length <= 5 || arguments[5] === undefined ? 20 : arguments[5];
-        var g_scatter = arguments.length <= 6 || arguments[6] === undefined ? 28 : arguments[6];
+        var g_multiply = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 1;
+        var g_fade = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 1;
+        var g_spread = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : 20;
+        var g_scatter = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : 28;
 
         _classCallCheck(this, Grainread);
 
@@ -257,5 +257,3 @@ var Grainread = function () {
 
     return Grainread;
 }();
-
-//# sourceMappingURL=grainread.js.map

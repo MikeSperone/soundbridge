@@ -31,7 +31,7 @@ var Loop = function (_Play) {
     _createClass(Loop, [{
         key: "sensor",
         value: function sensor(val) {
-            var time = arguments.length <= 1 || arguments[1] === undefined ? 0 : arguments[1];
+            var time = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
 
             var x = Math.floor(val);
             console.log('time: ' + time);
@@ -109,5 +109,3 @@ var Loop = function (_Play) {
 
     return Loop;
 }(Play);
-
-//# sourceMappingURL=trigroove.js.map

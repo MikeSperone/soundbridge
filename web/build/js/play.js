@@ -10,7 +10,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var Play = function () {
     function Play(audio, context) {
-        var vol = arguments.length <= 2 || arguments[2] === undefined ? 0 : arguments[2];
+        var vol = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
 
         _classCallCheck(this, Play);
 
@@ -50,7 +50,7 @@ var Play = function () {
     _createClass(Play, [{
         key: 'startSample',
         value: function startSample() {
-            var offset = arguments.length <= 0 || arguments[0] === undefined ? 0 : arguments[0];
+            var offset = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
 
             console.log("startSample");
 
@@ -128,5 +128,3 @@ var Play = function () {
 
     return Play;
 }();
-
-//# sourceMappingURL=play.js.map

@@ -21,10 +21,31 @@ body {
   margin: 2px;
 }
 
+$xyWin: 600px;
+$xyOffsets: ($xyWin / 2) - 100;
 .xy-pad {
   display: block;
-  width: 340px;
-  height: 340px;
-  border: 1px solid $primary-color;
+  position: relative;
+  width: $xyWin - 100;
+  height: $xyWin - 100;
   margin: 60px;
+  border: 1px solid $primary-color;
+  .qd {
+      position: absolute;
+      display: block;
+      width: $xyWin / 2;
+      height: $xyWin / 2;
+      margin: 0;
+      border: 0;
+  }
+  #one {
+      left: $xyOffsets;
+  }
+  #two {
+      top: $xyOffsets;
+      left: $xyOffsets;
+  }
+  #three {
+      top: $xyOffsets;
+  }
 }
