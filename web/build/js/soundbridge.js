@@ -4,10 +4,10 @@
 var test = void 0;
 $.getJSON("js/settings.json", function (json) {
     console.log("settings loaded");
-    run(json);
+    start(json);
 });
 
-function run(settings) {
+function start(settings) {
 
     /*
     * Audio setup
