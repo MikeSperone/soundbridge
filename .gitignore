@@ -1,0 +1,7 @@
+/web/.idea
+/web/node_modules
+/web/build
+
+.DS_Store
+
+*.m4a

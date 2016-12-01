@@ -14,8 +14,8 @@ class Loop extends Play {
     }
 
     sensor(val, time = 0) {
+
         let x = Math.floor(val);
-        console.log('time: ' + time);
 
         if (x > 20) {
 

@@ -1,8 +1,8 @@
 /**
  * Grainread class
- * a single grain for the playgrain class
+ * a single series of grains
+  for the playgrain class
  * Created by Mike Sperone on 8/25/16.
- *
  *
 */
 
@@ -32,14 +32,14 @@ class Grainread {
         this.env = this.context.createGain();
         this.panner = this.context.createStereoPanner();
 
-        this.split = this.context.createChannelSplitter(2);
+        this.splitter = this.context.createChannelSplitter(2);
         this.merge = this.context.createChannelMerger(2);
-        this.delayA = this.context.createDelay(0.2);
-        this.delayB = this.context.createDelay(0.2);
+        this.delayA = this.context.createDelay(0.5);
+        this.delayB = this.context.createDelay(0.5);
         this.fbkA = this.context.createGain();
-        this.fbkA.gain.value = 0.2;
+        this.fbkA.gain.value = 0.5;
         this.fbkB = this.context.createGain();
-        this.fbkB.gain.value = 0.2;
+        this.fbkB.gain.value = 0.5;
         this.volume = this.context.createGain();
 
         let that = this;
@@ -57,20 +57,19 @@ class Grainread {
                     that.duration = that.buffer.duration;
                     that.src.connect(that.env);
 
-                    // that.env.connect(that.split);
-                    // that.split.connect(that.delayA, 0);
-                    // that.split.connect(that.delayB, 1);
-                    // that.delayA.connect(that.fbkA);
-                    // that.delayB.connect(that.fbkB);
-                    // that.fbkA.connect(that.delayA);
-                    // that.fbkB.connect(that.delayB);
-                    // that.delayA.connect(that.merge, 0, 0);
-                    // that.delayB.connect(that.merge, 0, 1);
-                    //
-                    // that.merge.connect(that.panner);
+                    that.env.connect(that.delayA);
+                    that.env.connect(that.delayB);
+                    that.delayA.connect(that.fbkA);
+                    that.delayB.connect(that.fbkB);
+                    that.fbkA.connect(that.delayA);
+                    that.fbkB.connect(that.delayB);
+                    that.delayA.connect(that.merge, 0, 0);
+                    that.delayB.connect(that.merge, 0, 1);
+
+                    that.merge.connect(that.panner);
 
                     that.src.loop = true;
-                    that.env.connect(that.panner);
+                    //that.env.connect(that.panner);
                     that.panner.connect(that.volume);
                     that.volume.connect(context.destination);
                     that.phasor();

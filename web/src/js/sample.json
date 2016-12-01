@@ -23,7 +23,7 @@ samples = [
   {"0": "pigeons",        "1": "localbirds2",     "2": "geese+gulls",     "3":"sculpture1",     "a":"springpeepers"},
   {"0": "bartonsifter3",  "1": "foghorn2",        "2": "pno_pluck",       "3":"heliocopter",    "a":"ambientfactory"},
   {"0": "bridgesound4",   "1": "foghorn2",        "2": "foghorn2",        "3":"waveslapping",   "a":"ambientthunderdrips"},
-  {"0": "rightear15",     "1": "rightear15",      "2": "bridgesound",     "3":"pno_pluck",      "a":"crickets"},
+  {"0": "rightear15",     "1": "rightear15",      "2": "bridgesound1",     "3":"pno_pluck",      "a":"crickets"},
   {"0": "churchbells",    "1": "crickets",        "2": "geese+gulls",     "3":"lenfishing",     "a":""},
   {"0": "paintmixer",     "1": "montagemachine",  "2": "elevator",        "3":"lensugar",       "a":""},
   {"0": "", "1": "", "2": "", "3":""},

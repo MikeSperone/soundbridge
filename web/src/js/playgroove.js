@@ -1,7 +1,8 @@
 /**
  * Created by Mike on 8/25/16.
  */
-'use strict';
+"use strict";
+
 class Playgroove {
 
     constructor(audio, context) {
