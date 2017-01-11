@@ -15,13 +15,14 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var Loop = function (_Play) {
     _inherits(Loop, _Play);
 
-    function Loop(audio, context) {
+    function Loop(audio, context, connection) {
         _classCallCheck(this, Loop);
 
-        var _this = _possibleConstructorReturn(this, (Loop.__proto__ || Object.getPrototypeOf(Loop)).call(this, audio, context));
+        var _this = _possibleConstructorReturn(this, (Loop.__proto__ || Object.getPrototypeOf(Loop)).call(this, audio, context, connection));
 
         _this.audio = audio;
         _this.context = context;
+        _this.connect = connection;
         _this.position = 0;
         _this.sensorPos = null;
         //this.play();
@@ -33,8 +34,8 @@ var Loop = function (_Play) {
         value: function sensor(val) {
             var time = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
 
+
             var x = Math.floor(val);
-            console.log('time: ' + time);
 
             if (x > 20) {
 

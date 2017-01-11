@@ -6,22 +6,42 @@
 
 class Playgrain {
 
-    constructor(audio, context) {
-
+    constructor(audio, context, connection) {
+        //console.log("playgrain");
         this.audio = audio;
         this.context = context;
+        this.connect = connection;
 
-        this.a = new Grainread(this.audio, this.context, 1);
-        this.b = new Grainread(this.audio, this.context, 1);
-        this.c = new Grainread(this.audio, this.context, 1);
-        this.d = new Grainread(this.audio, this.context, 1);
-        this.e = new Grainread(this.audio, this.context, 1);
-        this.f = new Grainread(this.audio, this.context, 1);
-        this.g = new Grainread(this.audio, this.context, 1);
-        this.h = new Grainread(this.audio, this.context, 1);
-        this.i = new Grainread(this.audio, this.context, 1);
-        this.j = new Grainread(this.audio, this.context, 1);
+        this.a = new Grainread(this.audio, this.context, this.connect, 1);
+        this.b = new Grainread(this.audio, this.context, this.connect, 1);
+        this.c = new Grainread(this.audio, this.context, this.connect, 1);
+        this.d = new Grainread(this.audio, this.context, this.connect, 1);
+        this.e = new Grainread(this.audio, this.context, this.connect, 1);
+        this.f = new Grainread(this.audio, this.context, this.connect, 1);
+        this.g = new Grainread(this.audio, this.context, this.connect, 1);
+        this.h = new Grainread(this.audio, this.context, this.connect, 1);
+        this.i = new Grainread(this.audio, this.context, this.connect, 1);
+        this.j = new Grainread(this.audio, this.context, this.connect, 1);
 
+    }
+
+    control(n) {
+      this.read = n;
+      this.feedback = (n > 0) ? 0.75*(1-n) : 0.75;
+    }
+
+    destroy() {
+        this.stop();
+        this.a.src.disconnect();
+        this.b.src.disconnect();
+        this.c.src.disconnect();
+        this.d.src.disconnect();
+        this.e.src.disconnect();
+        this.f.src.disconnect();
+        this.g.src.disconnect();
+        this.h.src.disconnect();
+        this.i.src.disconnect();
+        this.j.src.disconnect();
     }
 
     set fade(f) {
@@ -52,15 +72,15 @@ class Playgrain {
 
     set read(gr) {
         this.a.read = gr;
-        this.b.read = gr;
-        this.c.read = gr;
-        this.d.read = gr;
-        this.e.read = gr;
-        this.f.read = gr;
-        this.g.read = gr;
-        this.h.read = gr;
-        this.i.read = gr;
-        this.j.read = gr;
+        this.b.read = (gr+Math.random())/2;
+        this.c.read = (gr+Math.random())/2;
+        this.d.read = (gr+Math.random())/2;
+        this.e.read = (gr+Math.random())/2;
+        this.f.read = (gr+Math.random())/2;
+        this.g.read = (gr+Math.random())/2;
+        this.h.read = (gr+Math.random())/2;
+        this.i.read = (gr+Math.random())/2;
+        this.j.read = (gr+Math.random())/2;
     }
 
     set scatter(s) {

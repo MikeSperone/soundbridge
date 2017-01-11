@@ -9,11 +9,26 @@
     <body>
         <h1>Soundbridge!</h1>
 
-        <div class="sensor" id="zero"><div class="value"></div></div>
-        <div class="sensor" id="one"><div class="value"></div></div>
-        <div class="sensor" id="two"><div class="value"></div></div>
-        <div class="sensor" id="three"><div class="value"></div></div>
+        <div class="control-wrapper">
+            <button class="control" id="mute">Mute</button>
+            <label for="masterVol">Volume</label>
+            <input class="control" id="masterVol" type="range"></input>
+            <label for="setting">Setting</label>
+            <input class="control" id="setting" type="number" min="1" max="30"></input><button class="control" id="submit-setting">change</button>
+        </div>
 
+        <div class="sensor-wrapper">
+            <div class="sensor" id="zero"><div class="value"></div></div><button id="mute0">mute</button>
+        </div>
+        <div class="sensor-wrapper">
+            <div class="sensor" id="one"><div class="value"></div></div><button id="mute1">mute</button>
+        </div>
+        <div class="sensor-wrapper">
+            <div class="sensor" id="two"><div class="value"></div></div><button id="mute2">mute</button>
+        </div>
+        <div class="sensor-wrapper">
+            <div class="sensor" id="three"><div class="value"></div></div><button id="mute3">mute</button>
+        </div>
         <div class="xy-pad">
             <div class="qd sensor" id="zero"><div class="value"></div></div>
             <div class="qd sensor" id="one"><div class="value"></div></div>

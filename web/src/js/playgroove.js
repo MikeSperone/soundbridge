@@ -5,10 +5,11 @@
 
 class Playgroove {
 
-    constructor(audio, context) {
+    constructor(audio, context, connection) {
 
         this.audio = audio;
         this.context = context;
+        this.connect = connection;
         this.src = this.context.createBufferSource();
         this.delay = this.context.createDelay(1.0);
         this.feedback = this.context.createGain();
@@ -34,7 +35,7 @@ class Playgroove {
                     that.src.buffer = buffer;
                     that.src.playbackRate.value = 1;
 
-                    that.volume.connect(context.destination);
+                    that.volume.connect(that.connect);
                     that.volume.gain.value = 0;
                     that.src.loop = true;
 
@@ -67,6 +68,11 @@ class Playgroove {
 
     delFeedback(fbk) {
         this.feedback.gain.value = fbk;
+    }
+
+    destroy() {
+        this.src.stop();
+        this.src.disconnect();
     }
 
     pbRate(rate) {

@@ -1,18 +1,19 @@
 /**
  * Created by Mike on 8/25/16.
  */
-'use strict';
+"use strict";
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var Playgroove = function () {
-    function Playgroove(audio, context) {
+    function Playgroove(audio, context, connection) {
         _classCallCheck(this, Playgroove);
 
         this.audio = audio;
         this.context = context;
+        this.connect = connection;
         this.src = this.context.createBufferSource();
         this.delay = this.context.createDelay(1.0);
         this.feedback = this.context.createGain();
@@ -38,7 +39,7 @@ var Playgroove = function () {
                 that.src.buffer = buffer;
                 that.src.playbackRate.value = 1;
 
-                that.volume.connect(context.destination);
+                that.volume.connect(that.connect);
                 that.volume.gain.value = 0;
                 that.src.loop = true;
             }, function (e) {
@@ -75,6 +76,12 @@ var Playgroove = function () {
         key: 'delFeedback',
         value: function delFeedback(fbk) {
             this.feedback.gain.value = fbk;
+        }
+    }, {
+        key: 'destroy',
+        value: function destroy() {
+            this.src.stop();
+            this.src.disconnect();
         }
     }, {
         key: 'pbRate',

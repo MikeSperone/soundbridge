@@ -9,13 +9,14 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
  */
 
 var Play = function () {
-    function Play(audio, context) {
-        var vol = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+    function Play(audio, context, connection) {
+        var vol = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 0;
 
         _classCallCheck(this, Play);
 
         this.audio = audio;
         this.context = context;
+        this.connect = connection;
         this.contextCreationTime = new Date();
         this.startTime = null;
 
@@ -67,11 +68,17 @@ var Play = function () {
             this.src.loopEnd = this.loopEnd;
 
             this.src.connect(this.volume);
-            this.volume.connect(this.context.destination);
+            this.volume.connect(this.connect);
             this.startTime = this.context.currentTime - offset;
 
             this.src.start(0, offset);
             this.stopped = false;
+        }
+    }, {
+        key: 'destroy',
+        value: function destroy() {
+            this.stop();
+            this.src.disconnect();
         }
     }, {
         key: 'play',

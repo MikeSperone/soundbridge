@@ -6,9 +6,17 @@ body {
   font: $font-stack;
   color: $primary-color;
 }
+.control {
+    padding: 10px;
+    margin: 10px;
+}
 
+.sensor-wrapper {
+    display: block;
+    width: 600px;
+}
 .sensor {
-  display: block;
+    display: inline-block;
   width: 340px;
   height: 25px;
   border: 1px solid $primary-color;

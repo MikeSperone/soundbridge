@@ -6,4 +6,8 @@ var audioTwo = 'audio/bees.m4a';
 var audioThree = '';
 var audioAmb = 'audio/ambientcar_factory.m4a';
 
-var context = new AudioContext();
+var context = new window.AudioContext();
+
+var ambient = new Ambient(audioZero, context);
+
+console.log(ambient);

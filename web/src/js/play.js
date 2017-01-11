@@ -3,10 +3,11 @@
  */
 
 class Play {
-    constructor(audio, context, vol = 0) {
+    constructor(audio, context, connection, vol = 0) {
 
         this.audio = audio;
         this.context = context;
+        this.connect = connection;
         this.contextCreationTime = new Date();
         this.startTime = null;
 
@@ -52,13 +53,17 @@ class Play {
         this.src.loopEnd = this.loopEnd;
 
         this.src.connect(this.volume);
-        this.volume.connect(this.context.destination);
+        this.volume.connect(this.connect);
         this.startTime = this.context.currentTime - offset;
 
         this.src.start(0, offset);
         this.stopped = false;
     }
 
+    destroy() {
+        this.stop();
+        this.src.disconnect();
+    }
     get duration() {
         return this.src.buffer.duration;
     }

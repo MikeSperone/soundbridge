@@ -3,8 +3,16 @@ body {
   font: Helvetica, sans-serif;
   color: #333; }
 
-.sensor {
+.control {
+  padding: 10px;
+  margin: 10px; }
+
+.sensor-wrapper {
   display: block;
+  width: 600px; }
+
+.sensor {
+  display: inline-block;
   width: 340px;
   height: 25px;
   border: 1px solid #333;

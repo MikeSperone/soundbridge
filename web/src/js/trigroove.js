@@ -4,10 +4,11 @@
 
 class Loop extends Play {
 
-    constructor(audio, context) {
-        super(audio, context);
+    constructor(audio, context, connection) {
+        super(audio, context, connection);
         this.audio = audio;
         this.context = context;
+        this.connect = connection;
         this.position = 0;
         this.sensorPos = null;
         //this.play();

@@ -13,13 +13,15 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 */
 
 var Grainread = function () {
-    function Grainread(audio, context, g_read) {
-        var g_multiply = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 1;
-        var g_fade = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 1;
-        var g_spread = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : 20;
-        var g_scatter = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : 28;
+    function Grainread(audio, context, connection, g_read) {
+        var g_multiply = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 1;
+        var g_fade = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : 1;
+        var g_spread = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : 20;
+        var g_scatter = arguments.length > 7 && arguments[7] !== undefined ? arguments[7] : 28;
 
         _classCallCheck(this, Grainread);
+
+        //console.log("grainread");
 
         this.g_read = g_read;
         this.g_multiply = g_multiply;
@@ -35,6 +37,7 @@ var Grainread = function () {
 
         this.audio = audio;
         this.context = context;
+        this.connect = connection;
         this.buffer = null;
         this.duration = null;
         this.stopped = true;
@@ -45,8 +48,8 @@ var Grainread = function () {
 
         this.split = this.context.createChannelSplitter(2);
         this.merge = this.context.createChannelMerger(2);
-        this.delayA = this.context.createDelay(0.2);
-        this.delayB = this.context.createDelay(0.2);
+        this.delayA = this.context.createDelay(0.5);
+        this.delayB = this.context.createDelay(0.5);
         this.fbkA = this.context.createGain();
         this.fbkA.gain.value = 0.2;
         this.fbkB = this.context.createGain();
@@ -63,27 +66,30 @@ var Grainread = function () {
             var audioData = req.response;
 
             that.context.decodeAudioData(audioData, function (buffer) {
+                //console.log("decode audio data");
                 that.src.buffer = buffer;
                 that.buffer = buffer;
                 that.duration = that.buffer.duration;
                 that.src.connect(that.env);
 
-                // that.env.connect(that.split);
-                // that.split.connect(that.delayA, 0);
-                // that.split.connect(that.delayB, 1);
-                // that.delayA.connect(that.fbkA);
-                // that.delayB.connect(that.fbkB);
-                // that.fbkA.connect(that.delayA);
-                // that.fbkB.connect(that.delayB);
-                // that.delayA.connect(that.merge, 0, 0);
-                // that.delayB.connect(that.merge, 0, 1);
-                //
-                // that.merge.connect(that.panner);
+                that.env.connect(that.split);
+                that.split.connect(that.delayA, 0);
+                that.split.connect(that.delayB, 1);
+                that.delayA.connect(that.fbkA);
+                that.delayB.connect(that.fbkB);
+                that.fbkA.connect(that.delayA);
+                that.fbkB.connect(that.delayB);
+                that.delayA.connect(that.merge, 0, 0);
+                that.delayB.connect(that.merge, 0, 1);
 
+                that.merge.connect(that.panner);
+
+                that.delayA.delayTime.value = Math.random() * 0.5;
+                that.delayB.delayTime.value = Math.random() * 0.5;
                 that.src.loop = true;
                 that.env.connect(that.panner);
                 that.panner.connect(that.volume);
-                that.volume.connect(context.destination);
+                that.volume.connect(that.connect);
                 that.phasor();
             }, function (e) {
                 "Error with decoding audio data" + e.err;
@@ -136,29 +142,30 @@ var Grainread = function () {
         key: 'phasor',
         value: function phasor() {
             var that = this;
-
+            //console.log(that, ", phasor");
             var internalCallback = function () {
 
                 return function () {
 
-                    var time = Math.random() * that.read * 2 + 0.1;
-                    window.setTimeout(internalCallback, time * 1000);
+                    this.time = Math.random() * that.read * 2 + 0.1;
+                    //console.log(this, ", time: ", time);
+                    window.setTimeout(internalCallback, this.time * 1000);
 
                     if (that.stopped === false) {
 
                         that.position = that.read * that.duration;
-                        that.length = time;
+                        that.length = this.time;
                         that.panner.value = that.spread * 0.4 * Math.random() - 1;
 
-                        var now = that.context.currentTime;
-                        var e = that.env.gain;
-                        e.cancelScheduledValues(now);
-                        e.setValueAtTime(0.0001, now);
+                        this.now = that.context.currentTime;
+                        this.e = that.env.gain;
+                        this.e.cancelScheduledValues(this.now);
+                        this.e.setValueAtTime(0.0001, this.now);
 
                         that.restartAtTime(that.position);
 
-                        e.exponentialRampToValueAtTime(1, now + time / 2);
-                        e.exponentialRampToValueAtTime(0.0001, now + time);
+                        this.e.exponentialRampToValueAtTime(1, this.now + this.time / 2);
+                        this.e.exponentialRampToValueAtTime(0.0001, this.now + this.time);
                     }
                 };
             }();
@@ -184,7 +191,7 @@ var Grainread = function () {
     }, {
         key: 'feedback',
         set: function set(f) {
-            this.fbkA.gain.value = f;
+            this.fbkA.gain.value = Math.random() * f;
         },
         get: function get() {
             return this.fbkA.gain.value;
