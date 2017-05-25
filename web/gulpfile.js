@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 let gulp = require('gulp'),
     webserver = require('gulp-webserver'),
     babel = require('gulp-babel'),
@@ -82,42 +81,4 @@ gulp.task('watch', function() {
     gulp.watch(src+'/js/*.js', ['dev-js']);
     gulp.watch(src+'/scss/*.scss', ['styles']);
     gulp.watch(src+'/*.html', ['dev-html']);
-
-=======
-var gulp = require('gulp');
-
-var sass = require('gulp-sass'),
-    sourcemaps = require('gulp-sourcemaps'),
-    autoprefixer = require('gulp-autoprefixer');
-
-var concat = require('gulp-concat'),
-    stripDebug = require('gulp-strip-debug'),
-    uglify = require('gulp-uglify');
-
-var production = false;
-
-var sassOpt = {errLogToConsole: true, outputStyle: 'compressed'},
-    autopreOpt = {browsers: ['last 3 versions']};
-
-gulp.task('sass', function() {
-   return gulp
-       .src('src/scss/*.scss')
-       .pipe(sourcemaps.init())
-       .pipe(sass(sassOpt).on('error', sass.logError))
-       .pipe(autoprefixer(autopreOpt))
-       .pipe(sourcemaps.write('build/css/maps'))
-       .pipe(gulp.dest('build/css'));
-});
-
-gulp.task('js', function () {
-   return gulp
-       .src('src/js/*.js')
-       .pipe(stripDebug())
-       .pipe(gulp.dest('build/js'));
-});
-
-gulp.task('watch', function() {
-    gulp.watch('src/js/*.js', ['js']);
-    gulp.watch('src/scss/*.scss', ['sass']);
->>>>>>> unknown changes
 });
