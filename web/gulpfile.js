@@ -12,7 +12,7 @@ let concat = require('gulp-concat'),
     uglify = require('gulp-uglify');
 
 let src   = 'src',
-    build = 'build';
+    build = 'static';
 
 let host = 'localhost';
 
