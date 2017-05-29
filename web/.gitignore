@@ -1,7 +1,5 @@
 /.idea
 /node_modules
-/build
 
 .DS_Store
 
-#*.m4a
