@@ -1,13 +1,22 @@
 #!/usr/bin/env nodejs
 
-var express = require('express');
-var app = express();
-var path = require('path');
+var config = require('../config/server');
+var app = require('express')();
+var http = require('http').Server(app);
+var io		= require('socket.io')(http);
 
-var build_path = path.join(__dirname, '/build');
+var path = require('path');
+var build_path = path.join(__dirname, config.paths.build);
 
 app.get('/', function(req, res) {
     res.sendFile(build_path + '/index.html');
 });
-console.log(build_path);
-app.listen(8000);
+
+io.on('connection', function(socket){
+	console.log('user connected');
+});
+
+console.log('connecting...');
+http.listen(Number(config.server.port), function() {
+	console.log('connected.');
+});

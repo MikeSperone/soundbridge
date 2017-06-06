@@ -1,4 +1,6 @@
 /web/.idea
 /web/node_modules
 
+/config
+
 .DS_Store

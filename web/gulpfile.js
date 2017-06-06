@@ -1,20 +1,23 @@
-let gulp = require('gulp'),
-    webserver = require('gulp-webserver'),
-    babel = require('gulp-babel'),
-    pump = require('pump'),
-    sass = require('gulp-sass'),
-    sourcemaps = require('gulp-sourcemaps'),
-    autoprefixer = require('gulp-autoprefixer'),
-    htmlmin = require('gulp-htmlmin');
+const
+	config = require('../config/web'),
 
-let concat = require('gulp-concat'),
-    stripDebug = require('gulp-strip-debug'),
-    uglify = require('gulp-uglify');
+	gulp		= require('gulp'),
+    webserver	= require('gulp-webserver'),
+    babel		= require('gulp-babel'),
+    pump  		= require('pump'),
+    sass  		= require('gulp-sass'),
+    sourcemaps	= require('gulp-sourcemaps'),
+    autoprefixer= require('gulp-autoprefixer'),
+    htmlmin		= require('gulp-htmlmin'),
 
-let src   = 'src',
-    build = 'static';
+	concat		= require('gulp-concat'),
+    stripDebug	= require('gulp-strip-debug'),
+    uglify		= require('gulp-uglify');
 
-let host = 'localhost';
+const
+	src   = config.src,
+    build = config.build,
+	host  = config.host;
 
 gulp.task('webserver', function() {
     gulp.src(build)
@@ -48,6 +51,11 @@ gulp.task('prod-js', function (cb) {
         ],
         cb
     );
+});
+
+gulp.task('settings', function() {
+	return gulp.src(src + 'js/settings.json').
+		pipe(gulp.dest(build));
 });
 
 gulp.task('prod-html', function() {

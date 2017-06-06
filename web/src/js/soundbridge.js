@@ -6,9 +6,10 @@ $.getJSON("js/settings.json",
         console.log("settings loaded");
         start(json);
     });
-
+let ws = io();
 function start(settings) {
 
+    const audiopath = 'audio/';
     /*
     * Audio setup
     */
@@ -28,11 +29,11 @@ function start(settings) {
     console.log("setting number: ", (i + 1));
 
     // set samples
-    let audioZero = 'audio/' + samples[0] + '.mp3';
-    let audioOne = 'audio/' + samples[1] + '.mp3';
-    let audioTwo = 'audio/' + samples[2] + '.mp3';
-    let audioThree = 'audio/' + samples[3] + '.mp3';
-    let audioThreeHold = 'audio/hold/' + samples[3] + '_slow.mp3';
+    let audioZero = audiopath + samples[0] + '.mp3';
+    let audioOne  = audiopath + samples[1] + '.mp3';
+    let audioTwo  = audiopath + samples[2] + '.mp3';
+    let audioThree = audiopath + samples[3] + '.mp3';
+    let audioThreeHold = audiopath + 'hold/' + samples[3] + '_slow.mp3';
 
     let time = 0;
 
@@ -40,7 +41,7 @@ function start(settings) {
     let context = new window.AudioContext();
 
     if (samples.a !== "") {
-        let audioAmb = 'audio/' + samples.a + '.mp3';
+        let audioAmb = audiopath + samples.a + '.mp3';
         let ambient = new Play(audioAmb, context, 0.8);
     }
 
@@ -63,7 +64,7 @@ function start(settings) {
     let threePosition = 0;
 
     let openConnection = false;
-    let ws = new WebSocket('ws://mikesperone.com:31296');
+    //let ws = io(); 
 
     ws.onopen = function(){
 
