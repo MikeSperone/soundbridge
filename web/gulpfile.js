@@ -1,5 +1,5 @@
 const
-	config = require('../config/web'),
+	config = require('../config'),
 
 	gulp		= require('gulp'),
     webserver	= require('gulp-webserver'),
@@ -81,8 +81,8 @@ gulp.task('dev-html', function() {
   return gulp.src(src + '/*.html')
     .pipe(gulp.dest(build));
 });
-
-gulp.task('dev', ['dev-js', 'styles', 'dev-html', 'webserver', 'watch']);
+gulp.task('build', ['dev-js', 'styles', 'dev-html']);
+gulp.task('dev', ['build', 'webserver', 'watch']);
 gulp.task('production', ['prod-js', 'styles', 'prod-html']);
 
 gulp.task('watch', function() {
