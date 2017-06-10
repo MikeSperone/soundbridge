@@ -1,12 +1,17 @@
 "use strict";
 //Global test variable
 let test;
-$.getJSON("js/settings.json",
-    function(json){
-        console.log("settings loaded");
-        start(json);
-    });
+
 let ws = io();
+ws.onmessage('setting', function(i) {
+	console.log("server ready");
+	$.getJSON("js/settings.json",
+		function(json){
+			console.log("settings loaded");
+			start(json, i);
+		});
+});
+
 function start(settings) {
 
     const audiopath = 'audio/';
@@ -66,7 +71,6 @@ function start(settings) {
     let openConnection = false;
     //let ws = io(); 
 
-    ws.onopen = function(){
 		console.debug("open connection");
         openConnection = true;
 
@@ -84,9 +88,6 @@ function start(settings) {
             }
 
         };
-
-    };
-	ws.onopen();
 
     function transmit(dest, msg) {
         if (openConnection) {
