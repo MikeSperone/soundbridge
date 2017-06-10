@@ -81,8 +81,8 @@ gulp.task('dev-html', function() {
   return gulp.src(src + '/*.html')
     .pipe(gulp.dest(build));
 });
-
-gulp.task('dev', ['dev-js', 'styles', 'dev-html', 'webserver', 'watch']);
+gulp.task('server', ['webserver', 'watch']);
+gulp.task('dev', ['dev-js', 'styles', 'dev-html']);
 gulp.task('production', ['prod-js', 'styles', 'prod-html']);
 
 gulp.task('watch', function() {

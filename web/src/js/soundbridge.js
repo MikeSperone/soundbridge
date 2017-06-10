@@ -67,7 +67,7 @@ function start(settings) {
     //let ws = io(); 
 
     ws.onopen = function(){
-
+		console.debug("open connection");
         openConnection = true;
 
         ws.onmessage = function(e){
@@ -86,10 +86,12 @@ function start(settings) {
         };
 
     };
+	ws.onopen();
 
-    function transmit(msg) {
+    function transmit(dest, msg) {
         if (openConnection) {
-            ws.send(msg);
+			console.log("transmitting message to "+dest);
+            ws.emit(dest, msg);
         }
     }
 
@@ -144,17 +146,17 @@ function start(settings) {
         {
             mouseenter: function () {
                 over(this.id);
-                transmit('{"over": "' + this.id + '"}');
+                transmit("over", this.id);
             },
             mouseleave: function () {
                 out(this.id);
-                transmit('{"out": "' + this.id + '"}');
+                transmit("out", this.id);
             },
             mousemove: function(event) {
                 //event.pageX range: 60 - 400
 
                 moveHand(event, this.id, 'local');
-                transmit('{\"data\": ["'+this.id+'", '+event.pageX+']}');
+                transmit("data", [this.id, event.pageX]);
 
             }
         }
