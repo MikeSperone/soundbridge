@@ -1,5 +1,5 @@
 const
-	config = require('../config/web'),
+	config = require('../config'),
 
 	gulp		= require('gulp'),
     webserver	= require('gulp-webserver'),
