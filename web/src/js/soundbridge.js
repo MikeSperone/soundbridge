@@ -1,16 +1,40 @@
 "use strict";
-//Global test variable
-let test;
 
+const DEBUG = false;
+let openConnection = false;
 let ws = io();
-ws.onmessage('setting', function(i) {
+
+ws.on('setting', function(i) {
 	console.log("server ready");
+	openConnection = true;
 	$.getJSON("js/settings.json",
 		function(json){
+			const settings = setSettings(json, i);
 			console.log("settings loaded");
-			start(json, i);
+			start(settings);
 		});
 });
+
+console.log = function(s, o=''){
+	if (DEBUG) {
+		if (o !== '') {
+			console.debug(s, o);
+		} else {
+			console.debug(s);
+		}
+	}
+};
+
+function setSettings(settings, i) {
+
+	console.log("setting number: ", (i + 1));
+
+	const samples = settings.samples[i],
+		  grainSettings = settings.grain[i],
+		  delaySettings = settings.delay[i];
+
+	return { samples: samples, grain: grainSettings, delay: delaySettings };
+}
 
 function start(settings) {
 
@@ -26,12 +50,10 @@ function start(settings) {
     let zeroOut, oneOut, twoOut, threeOut;
 
     // load settings
-    let i = Math.floor(Math.random() * 29);
-    let samples = settings.samples[i];
-    let grainSettings = settings.grain[i];
-    let delaySettings = settings.delay[i];
-
-    console.log("setting number: ", (i + 1));
+    //let i = Math.floor(Math.random() * 29);
+    let samples = settings.samples;
+    let grainSettings = settings.grain;
+    let delaySettings = settings.delay;
 
     // set samples
     let audioZero = audiopath + samples[0] + '.mp3';
@@ -68,26 +90,17 @@ function start(settings) {
 
     let threePosition = 0;
 
-    let openConnection = false;
-    //let ws = io(); 
+	ws.on('out', function(d){
+		out(d);
+	});
 
-		console.debug("open connection");
-        openConnection = true;
+	ws.on('over', function(d){
+		over(d);
+	});
 
-        ws.onmessage = function(e){
-
-            let data = JSON.parse(e.data);
-            if (data.out) {
-                out(data.out);
-            } else if (data.over) {
-                over(data.over);
-            } else if (data.data) {
-
-                moveHand(data.data[1], data.data[0], 'remote');
-
-            }
-
-        };
+	ws.on('data', function(d){
+		moveHand(d[1], d[0], 'remote');
+	});
 
     function transmit(dest, msg) {
         if (openConnection) {

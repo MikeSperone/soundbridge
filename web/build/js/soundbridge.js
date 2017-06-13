@@ -1,12 +1,42 @@
 "use strict";
-//Global test variable
 
-var test = void 0;
-$.getJSON("js/settings.json", function (json) {
-    console.log("settings loaded");
-    start(json);
-});
+var DEBUG = false;
+var openConnection = false;
 var ws = io();
+
+ws.on('setting', function (i) {
+    console.log("server ready");
+    openConnection = true;
+    $.getJSON("js/settings.json", function (json) {
+        var settings = setSettings(json, i);
+        console.log("settings loaded");
+        start(settings);
+    });
+});
+
+console.log = function (s) {
+    var o = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
+
+    if (DEBUG) {
+        if (o !== '') {
+            console.debug(s, o);
+        } else {
+            console.debug(s);
+        }
+    }
+};
+
+function setSettings(settings, i) {
+
+    console.log("setting number: ", i + 1);
+
+    var samples = settings.samples[i],
+        grainSettings = settings.grain[i],
+        delaySettings = settings.delay[i];
+
+    return { samples: samples, grain: grainSettings, delay: delaySettings };
+}
+
 function start(settings) {
 
     var audiopath = 'audio/';
@@ -24,12 +54,10 @@ function start(settings) {
         threeOut = void 0;
 
     // load settings
-    var i = Math.floor(Math.random() * 29);
-    var samples = settings.samples[i];
-    var grainSettings = settings.grain[i];
-    var delaySettings = settings.delay[i];
-
-    console.log("setting number: ", i + 1);
+    //let i = Math.floor(Math.random() * 29);
+    var samples = settings.samples;
+    var grainSettings = settings.grain;
+    var delaySettings = settings.delay;
 
     // set samples
     var audioZero = audiopath + samples[0] + '.mp3';
@@ -66,27 +94,17 @@ function start(settings) {
 
     var threePosition = 0;
 
-    var openConnection = false;
-    //let ws = io(); 
+    ws.on('out', function (d) {
+        out(d);
+    });
 
-    ws.onopen = function () {
-        console.debug("open connection");
-        openConnection = true;
+    ws.on('over', function (d) {
+        over(d);
+    });
 
-        ws.onmessage = function (e) {
-
-            var data = JSON.parse(e.data);
-            if (data.out) {
-                out(data.out);
-            } else if (data.over) {
-                over(data.over);
-            } else if (data.data) {
-
-                moveHand(data.data[1], data.data[0], 'remote');
-            }
-        };
-    };
-    ws.onopen();
+    ws.on('data', function (d) {
+        moveHand(d[1], d[0], 'remote');
+    });
 
     function transmit(dest, msg) {
         if (openConnection) {

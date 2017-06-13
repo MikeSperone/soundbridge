@@ -20,34 +20,34 @@ app.get('/', function(req, res) {
 /**
 *  Setting Numbers
 */
-let currentSetting = _setSetting();
-
-const _setSetting = function() {
-		let i = Math.floor(Math.random() * 29);
+this.currentSetting = 0;
+const setCurrentSetting = function() {
+		this.currentSetting = Math.floor(Math.random() * 29);
 	},
-	  _getSetting = function() {
-		return currentSetting;
+	  getCurrentSetting = function() {
+		return this.currentSetting;
 	};
 
+let currentSetting = setCurrentSetting();
 
 io.on('connection', function(socket){
 
 	console.log('user connected');
-	socket.emit('setting', currentSetting);
+	socket.emit('setting', getCurrentSetting());
 
 	setTimeout(function(){
-		currentSetting = _setSetting();
-		socket.emit('setting', currentSetting);
+		currentSetting = setCurrentSetting();
+		socket.emit('setting', getCurrentSetting());
 	}, 60 * 1000 * 30);
 
 	socket.on('data', function(d) {
 		socket.broadcast.emit('data', d);	
 	});
 	socket.on('over', function(d) {
-		console.log('over', d);
+		socket.broadcast.emit('over', d);
 	});
 	socket.on('out', function(d) {
-		console.log('out', d);
+		socket.broadcast.emit('out', d);
 	});
 	socket.on('login', function(d) {
 		console.log('login', d);
@@ -55,8 +55,6 @@ io.on('connection', function(socket){
 	socket.on('logout', function(d) {
 		console.log('logout', d);
 	});
-
-
 
 });
 
