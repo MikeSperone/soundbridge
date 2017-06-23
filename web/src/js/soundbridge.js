@@ -133,7 +133,7 @@ function start(settings) {
 
     };
 
-    function out(id){
+    let out = function(id){
 
         switch (id) {
             case 'zero':
@@ -154,7 +154,7 @@ function start(settings) {
                 break;
         }
 
-    }
+    };
 
     sensor.on(
         {
@@ -175,7 +175,7 @@ function start(settings) {
             }
         }
     );
-
+/*
     let xyOffset = null;
     let quadrant = null;
     let xyWidth = 500,
@@ -234,11 +234,11 @@ function start(settings) {
         }
     );
 
-
+*/
     function moveHand(event, id, src) {
 
         event = (src === 'local') ? event.pageX : event;
-        rate = (event/270);                   // range of .225 - 1.48
+        let rate = (event/270);                   // range of .225 - 1.48
         $('#'+id).children('.value').text(rate.toFixed(2));
 
         switch (id) {
