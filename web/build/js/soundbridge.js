@@ -1,18 +1,31 @@
 "use strict";
 
-var DEBUG = false;
+var DEBUG = true;
 var openConnection = false;
-var ws = io();
+var ws = typeof io !== "undefined" ? io() : false;
 
-ws.on('setting', function (i) {
-    console.log("server ready");
-    openConnection = true;
+if (ws) {
+    ws.on('setting', function (i) {
+        console.log("server ready");
+        openConnection = true;
+        $.getJSON("js/settings.json", function (json) {
+            var settings = setSettings(json, i);
+            console.log("settings loaded");
+            start(settings);
+        });
+    });
+} else {
+    // allow ws.on() functions to be called with no error
+    ws = { on: function on(a, b) {} };
+    console.warn("No server, Solo Mode");
+    openConnection = false;
     $.getJSON("js/settings.json", function (json) {
+        var i = Math.floor(Math.random() * 29);
         var settings = setSettings(json, i);
         console.log("settings loaded");
         start(settings);
     });
-});
+}
 
 console.log = function (s) {
     var o = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
@@ -54,7 +67,6 @@ function start(settings) {
         threeOut = void 0;
 
     // load settings
-    //let i = Math.floor(Math.random() * 29);
     var samples = settings.samples;
     var grainSettings = settings.grain;
     var delaySettings = settings.delay;
@@ -174,10 +186,10 @@ function start(settings) {
             transmit("out", this.id);
         },
         mousemove: function mousemove(event) {
+            //console.log(event.offsetX);
             //event.pageX range: 60 - 400
-
-            moveHand(event, this.id, 'local');
-            transmit("data", [this.id, event.pageX]);
+            moveHand(event.offsetX + 1, this.id, 'local');
+            transmit("data", [this.id, event.offsetX + 1]);
         }
     });
     /*
@@ -242,7 +254,7 @@ function start(settings) {
     */
     function moveHand(event, id, src) {
 
-        event = src === 'local' ? event.pageX : event;
+        //event = (src === 'local') ? event.offsetX : event;
         var rate = event / 270; // range of .225 - 1.48
         $('#' + id).children('.value').text(rate.toFixed(2));
 
@@ -262,8 +274,8 @@ function start(settings) {
                 }
                 break;
             case 'two':
-                console.log((event - 60) / 360);
-                two.read = (event - 60) / 360;
+                // range: 0 - 1
+                two.read = event / 360;
                 break;
             case 'three':
 

@@ -66,11 +66,12 @@ class Grainread {
                     that.delayA.connect(that.merge, 0, 0);
                     that.delayB.connect(that.merge, 0, 1);
 
-                    that.merge.connect(that.panner);
+                    that._connectIfPanner([that.merge, that.panner]);
+                    //that.merge.connect(that.panner);
 
                     that.src.loop = true;
                     //that.env.connect(that.panner);
-                    that.panner.connect(that.volume);
+                    that._connectIfPanner([that.panner,that.volume], [that.merge, that.volume]);
                     that.volume.connect(context.destination);
                     that.phasor();
                 },
@@ -81,6 +82,15 @@ class Grainread {
 
     }
 
+    _connectIfPanner(a, b=[]) {
+        if (this.panner.empty !== true) {
+            //console.debug("connection panner");
+            a[0].connect(a[1]);
+        } else {
+            //console.debug("panner left out");
+            if (b.length) { b[0].connect(b[1]); }
+        }
+    }
     restartAtTime(t) {
         this.stop();
         this.src = this.context.createBufferSource();
@@ -137,10 +147,10 @@ class Grainread {
     get position() {
         return this.src.loopStart;
     }
-    set length(x) {
+    set loopLength(x) {
         this.src.loopEnd = this.position + x;
     }
-    get length() {
+    get loopLength() {
         return this.src.loopEnd - this.src.loopStart;
     }
 
@@ -197,9 +207,11 @@ class Grainread {
                 window.setTimeout(internalCallback, time * 1000);
 
                 if (that.stopped === false) {
-
+                    // Setting
                     that.position = that.read * that.duration;
-                    that.length = time;
+                    //console.log("grain start position: ", that.position);
+                    that.loopLength = ((that.read * 29) + 6) * 50;
+                    //console.log("grain length: ", that.loopLength);
                     that.panner.value = (that.spread * 0.4 * Math.random()) - 1;
 
                     let now = that.context.currentTime;
@@ -215,8 +227,9 @@ class Grainread {
                 }
 
             };
-        }();
 
+        }();
+        //TODO: use AnimationFrame instead
         window.setTimeout(internalCallback, 500);
     }
 

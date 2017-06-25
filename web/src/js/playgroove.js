@@ -48,13 +48,21 @@ class Playgroove {
 
     delaySwitch(setting) {
         if (setting) {
-            //console.log("delay on");
+            console.debug("delay on");
             this.delay.connect(this.feedback);
             this.feedback.connect(this.delay);
-            this.delay.connect(this.merge, 0, 1);
-            this.src.connect(this.panL);
-            this.src.connect(this.delay);
-            this.panL.connect(this.volume);
+            if (this.panL.empty !== true) {
+                console.debug("connection panL");
+                this.delay.connect(this.merge, 0, 1);
+                this.src.connect(this.panL);
+                this.src.connect(this.delay);
+                this.panL.connect(this.volume);
+            } else {
+                console.debug("panL left out");
+                this.delay.connect(this.merge, 0, 1);
+                this.src.connect(this.merge, 0, 0);
+                this.merge.connect(this.volume);
+            }
         } else {
             //console.log("delay off");
             this.src.connect(this.volume);
