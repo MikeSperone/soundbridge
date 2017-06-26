@@ -73,6 +73,7 @@ class Grainread {
                     //that.env.connect(that.panner);
                     that._connectIfPanner([that.panner,that.volume], [that.merge, that.volume]);
                     that.volume.connect(context.destination);
+                    that.forwardInTime();
                     that.phasor();
                 },
                 function(e){"Error with decoding audio data" + e.err});
@@ -92,6 +93,7 @@ class Grainread {
         }
     }
     restartAtTime(t) {
+        console.log("restarting at time: ", t);
         this.stop();
         this.src = this.context.createBufferSource();
         this.src.buffer = this.buffer;
@@ -142,6 +144,7 @@ class Grainread {
     }
 
     set position(x) {
+        //console.log(this.src.loopStart);
         this.src.loopStart = x;
     }
     get position() {
@@ -160,6 +163,7 @@ class Grainread {
 
     set read(gr) {
         this.g_read = gr;
+        this.readChanged.bind(this);
     }
     get read() {
         return this.g_read;
@@ -196,41 +200,59 @@ class Grainread {
         return this.g_scatter;
     }
 
+    readChanged() {
+        console.log("read changed.  pos: ", this.position);
+        this.position = this.read * this.duration;
+    }
+
+    forwardInTime() {
+        //console.log("forward!");
+        // scope, I think?  this inside the callback should be this out here
+        const internalCallback = function() {
+            //return function(this) {
+                this.position = this.position + 0.1;
+                //console.log("moving forward.  pos: ", that.position);
+                window.setTimeout(internalCallback.bind(this), 100);
+            //}
+        };
+        window.setTimeout(internalCallback.bind(this), 100);
+    }
+
     phasor() {
         let that = this;
 
         var internalCallback = function() {
 
-            return function() {
+            //return function() {
 
-                let time = ((Math.random() * that.read)*2 + 0.1);
-                window.setTimeout(internalCallback, time * 1000);
+                let time = ((Math.random() * this.read)*2 + 0.1);
+                window.setTimeout(internalCallback.bind(this), time * 1000);
 
-                if (that.stopped === false) {
+                if (this.stopped === false) {
                     // Setting
-                    that.position = that.read * that.duration;
+                    //that.position = that.read * that.duration;
                     //console.log("grain start position: ", that.position);
-                    that.loopLength = ((that.read * 29) + 6) * 50;
+                    this.loopLength = ((this.read * 29) + 6) * 50;  // based on each sample
                     //console.log("grain length: ", that.loopLength);
-                    that.panner.value = (that.spread * 0.4 * Math.random()) - 1;
+                    this.panner.value = (this.spread * 0.4 * Math.random()) - 1;
 
-                    let now = that.context.currentTime;
-                    let e = that.env.gain;
+                    let now = this.context.currentTime;
+                    let e = this.env.gain;
                     e.cancelScheduledValues(now);
                     e.setValueAtTime(0.0001, now);
 
-                    that.restartAtTime(that.position);
+                    this.restartAtTime(this.position);
 
-                    e.exponentialRampToValueAtTime(1, now + time / 2);
+                    e.exponentialRampToValueAtTime(1, now + (time / 2));
                     e.exponentialRampToValueAtTime(0.0001, now + time);
 
                 }
 
-            };
+            //};
 
         }();
         //TODO: use AnimationFrame instead
-        window.setTimeout(internalCallback, 500);
+        window.setTimeout(internalCallback.bind(this), 500);
     }
 
 }

@@ -20,7 +20,7 @@ if (ws) {
     console.warn("No server, Solo Mode");
     openConnection = false;
     $.getJSON("js/settings.json", function (json) {
-        var i = Math.floor(Math.random() * 29);
+        var i = 18; //Math.floor(Math.random() * 29);
         var settings = setSettings(json, i);
         console.log("settings loaded");
         start(settings);

@@ -22,7 +22,7 @@ if (ws) {
     openConnection = false;
     $.getJSON("js/settings.json",
         function(json){
-            let i = Math.floor(Math.random() * 29);
+            let i = 18; //Math.floor(Math.random() * 29);
             const settings = setSettings(json, i);
             console.log("settings loaded");
             start(settings);
