@@ -1,12 +1,55 @@
 "use strict";
-//Global test variable
-let test;
-$.getJSON("js/settings.json",
-    function(json){
-        console.log("settings loaded");
-        start(json);
+
+const DEBUG = true;
+let openConnection = false;
+let ws = (typeof io !== "undefined") ? io() : false;
+
+if (ws) {
+    ws.on('setting', function(i) {
+    	console.log("server ready");
+    	openConnection = true;
+    	$.getJSON("js/settings.json",
+    		function(json){
+    			const settings = setSettings(json, i);
+    			console.log("settings loaded");
+    			start(settings);
+    		});
     });
-let ws = io();
+} else {
+    // allow ws.on() functions to be called with no error
+    ws = { on: function(a, b) {} };
+    console.warn("No server, Solo Mode");
+    openConnection = false;
+    $.getJSON("js/settings.json",
+        function(json){
+            let i = 18; //Math.floor(Math.random() * 29);
+            const settings = setSettings(json, i);
+            console.log("settings loaded");
+            start(settings);
+        });
+}
+
+console.log = function(s, o=''){
+	if (DEBUG) {
+		if (o !== '') {
+			console.debug(s, o);
+		} else {
+			console.debug(s);
+		}
+	}
+};
+
+function setSettings(settings, i) {
+
+	console.log("setting number: ", (i + 1));
+
+	const samples = settings.samples[i],
+		  grainSettings = settings.grain[i],
+		  delaySettings = settings.delay[i];
+
+	return { samples: samples, grain: grainSettings, delay: delaySettings };
+}
+
 function start(settings) {
 
     const audiopath = 'audio/';
@@ -21,12 +64,9 @@ function start(settings) {
     let zeroOut, oneOut, twoOut, threeOut;
 
     // load settings
-    let i = Math.floor(Math.random() * 29);
-    let samples = settings.samples[i];
-    let grainSettings = settings.grain[i];
-    let delaySettings = settings.delay[i];
-
-    console.log("setting number: ", (i + 1));
+    let samples = settings.samples;
+    let grainSettings = settings.grain;
+    let delaySettings = settings.delay;
 
     // set samples
     let audioZero = audiopath + samples[0] + '.mp3';
@@ -63,33 +103,22 @@ function start(settings) {
 
     let threePosition = 0;
 
-    let openConnection = false;
-    //let ws = io(); 
+	ws.on('out', function(d){
+		out(d);
+	});
 
-    ws.onopen = function(){
+	ws.on('over', function(d){
+		over(d);
+	});
 
-        openConnection = true;
+	ws.on('data', function(d){
+		moveHand(d[1], d[0], 'remote');
+	});
 
-        ws.onmessage = function(e){
-
-            let data = JSON.parse(e.data);
-            if (data.out) {
-                out(data.out);
-            } else if (data.over) {
-                over(data.over);
-            } else if (data.data) {
-
-                moveHand(data.data[1], data.data[0], 'remote');
-
-            }
-
-        };
-
-    };
-
-    function transmit(msg) {
+    function transmit(dest, msg) {
         if (openConnection) {
-            ws.send(msg);
+			console.log("transmitting message to "+dest);
+            ws.emit(dest, msg);
         }
     }
 
@@ -117,7 +146,7 @@ function start(settings) {
 
     };
 
-    function out(id){
+    let out = function(id){
 
         switch (id) {
             case 'zero':
@@ -138,28 +167,28 @@ function start(settings) {
                 break;
         }
 
-    }
+    };
 
     sensor.on(
         {
             mouseenter: function () {
                 over(this.id);
-                transmit('{"over": "' + this.id + '"}');
+                transmit("over", this.id);
             },
             mouseleave: function () {
                 out(this.id);
-                transmit('{"out": "' + this.id + '"}');
+                transmit("out", this.id);
             },
             mousemove: function(event) {
+                //console.log(event.offsetX);
                 //event.pageX range: 60 - 400
-
-                moveHand(event, this.id, 'local');
-                transmit('{\"data\": ["'+this.id+'", '+event.pageX+']}');
+                moveHand(event.offsetX + 1, this.id, 'local');
+                transmit("data", [this.id, event.offsetX + 1]);
 
             }
         }
     );
-
+/*
     let xyOffset = null;
     let quadrant = null;
     let xyWidth = 500,
@@ -218,11 +247,11 @@ function start(settings) {
         }
     );
 
-
+*/
     function moveHand(event, id, src) {
 
-        event = (src === 'local') ? event.pageX : event;
-        rate = (event/270);                   // range of .225 - 1.48
+        //event = (src === 'local') ? event.offsetX : event;
+        let rate = (event/270);                   // range of .225 - 1.48
         $('#'+id).children('.value').text(rate.toFixed(2));
 
         switch (id) {
@@ -241,8 +270,8 @@ function start(settings) {
                 }
                 break;
             case 'two':
-                console.log((event-60)/360);
-                two.read = (event - 60)/360;
+                // range: 0 - 1
+                two.read = event/360;
                 break;
             case 'three':
 
