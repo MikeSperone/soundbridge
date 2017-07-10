@@ -12,7 +12,9 @@ const
 
 	concat		= require('gulp-concat'),
     stripDebug	= require('gulp-strip-debug'),
-    uglify		= require('gulp-uglify');
+    uglify		= require('gulp-uglify'),
+
+    webpack     = require('webpack-stream');
 
 const
 	src   = config.src,
@@ -53,10 +55,10 @@ gulp.task('prod-js', function (cb) {
     );
 });
 
-gulp.task('settings', function() {
-	return gulp.src(src + '/js/settings.json').
-		pipe(gulp.dest(build+'/js'));
-});
+// gulp.task('settings', function() {
+// 	return gulp.src(src + '/js/settings.json').
+// 		pipe(gulp.dest(build+'/js'));
+// });
 
 gulp.task('prod-html', function() {
   return gulp.src(src + '/*.html')
@@ -64,17 +66,10 @@ gulp.task('prod-html', function() {
     .pipe(gulp.dest(build));
 });
 
-gulp.task('dev-js', function (cb) {
-    pump(
-        [
-            gulp.src(src + '/js/*.js'),
-            babel({
-                presets: ['es2015']
-            }),
-            gulp.dest(build+'/js')
-        ],
-        cb
-    );
+gulp.task('dev-js', function () {
+    return gulp.src(src + '/js/soundbridge.js')
+        .pipe(webpack( require('./webpack.config.js')))
+        .pipe(gulp.dest(build + '/js/'));
 });
 
 gulp.task('dev-html', function() {
@@ -92,3 +87,4 @@ gulp.task('watch', function() {
     gulp.watch(src+'/scss/*.scss', ['styles']);
     gulp.watch(src+'/*.html', ['dev-html']);
 });
+

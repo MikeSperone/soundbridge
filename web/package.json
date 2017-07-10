@@ -18,11 +18,16 @@
     "pump": "^1.0.2"
   },
   "devDependencies": {
-    "gulp-webserver": "*"
+    "babel-loader": "^7.1.1",
+    "chai": "^4.0.2",
+    "gulp-webserver": "*",
+    "mocha": "^3.4.2",
+    "web-audio-test-api": "^0.5.2",
+    "webpack-stream": "^3.2.0"
   },
   "repository": {},
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha --compilers js:babel-core/register"
   },
   "author": "Michael Sperone",
   "license": "ISC"

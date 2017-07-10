@@ -3,7 +3,7 @@
  */
 "use strict";
 
-class Playgroove {
+export default class Playgroove {
 
     constructor(audio, context) {
 

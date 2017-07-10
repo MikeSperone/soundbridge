@@ -1,33 +1,33 @@
 "use strict";
 
+import Ambient from './ambient.js';
+import Play from './play.js';
+import Playgroove from './playgroove.js';
+import Playgrain from './playgrain.js';
+import Loop from './loop.js';
+
+import settings as json from './settings.js';
+
 const DEBUG = true;
 let openConnection = false;
 let ws = (typeof io !== "undefined") ? io() : false;
+let i = 18; //Math.floor(Math.random() * 29);
 
 if (ws) {
-    ws.on('setting', function(i) {
+    ws.on('setting', function(n) {
     	console.log("server ready");
     	openConnection = true;
-    	$.getJSON("js/settings.json",
-    		function(json){
-    			const settings = setSettings(json, i);
-    			console.log("settings loaded");
-    			start(settings);
-    		});
+    	i = n;
     });
 } else {
     // allow ws.on() functions to be called with no error
     ws = { on: function(a, b) {} };
     console.warn("No server, Solo Mode");
-    openConnection = false;
-    $.getJSON("js/settings.json",
-        function(json){
-            let i = 18; //Math.floor(Math.random() * 29);
-            const settings = setSettings(json, i);
-            console.log("settings loaded");
-            start(settings);
-        });
 }
+
+const settings = setSettings(json, i);
+console.log("settings loaded");
+start(settings);
 
 console.log = function(s, o=''){
 	if (DEBUG) {

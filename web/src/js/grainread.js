@@ -6,7 +6,7 @@
  *
 */
 
-class Grainread {
+export default class Grainread {
 
     constructor(audio, context, g_read, g_multiply = 1, g_fade = 1, g_spread = 20, g_scatter = 28) {
 
