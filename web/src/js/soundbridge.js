@@ -1,12 +1,16 @@
 "use strict";
 
-import Ambient from './ambient.js';
-import Play from './play.js';
-import Playgroove from './playgroove.js';
-import Playgrain from './playgrain.js';
-import Loop from './loop.js';
 
-import settings as json from './settings.js';
+
+import Ambient      from './ambient.js';
+import Play         from './play.js';
+import Playgroove   from './playgroove.js';
+import Playgrain    from './playgrain.js';
+import Loop         from './loop.js';
+
+import * as v from './settings.js';
+
+const json = v.settings;
 
 const DEBUG = true;
 let openConnection = false;
@@ -27,7 +31,11 @@ if (ws) {
 
 const settings = setSettings(json, i);
 console.log("settings loaded");
-start(settings);
+
+if (typeof window !== "undefined") {
+    var $ = require("jquery"); 
+    start(settings);
+}
 
 console.log = function(s, o=''){
 	if (DEBUG) {
@@ -39,7 +47,7 @@ console.log = function(s, o=''){
 	}
 };
 
-function setSettings(settings, i) {
+export function setSettings(settings, i) {
 
 	console.log("setting number: ", (i + 1));
 
@@ -50,7 +58,7 @@ function setSettings(settings, i) {
 	return { samples: samples, grain: grainSettings, delay: delaySettings };
 }
 
-function start(settings) {
+export function start(settings) {
 
     const audiopath = 'audio/';
     /*
