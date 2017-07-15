@@ -1,7 +1,5 @@
 "use strict";
 
-
-
 import Ambient      from './ambient.js';
 import Play         from './play.js';
 import Playgroove   from './playgroove.js';
@@ -318,3 +316,4 @@ export function start(settings) {
         }
     }
 }
+

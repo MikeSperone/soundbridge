@@ -77,7 +77,7 @@ gulp.task('dev-html', function() {
     .pipe(gulp.dest(build));
 });
 gulp.task('server', ['webserver', 'watch']);
-gulp.task('dev', ['dev-js', 'settings', 'styles', 'dev-html']);
+gulp.task('dev', ['dev-js', 'styles', 'dev-html']);
 gulp.task('dev-server', ['dev', 'server']);
 
 gulp.task('production', ['prod-js', 'styles', 'prod-html']);
