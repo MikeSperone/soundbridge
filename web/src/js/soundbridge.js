@@ -1,5 +1,5 @@
 "use strict";
-
+import $ from 'jquery';
 import Ambient      from './ambient.js';
 import Play         from './play.js';
 import Playgroove   from './playgroove.js';
@@ -18,7 +18,7 @@ export function setSettings(settings, i) {
 	return { samples: samples, grain: grainSettings, delay: delaySettings };
 }
 
-export function start(settings) {
+export function start(settings, ws) {
 
     const audiopath = 'audio/';
     /*

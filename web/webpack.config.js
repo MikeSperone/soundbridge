@@ -1,5 +1,5 @@
 module.exports = {
-	entry: "./src/js/soundbridge.js",
+	entry: "./src/js/index.js",
 	output: {
 		path: __dirname + "/build/js",
 		filename: "bundle.js"

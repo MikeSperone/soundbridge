@@ -67,7 +67,7 @@ gulp.task('prod-html', function() {
 });
 
 gulp.task('dev-js', function () {
-    return gulp.src(src + '/js/soundbridge.js')
+    return gulp.src(src + '/js/index.js')
         .pipe(webpack( require('./webpack.config.js')))
         .pipe(gulp.dest(build + '/js/'));
 });

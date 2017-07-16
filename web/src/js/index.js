@@ -1,8 +1,8 @@
-import * from './soundbridge.js';
+import {setSettings, start} from './soundbridge.js';
 import * as json from './settings.js';
 
 (function() {
-    
+
     const DEBUG = true;
 
     let openConnection = false;
@@ -26,7 +26,7 @@ import * as json from './settings.js';
 
     if (typeof window !== "undefined") {
         var $ = require("jquery"); 
-        start(settings);
+        start(settings, ws);
     }
 
     console.log = function(s, o=''){
