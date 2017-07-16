@@ -1,6 +1,5 @@
 import 'web-audio-test-api';
 import Grainread from '../src/js/grainread.js';
-import {XMLHttpRequest} from 'xmlhttprequest';
 
 describe('Grainread Class', function() {
 

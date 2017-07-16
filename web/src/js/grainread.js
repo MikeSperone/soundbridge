@@ -5,7 +5,6 @@
  * Created by Mike Sperone on 8/25/16.
  *
 */
-
 export default class Grainread {
 
     constructor(audio, context, g_read, g_multiply = 1, g_fade = 1, g_spread = 20, g_scatter = 28) {

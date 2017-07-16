@@ -5,7 +5,7 @@ import * as json from '../src/js/settings.js';
 let chai = require('chai');
 let expect = chai.expect;
 
-describe('Play Class', function() {
+describe('Soundbridge', function() {
 	
 	describe("setSettings()", function() {
 
