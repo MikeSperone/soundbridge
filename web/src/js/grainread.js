@@ -85,10 +85,10 @@ export default class Grainread {
 
     _connectIfPanner(a, b=[]) {
         if (this.panner.empty !== true) {
-            //console.debug("connection panner");
+            console.debug("connection panner");
             a[0].connect(a[1]);
         } else {
-            //console.debug("panner left out");
+            console.debug("panner left out");
             if (b.length) { b[0].connect(b[1]); }
         }
     }
