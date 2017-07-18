@@ -22,6 +22,9 @@ The installation runs this on a:
 Requires [node](https://nodejs.org) and [npm](https://npmjs.com)
 
 ## Set up for Development
+
+I recently added Webpack and didn't check to see if that changed anything I documented here.  I hope not, but just an FYI this section may be out of date.
+
 ```sh
 cd web && npm install
 cd ..
@@ -41,6 +44,12 @@ or to also start the development server
 ```sh
 gulp dev-server
 ```
+
+## Testing
+```sh
+npm test
+```
+Using the [mocha](http://mochajs.org/) testing framework, along with the [chai](http://chaijs.com/) assertion library.  This runs all tests in the /test folder.
 
 ## Server
 
