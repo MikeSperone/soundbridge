@@ -1,4 +1,6 @@
-{ "samples": [
+
+export const settings = {
+    "samples": [
         {"0": "water3",         "1": "drillingbursts",  "2": "crickets",        "3":"arleneNR",       "a":""},
         {"0": "c_ray2",         "1": "c_ray2",          "2": "hammer",          "3":"carolynNR",      "a":""},
         {"0": "pno_pluck",      "1": "bridgesound1",    "2": "piano_hammer",    "3":"walter2",        "a":""},
@@ -94,4 +96,4 @@
         [true, true, [], true],
         [true, true, [], true]
     ]
-}
+};

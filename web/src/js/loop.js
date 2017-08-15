@@ -2,7 +2,9 @@
  * Created by Mike on 9/2/16.
  */
 
-class Loop extends Play {
+import Play from './play.js';
+
+export default class Loop extends Play {
 
     constructor(audio, context) {
         super(audio, context);

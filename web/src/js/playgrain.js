@@ -4,7 +4,9 @@
  * Created by Mike on 9/1/16.
  */
 
-class Playgrain {
+import Grainread from './grainread.js';
+
+export default class Playgrain {
 
     constructor(audio, context) {
 

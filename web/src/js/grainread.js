@@ -5,8 +5,7 @@
  * Created by Mike Sperone on 8/25/16.
  *
 */
-
-class Grainread {
+export default class Grainread {
 
     constructor(audio, context, g_read, g_multiply = 1, g_fade = 1, g_spread = 20, g_scatter = 28) {
 
@@ -85,10 +84,10 @@ class Grainread {
 
     _connectIfPanner(a, b=[]) {
         if (this.panner.empty !== true) {
-            //console.debug("connection panner");
+            console.debug("connection panner");
             a[0].connect(a[1]);
         } else {
-            //console.debug("panner left out");
+            console.debug("panner left out");
             if (b.length) { b[0].connect(b[1]); }
         }
     }

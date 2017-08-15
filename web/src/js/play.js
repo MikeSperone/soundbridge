@@ -2,7 +2,7 @@
  * Created by Mike on 8/30/16.
  */
 
-class Play {
+export default class Play {
     constructor(audio, context, vol = 0) {
 
         this.audio = audio;

@@ -1,45 +1,13 @@
 "use strict";
+import $ from 'jquery';
+import Ambient      from './ambient.js';
+import Play         from './play.js';
+import Playgroove   from './playgroove.js';
+import Playgrain    from './playgrain.js';
+import Loop         from './loop.js';
 
-const DEBUG = true;
-let openConnection = false;
-let ws = (typeof io !== "undefined") ? io() : false;
 
-if (ws) {
-    ws.on('setting', function(i) {
-    	console.log("server ready");
-    	openConnection = true;
-    	$.getJSON("js/settings.json",
-    		function(json){
-    			const settings = setSettings(json, i);
-    			console.log("settings loaded");
-    			start(settings);
-    		});
-    });
-} else {
-    // allow ws.on() functions to be called with no error
-    ws = { on: function(a, b) {} };
-    console.warn("No server, Solo Mode");
-    openConnection = false;
-    $.getJSON("js/settings.json",
-        function(json){
-            let i = 18; //Math.floor(Math.random() * 29);
-            const settings = setSettings(json, i);
-            console.log("settings loaded");
-            start(settings);
-        });
-}
-
-console.log = function(s, o=''){
-	if (DEBUG) {
-		if (o !== '') {
-			console.debug(s, o);
-		} else {
-			console.debug(s);
-		}
-	}
-};
-
-function setSettings(settings, i) {
+export function setSettings(settings, i) {
 
 	console.log("setting number: ", (i + 1));
 
@@ -50,7 +18,7 @@ function setSettings(settings, i) {
 	return { samples: samples, grain: grainSettings, delay: delaySettings };
 }
 
-function start(settings) {
+export function start(settings, ws) {
 
     const audiopath = 'audio/';
     /*
@@ -310,3 +278,4 @@ function start(settings) {
         }
     }
 }
+
