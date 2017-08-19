@@ -3,6 +3,12 @@
  */
 
 export default class Play {
+    /**
+     * Plays an audio file
+     * @param {string} audio - path to audio file
+     * @param {AudioContext} context - Web Audio Context
+     * @param {number} vol - (optional) The starting volume.  Defaults to 0
+     */
     constructor(audio, context, vol = 0) {
 
         this.audio = audio;
@@ -22,22 +28,30 @@ export default class Play {
         req.open('GET', audio);
         req.responseType = 'arraybuffer';
 
-        req.onload = function() {
-            let audioData = req.response;
+        req.onreadystatechange = function() {
+            if (this.readyState == 4) {
+                let audioData = req.response;
 
-            that.context.decodeAudioData(audioData, function(buffer) {
-                    that.buffer = buffer;
-                    that.stopped = true;
-                    that.startSample();
-                    that.volume.gain.value = vol;
-                    that.audioLoadTimeOffset = (new Date() - that.contextCreationTime) / 1000;
-                },
-                function(e){console.log("Error with decoding audio data" + e.err);});
+                that.context.decodeAudioData(audioData, function(buffer) {
+                        that.buffer = buffer;
+                        that.stopped = true;
+                        that.startSample();
+                        that.volume.gain.value = vol;
+                        that.audioLoadTimeOffset = (new Date() - that.contextCreationTime) / 1000;
+                        console.log(that);
+                    },
+                    function(e){console.log("Error with decoding audio data" + e.err);});
+            }
         };
 
         req.send();
+
     }
 
+    /**
+     * Start playing the sample at new offset
+     * @param {number} offset - How far into the sample to start playback (s)
+     */
     startSample(offset = 0) {
         console.log("startSample");
 
@@ -59,6 +73,10 @@ export default class Play {
         this.stopped = false;
     }
 
+    /**
+     * Get the duration of the audio buffer
+     * @return {number} The duration in ms
+     */
     get duration() {
         return this.src.buffer.duration;
     }
@@ -68,6 +86,10 @@ export default class Play {
             this.src.start();
         }
     }
+
+    /**
+     * Stop the audio
+     */
     stop() {
         if (this.stopped === false) {
             this.src.stop(0);
@@ -75,6 +97,10 @@ export default class Play {
         }
     }
 
+    /**
+     * Gets the elapsed time from start of playback
+     * @return time from start of playback until now (ms)
+     */
     get elapsedTime(){
         return this.context.currentTime - this.startTime;
     }
@@ -95,8 +121,19 @@ export default class Play {
         return [{"audio": this.audio}, {"context": this.context}];
     }
 
+    /**
+     * Set the volume
+     * @param {number} v 0.0 to 1.0
+     */
     set vol(v) {
         this.volume.gain.value = v;
     }
-
+    
+    /**
+     * Get the current volume
+     * @return {Number} volume
+     */
+    get vol() {
+        return this.volume.gain.value;
+    }
 }

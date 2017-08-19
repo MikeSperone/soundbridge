@@ -1,5 +1,6 @@
-import {XMLHttpRequest} from 'xmlhttprequest';
+var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 global.XMLHttpRequest = XMLHttpRequest;
+
 
 describe("Test", function() {
 
@@ -8,4 +9,5 @@ describe("Test", function() {
 			return true;
 		});
 	});
+
 });
