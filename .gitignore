@@ -1,3 +1,4 @@
+node_modules/
 /web/.idea
 /web/build
 /web/node_modules
