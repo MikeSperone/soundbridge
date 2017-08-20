@@ -1,0 +1,8 @@
+module.exports = {
+	src: 'src',
+	build: 'build',
+	host: 'localhost',
+	port: 8888,
+	web_path: '../web/'
+};
+

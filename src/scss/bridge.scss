@@ -1,0 +1,51 @@
+$font-stack: Helvetica, sans-serif;
+$primary-color: #333;
+
+body {
+  margin: 0;
+  font: $font-stack;
+  color: $primary-color;
+}
+
+.sensor {
+  display: block;
+  width: 340px;
+  height: 25px;
+  border: 1px solid $primary-color;
+  margin: 60px;
+  margin-bottom: 10%;
+}
+
+.value {
+  float: right;
+  margin: 2px;
+}
+
+$xyWin: 600px;
+$xyOffsets: ($xyWin / 2) - 100;
+.xy-pad {
+  display: block;
+  position: relative;
+  width: $xyWin - 100;
+  height: $xyWin - 100;
+  margin: 60px;
+  border: 1px solid $primary-color;
+  .qd {
+      position: absolute;
+      display: block;
+      width: $xyWin / 2;
+      height: $xyWin / 2;
+      margin: 0;
+      border: 0;
+  }
+  #one {
+      left: $xyOffsets;
+  }
+  #two {
+      top: $xyOffsets;
+      left: $xyOffsets;
+  }
+  #three {
+      top: $xyOffsets;
+  }
+}
