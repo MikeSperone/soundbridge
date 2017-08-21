@@ -32,47 +32,46 @@ gulp.task('styles', function() {
        .pipe(gulp.dest(build+'/css'));
 });
 
-// gulp.task('prod-js', function (cb) {
-//     pump(
-//         [
-//             gulp.src(src + '/js/*.js'),
-//             stripDebug(),
-//             babel({
-//                 presets: ['es2015']
-//             }),
-//             uglify(),
-//             gulp.dest(build+'/js')
-//         ],
-//         cb
-//     );
-// });
-
 gulp.task('prod-html', function() {
   return gulp.src(src + '/*.html')
     .pipe(htmlmin({collapseWhitespace: true}))
     .pipe(gulp.dest(build));
 });
-console.log(src);
+
 gulp.task('copyjslib', function() {
     return gulp.src(src + '/js/AudioContextMonkeyPatch.js')
         .pipe(gulp.dest(build + '/js/'));
 });
 
+gulp.task('concat-tests', function(cb) {
+    return gulp.src([
+                        './test/index.js',
+                        './test/soundbridge-test.js',
+                        './test/play-class-test.js',
+                        './test/loop-test.js',
+                        './test/playgroove-test.js',
+                        './test/grainread-test.js',
+                        './test/playgrain-test.js'
+                    ])
+        .pipe(concat('all-test.js'))
+        .pipe(gulp.dest('test'));
+        cb(err);
+});
+
+gulp.task('test-js', ['concat-tests'], function () {
+    return gulp.src('./test/all-test.js')
+        .pipe(webpack({
+            output: { filename: 'test-bundle.js' },
+            module: { rules: [{ test: /\.js$/, exclude: /node_modules/, loader: 'babel-loader?presets[]=es2015' }]}
+        }))
+        .pipe(gulp.dest('./test/build/'));
+});
+
 gulp.task('pack-js', function () {
     return gulp.src(src + '/js/index.js')
         .pipe(webpack({
-            output: {
-                filename: 'bundle.js'
-            },
-            module: {
-                rules: [
-                    {
-                        test: /\.js$/,
-                        exclude: /node_modules/,
-                        loader: 'babel-loader?presets[]=es2015',
-                    }
-                ]
-            }
+            output: { filename: 'bundle.js' },
+            module: { rules: [{ test: /\.js$/, exclude: /node_modules/, loader: 'babel-loader?presets[]=es2015' }]}
         }))
         .pipe(gulp.dest(build + '/js/'));
 });
@@ -85,6 +84,8 @@ gulp.task('server', ['webserver', 'watch']);
 gulp.task('dev', ['copyjslib', 'pack-js', 'styles', 'dev-html']);
 
 gulp.task('production', ['prod-js', 'styles', 'prod-html']);
+
+gulp.task('tests', ['concat-tests', 'test-js']);
 
 gulp.task('watch', function() {
     gulp.watch(src+'/js/*.js', ['dev-js']);

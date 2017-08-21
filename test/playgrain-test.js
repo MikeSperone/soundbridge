@@ -1,5 +1,3 @@
-import 'web-audio-test-api';
-import Playgrain from '../src/js/playgrain.js';
 
 describe('Playgrain Class', function() {
 

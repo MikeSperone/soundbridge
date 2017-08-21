@@ -1,5 +1,3 @@
-import 'web-audio-test-api';
-import Playgroove from '../src/js/playgroove.js';
 
 describe('Playgroove Class', function() {
 

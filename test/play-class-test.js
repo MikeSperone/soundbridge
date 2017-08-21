@@ -1,8 +1,3 @@
-import 'web-audio-test-api';
-import Play from '../src/js/play.js';
-
-let chai = require('chai');
-let expect = chai.expect;
 
 describe('Play Class', function() {
 

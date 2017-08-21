@@ -1,5 +1,3 @@
-import 'web-audio-test-api';
-import Loop from '../src/js/loop.js';
 
 describe('Loop Class', function() {
 
