@@ -25,8 +25,8 @@ describe('Play Class', function() {
     describe('Starting Settings', function() {
 
         it('volume', function() {
-            testing.vol(0.8);
-            expect(testing.vol).to.equal(0.8);
+            testing.vol(0.7);
+            expect(testing.vol).to.equal(0.7);
         });
 
         it('startSample', function() {

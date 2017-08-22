@@ -24,23 +24,6 @@ describe('Soundbridge', function() {
 		});
 	});
 
-    describe("audio files", function() {
-        it('should all exist', function() {
-
-            return Promise.all([
-                expect(getFile("walter2")).to.be.fulfilled,
-                expect(getFile("water1")).to.be.fulfilled,
-                expect(getFile("water3")).to.be.fulfilled,
-                expect(getFile("waterambient2")).to.be.fulfilled,
-                expect(getFile("waves")).to.be.fulfilled,
-                expect(getFile("wavebangbuf")).to.be.fulfilled,
-                expect(getFile("wavebangbuf2")).to.be.fulfilled,
-                expect(getFile("waveslapping")).to.be.fulfilled
-            ]);
-
-        });
-    });
-
             
 });
 

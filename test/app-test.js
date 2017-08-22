@@ -1,116 +1,134 @@
 var request = require('supertest');
 var app = require('../app');
 
-const getFile = function(name) {
-    request(app)
-        .get('audio/' + name + '.mp3')
-        .expect(200)
-        .end(function(error) {
-            if (error) throw error;
-        });
+const getFile = function(name, d) {
 }
 
 describe('App', function() {
-    describe('Requests to the root path', function() {
+
+    it('Requests to the root path', function(done) {
         request(app)
             .get('/')
             .expect(200)
             .end(function(error) {
                 if(error) throw error;
-                console.log('Done');
+                done(); 
             });
     });
 
-    describe('Request to all audio files', function() {
-        getFile("2_2_4_sheddrips");
-        getFile("34sL");
-        getFile("albert_tie");
-        getFile("ambientcar_factory");
-        getFile("ambientfactory");
-        getFile("ambientthunderdrips");
-        getFile("arleneNR");
-        getFile("badprinter");
-        getFile("badprinter2");
-        getFile("bartonsifter3");
-        getFile("boatreverse");
-        getFile("bridgesound");
-        getFile("bridgesound1");
-        getFile("bridgesound3");
-        getFile("bridgesound4");
-        getFile("buttonholer");
-        getFile("c_ray2");
-        getFile("carolynNR");
-        getFile("churchbells");
-        getFile("counteecullen");
-        getFile("crickets");
-        getFile("dennisfields");
-        getFile("dogsbarking");
-        getFile("drillingbursts");
-        getFile("elevator");
-        getFile("elevator_old_mix");
-        getFile("facwhistle+mock");
-        getFile("facwhistle1srt");
-        getFile("ferryboatbarge");
-        getFile("flagpole");
-        getFile("foghorn2");
-        getFile("geese+gulls");
-        getFile("glass_breaking");
-        getFile("glass_chipping");
-        getFile("glass_cutting");
-        getFile("glass_ice");
-        getFile("greyston2NR");
-        getFile("greyston4");
-        getFile("grinder");
-        getFile("hangerdoor");
-        getFile("hammer");
-        getFile("heliocopter");
-        getFile("laskyrachet");
-        getFile("lenfishing");
-        getFile("lensugar");
-        getFile("localbirds2");
-        getFile("marsh");
-        getFile("metalhinge1");
-        getFile("montagemachine");
-        getFile("masefield1");
-        getFile("masefield2");
-        getFile("mockingbird");
-        getFile("mockingbird2x");
-        getFile("mosesyoho");
-        getFile("motorboatecho");
-        getFile("night");
-        getFile("paintmixer");
-        getFile("piano_hammer");
-        getFile("piano_tuning");
-        getFile("piano_tuning2");
-        getFile("pigeons");
-        getFile("pinningmachine");
-        getFile("pno_pluck");
-        getFile("rightear12");
-        getFile("rightear15");
-        getFile("rhythmicdrips");
-        getFile("rhythmicsdrips");
-        getFile("sandwalk");
-        getFile("sax");
-        getFile("sculpture1");
-        getFile("shakesound8");
-        getFile("sharonbarge");
-        getFile("sidcaesar1");
-        getFile("sign+bell");
-        getFile("skateboardmono");
-        getFile("skateboardstereo");
-        getFile("springpeepers");
-        getFile("tennis");
-        getFile("trolley2");
-        getFile("victor_glass");
-        getFile("walter2");
-        getFile("water1");
-        getFile("water3");
-        getFile("waterambient2");
-        getFile("waves");
-        getFile("wavebangbuf");
-        getFile("wavebangbuf2");
-        getFile("waveslapping");
+    it('Request to non-existant file throws a 404', function(done) {
+        request(app)
+            .get('/audio/fake_aiuhsf.mp3')
+            .expect(404)
+            .end(function(error) {
+                if (error) throw error;
+                done();
+            });
+    });
 
-    });        
+    describe("Audio Files", function() {
+        const audioFiles = [
+            "2_2_4_sheddrips",
+            "34sL",
+            "albert_tie",
+            "ambientcar_factory",
+            "ambientfactory",
+            "ambientthunderdrips",
+            "arleneNR",
+            "badprinter",
+            "badprinter2",
+            "bartonsifter3",
+            "boatreverse",
+            "bridgesound",
+            "bridgesound1",
+            "bridgesound3",
+            "bridgesound4",
+            "buttonholer",
+            "c_ray2",
+            "carolynNR",
+            "churchbells",
+            "counteecullen",
+            "crickets",
+            "dennisfields",
+            "dogsbarking",
+            "drillingbursts",
+            "elevator",
+            "elevator_old_mix",
+            "facwhistle+mock",
+            "facwhistle1srt",
+            "ferryboatbarge",
+            "flagpole",
+            "foghorn2",
+            "geese+gulls",
+            "glass_breaking",
+            "glass_chipping",
+            "glass_cutting",
+            "glass_ice",
+            "greyston2NR",
+            "greyston4",
+            "grinder",
+            "hangerdoor",
+            "hammer",
+            "heliocopter",
+            "laskyrachet",
+            "lenfishing",
+            "lensugar",
+            "localbirds2",
+            "marsh",
+            "metalhinge1",
+            "montagemachine",
+            "masefield1",
+            "masefield2",
+            "mockingbird",
+            "mockingbird2x",
+            "mosesyoho",
+            "motorboatecho",
+            "night",
+            "paintmixer",
+            "piano_hammer",
+            "piano_tuning",
+            "piano_tuning2",
+            "pigeons",
+            "pinningmachine",
+            "pno_pluck",
+            "rightear12",
+            "rightear15",
+            "rhythmicdrips",
+            "rhythmicsdrips",
+            "sandwalk",
+            "sax",
+            "sculpture1",
+            "shakesound8",
+            "sharonbarge",
+            "sidcaesar1",
+            "sign+bell",
+            "skateboardmono",
+            "skateboardstereo",
+            "springpeepers",
+            "tennis",
+            "trolley2",
+            "victor_glass",
+            "walter2",
+            "water1",
+            "water3",
+            "waterambient2",
+            "waves",
+            "wavebangbuf",
+            "wavebangbuf2",
+            "waveslapping"
+        ];
+
+        audioFiles.forEach(function(a) {
+            it(a, function(done) {
+                request(app)
+                    .get('/audio/' + a + '.mp3')
+                    .expect(200)
+                    .end(function(error) {
+                        if (error) throw error;
+                        done();
+                    });
+            });
+        });
+    });
 });
 

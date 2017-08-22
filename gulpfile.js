@@ -86,6 +86,9 @@ gulp.task('dev', ['copyjslib', 'pack-js', 'styles', 'dev-html']);
 gulp.task('production', ['prod-js', 'styles', 'prod-html']);
 
 gulp.task('tests', ['concat-tests', 'test-js']);
+gulp.task('watch-tests', function() {
+    gulp.watch("./test/*.js", ['tests']);
+});
 
 gulp.task('watch', function() {
     gulp.watch(src+'/js/*.js', ['dev-js']);
