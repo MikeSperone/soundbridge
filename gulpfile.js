@@ -46,12 +46,12 @@ gulp.task('copyjslib', function() {
 gulp.task('concat-tests', function(cb) {
     return gulp.src([
                         './test/index.js',
-                        './test/soundbridge-test.js',
+                        // './test/soundbridge-test.js',
                         './test/play-class-test.js',
-                        './test/loop-test.js',
-                        './test/playgroove-test.js',
-                        './test/grainread-test.js',
-                        './test/playgrain-test.js'
+                        // './test/loop-test.js',
+                        // './test/playgroove-test.js',
+                        // './test/grainread-test.js',
+                        // './test/playgrain-test.js'
                     ])
         .pipe(concat('all-test.js'))
         .pipe(gulp.dest('test'));
@@ -67,7 +67,7 @@ gulp.task('test-js', ['concat-tests'], function () {
         .pipe(gulp.dest('./test/build/'));
 });
 
-gulp.task('pack-js', function () {
+gulp.task('js:pack', function () {
     return gulp.src(src + '/js/index.js')
         .pipe(webpack({
             output: { filename: 'bundle.js' },
@@ -80,19 +80,21 @@ gulp.task('dev-html', function() {
   return gulp.src(src + '/*.html')
     .pipe(gulp.dest(build));
 });
+
 gulp.task('server', ['webserver', 'watch']);
-gulp.task('dev', ['copyjslib', 'pack-js', 'styles', 'dev-html']);
-
+gulp.task('dev', ['copyjslib', 'js:pack', 'styles', 'dev-html']);
 gulp.task('production', ['prod-js', 'styles', 'prod-html']);
+gulp.task('test', ['concat-tests', 'test-js']);
 
-gulp.task('tests', ['concat-tests', 'test-js']);
-gulp.task('watch-tests', function() {
-    gulp.watch("./test/*.js", ['tests']);
+gulp.task('watch:test', function() {
+    gulp.watch("./test/*.js", ['test']);
 });
 
-gulp.task('watch', function() {
+gulp.task('watch:static', function() {
     gulp.watch(src+'/js/*.js', ['dev-js']);
     gulp.watch(src+'/scss/*.scss', ['styles']);
     gulp.watch(src+'/*.html', ['dev-html']);
 });
+
+gulp.task('watch', ['watch:test', 'watch:static']);
 

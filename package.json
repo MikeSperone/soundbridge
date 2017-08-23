@@ -3,7 +3,7 @@
     "version": "0.2.0",
     "description": "John Morton's Soundbridge",
     "scripts": {
-        "watch": "nodemon ./bin/www",
+        "start": "nodemon ./bin/www",
         "test": "mocha --compilers js:babel-core/register",
         "apptest": "mocha ./test/app-test.js"
     },

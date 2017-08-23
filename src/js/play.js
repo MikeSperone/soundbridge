@@ -38,7 +38,7 @@ export default class Play {
                         that.startSample();
                         that.volume.gain.value = vol;
                         that.audioLoadTimeOffset = (new Date() - that.contextCreationTime) / 1000;
-                        console.log(that);
+                        // console.log(that);
                     },
                     function(e){console.log("Error with decoding audio data" + e.err);});
             }
@@ -111,10 +111,10 @@ export default class Play {
     get position() {
         return this.loopStart;
     }
-    set length(x) {
+    set len(x) {
         this.loopEnd = Math.min((this.position + x), this.duration);
     }
-    get length() {
+    get len() {
         return this.src.loopEnd - this.src.loopStart;
     }
     toString() {
