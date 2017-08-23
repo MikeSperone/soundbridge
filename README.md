@@ -34,6 +34,9 @@ cp config.bak config.js
 ```
 and change your config host, port, etc... if necessary (if you're not using the server, it won't be)
 
+## Run server
+`npm run server`
+
 ## Building in /web
 
 Development:
@@ -47,9 +50,21 @@ gulp dev-server
 
 ## Testing
 ```sh
-npm test
+gulp test
 ```
 Using the [mocha](http://mochajs.org/) testing framework, along with the [chai](http://chaijs.com/) assertion library.  This runs all tests in the /test folder.
+
+## Watches
+#### everything
+```sh
+gulp watch
+```
+#### assets
+`gulp watch:static`
+css, js, html
+
+#### test
+`gulp watch:test`
 
 ## Server
 
