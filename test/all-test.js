@@ -1,7 +1,7 @@
 // import { setSettings } from '../src/js/soundbridge.js';
 // import * as json from '../src/js/settings.js';
 import Play from '../src/js/play.js';
-// import Loop from '../src/js/loop.js';
+import Loop from '../src/js/loop.js';
 // import Playgroove from '../src/js/playgroove.js';
 // import Grainread from '../src/js/grainread.js';
 // import Playgrain from '../src/js/playgrain.js';
@@ -70,6 +70,7 @@ describe('Play Class', function() {
         });
 
         it('stop()', function() {
+            testing.startSample(0);
             testing.stop();
             expect(testing.stopped).to.be.true;
         });
@@ -90,7 +91,27 @@ describe('Play Class', function() {
             expect(testing.len).to.equal(5);
             expect(testing.loopEnd - testing.loopStart).to.equal(5);
         });
+        
+        it('do not allow length to be greater than the sample', function() {
+            testing.position = 0;
+            testing.len = 5000;
+            expect(testing.loopEnd).to.equal(testing.duration);
+        });
+
+        afterEach(function() {
+            testing.stop();
+        });
 
     });
 });
 
+
+
+describe('Loop Class', function() {
+
+	it('should start a new instance', function() {
+		let audio = '/audio/arlene.mp3';
+		let context = new AudioContext();
+		return new Loop(audio, context);
+	});
+});

@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 3);
+/******/ 	return __webpack_require__(__webpack_require__.s = 4);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -230,6 +230,7 @@ var Play = function () {
         key: 'len',
         set: function set(x) {
             this.loopEnd = Math.min(this.position + x, this.duration);
+            this.startSample();
         },
         get: function get() {
             return this.src.loopEnd - this.src.loopStart;
@@ -261,8 +262,135 @@ exports.default = Play;
 
 "use strict";
 
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _play = __webpack_require__(0);
+
+var _play2 = _interopRequireDefault(_play);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * Created by Mike on 9/2/16.
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
+
+var Loop = function (_Play) {
+    _inherits(Loop, _Play);
+
+    function Loop(audio, context) {
+        _classCallCheck(this, Loop);
+
+        var _this = _possibleConstructorReturn(this, (Loop.__proto__ || Object.getPrototypeOf(Loop)).call(this, audio, context));
+
+        _this.audio = audio;
+        _this.context = context;
+        _this.position = 0;
+        _this.sensorPos = null;
+        //this.play();
+        return _this;
+    }
+
+    _createClass(Loop, [{
+        key: "sensor",
+        value: function sensor(val) {
+            var time = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+
+
+            var x = Math.floor(val);
+
+            if (x > 20) {
+
+                if (x !== this.sensorPos) {
+                    this.sensorPos = x;
+                    this.loop(x);
+                }
+            } else if (x < 11) {
+                // play
+                this.position = 0;
+                this.length = this.duration;
+                this.startSample(time);
+            }
+        }
+    }, {
+        key: "loop",
+        value: function loop(x) {
+            var start = void 0;
+            var dur = this.duration;
+            this.stop();
+            switch (x) {
+                case 21:
+                case 22:
+                    start = 0.3 * dur;
+                    break;
+                case 23:
+                case 24:
+                    start = 0.4 * dur;
+                    break;
+                case 25:
+                case 26:
+                    start = 0.5 * dur;
+                    break;
+                case 27:
+                case 28:
+                    start = 0.6 * dur;
+                    break;
+                case 29:
+                case 30:
+                    start = 0.7 * dur;
+                    break;
+                case 31:
+                case 32:
+                    start = 0.8 * dur;
+                    break;
+                default:
+                    start = 0.9 * dur;
+                    break;
+            }
+            console.log("start: " + start);
+            this.position = start;
+            this.length = 1.2;
+            this.startSample(this.position);
+        }
+    }, {
+        key: "delaySwitch",
+        value: function delaySwitch(setting) {
+            if (setting) {
+                //console.log("delay on");
+                this.delay.connect(this.feedback);
+                this.feedback.connect(this.delay);
+                this.delay.connect(this.merge, 0, 1);
+                this.src.connect(this.panL);
+                this.src.connect(this.delay);
+                this.panL.connect(this.volume);
+            } else {
+                //console.log("delay off");
+                this.src.connect(this.volume);
+            }
+        }
+    }]);
+
+    return Loop;
+}(_play2.default);
+
+exports.default = Loop;
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
 /* eslint-disable no-invalid-this */
-let checkError = __webpack_require__(4);
+let checkError = __webpack_require__(5);
 
 module.exports = (chai, utils) => {
     const Assertion = chai.Assertion;
@@ -624,7 +752,7 @@ module.exports.transformAsserterArgs = values => values;
 
 
 /***/ }),
-/* 2 */
+/* 3 */
 /***/ (function(module, exports) {
 
 var g;
@@ -651,7 +779,7 @@ module.exports = g;
 
 
 /***/ }),
-/* 3 */
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -661,17 +789,20 @@ var _play = __webpack_require__(0);
 
 var _play2 = _interopRequireDefault(_play);
 
+var _loop = __webpack_require__(1);
+
+var _loop2 = _interopRequireDefault(_loop);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-// import Loop from '../src/js/loop.js';
 // import Playgroove from '../src/js/playgroove.js';
 // import Grainread from '../src/js/grainread.js';
 // import Playgrain from '../src/js/playgrain.js';
 
 // var chai = require('chai');
-var chaiAsPromised = __webpack_require__(1); // import { setSettings } from '../src/js/soundbridge.js';
+// import { setSettings } from '../src/js/soundbridge.js';
 // import * as json from '../src/js/settings.js';
-
+var chaiAsPromised = __webpack_require__(2);
 chai.use(chaiAsPromised);
 // var expect = chai.expect;
 
@@ -733,6 +864,7 @@ describe('Play Class', function () {
         });
 
         it('stop()', function () {
+            testing.startSample(0);
             testing.stop();
             expect(testing.stopped).to.be.true;
         });
@@ -751,12 +883,31 @@ describe('Play Class', function () {
             expect(testing.len).to.equal(5);
             expect(testing.loopEnd - testing.loopStart).to.equal(5);
         });
+
+        it('do not allow length to be greater than the sample', function () {
+            testing.position = 0;
+            testing.len = 5000;
+            expect(testing.loopEnd).to.equal(testing.duration);
+        });
+
+        afterEach(function () {
+            testing.stop();
+        });
     });
 });
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
+
+describe('Loop Class', function () {
+
+    it('should start a new instance', function () {
+        var audio = '/audio/arlene.mp3';
+        var context = new AudioContext();
+        return new _loop2.default(audio, context);
+    });
+});
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ }),
-/* 4 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";

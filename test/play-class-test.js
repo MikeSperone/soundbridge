@@ -56,6 +56,7 @@ describe('Play Class', function() {
         });
 
         it('stop()', function() {
+            testing.startSample(0);
             testing.stop();
             expect(testing.stopped).to.be.true;
         });
@@ -75,6 +76,16 @@ describe('Play Class', function() {
             testing.len = 5;
             expect(testing.len).to.equal(5);
             expect(testing.loopEnd - testing.loopStart).to.equal(5);
+        });
+        
+        it('do not allow length to be greater than the sample', function() {
+            testing.position = 0;
+            testing.len = 5000;
+            expect(testing.loopEnd).to.equal(testing.duration);
+        });
+
+        afterEach(function() {
+            testing.stop();
         });
 
     });

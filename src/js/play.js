@@ -113,7 +113,9 @@ export default class Play {
     }
     set len(x) {
         this.loopEnd = Math.min((this.position + x), this.duration);
+        this.startSample();
     }
+
     get len() {
         return this.src.loopEnd - this.src.loopStart;
     }

@@ -1,7 +1,7 @@
 // import { setSettings } from '../src/js/soundbridge.js';
 // import * as json from '../src/js/settings.js';
 import Play from '../src/js/play.js';
-// import Loop from '../src/js/loop.js';
+import Loop from '../src/js/loop.js';
 // import Playgroove from '../src/js/playgroove.js';
 // import Grainread from '../src/js/grainread.js';
 // import Playgrain from '../src/js/playgrain.js';
