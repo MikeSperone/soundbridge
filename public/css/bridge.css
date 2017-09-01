@@ -1,0 +1,40 @@
+body {
+  margin: 0;
+  font: Helvetica, sans-serif;
+  color: #333; }
+
+.sensor {
+  display: block;
+  width: 340px;
+  height: 25px;
+  border: 1px solid #333;
+  margin: 60px;
+  margin-bottom: 10%; }
+
+.value {
+  float: right;
+  margin: 2px; }
+
+.xy-pad {
+  display: block;
+  position: relative;
+  width: 500px;
+  height: 500px;
+  margin: 60px;
+  border: 1px solid #333; }
+  .xy-pad .qd {
+    position: absolute;
+    display: block;
+    width: 300px;
+    height: 300px;
+    margin: 0;
+    border: 0; }
+  .xy-pad #one {
+    left: 200px; }
+  .xy-pad #two {
+    top: 200px;
+    left: 200px; }
+  .xy-pad #three {
+    top: 200px; }
+
+/*# sourceMappingURL=maps/bridge.css.map */

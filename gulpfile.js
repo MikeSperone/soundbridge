@@ -91,7 +91,7 @@ gulp.task('watch:test', function() {
 });
 
 gulp.task('watch:static', function() {
-    gulp.watch(src+'/js/*.js', ['js:pack']);
+    gulp.watch(src+'/js/*.js', ['dev-js']);
     gulp.watch(src+'/scss/*.scss', ['styles']);
     gulp.watch(src+'/*.html', ['dev-html']);
 });
