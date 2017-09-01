@@ -33,9 +33,6 @@
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
 /******/
-/******/ 	// identity function for calling harmony imports with the correct context
-/******/ 	__webpack_require__.i = function(value) { return value; };
-/******/
 /******/ 	// define getter function for harmony exports
 /******/ 	__webpack_require__.d = function(exports, name, getter) {
 /******/ 		if(!__webpack_require__.o(exports, name)) {
@@ -63,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 4);
+/******/ 	return __webpack_require__(__webpack_require__.s = 1);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -261,6 +258,238 @@ exports.default = Play;
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
+/* WEBPACK VAR INJECTION */(function(global) {
+
+var _play = __webpack_require__(0);
+
+var _play2 = _interopRequireDefault(_play);
+
+var _loop = __webpack_require__(3);
+
+var _loop2 = _interopRequireDefault(_loop);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+// import Playgroove from '../src/js/playgroove.js';
+// import Grainread from '../src/js/grainread.js';
+// import Playgrain from '../src/js/playgrain.js';
+
+// var chai = require('chai');
+// import { setSettings } from '../src/js/soundbridge.js';
+// import * as json from '../src/js/settings.js';
+var chaiAsPromised = __webpack_require__(4);
+chai.use(chaiAsPromised);
+// var expect = chai.expect;
+
+
+describe('Play Class', function () {
+
+    var audio = '/audio/arlene.mp3';
+    var context = new AudioContext();
+    var XMLHttpRequest = global.XMLHttpRequest;
+    var testing;
+
+    describe('initial state', function () {
+
+        before(function (done) {
+            var wait = 2000;
+            this.timeout(wait);
+            testing = new _play2.default(audio, context);
+            setTimeout(function () {
+                done();
+            }, wait / 2);
+        });
+
+        it('starts a new instance', function () {
+            console.log("testing: ", testing);
+            expect(testing).to.be.an("object");
+        });
+
+        it('names the audio file', function () {
+            expect(testing.audio).to.equal(audio);
+        });
+
+        it('fills the audio buffer', function () {
+            expect(testing.buffer.duration).to.be.within(90, 91);
+        });
+
+        it('begins at position 0', function () {
+            expect(testing.position).to.equal(0);
+        });
+
+        it('is stopped', function () {
+            expect(testing.stopped).to.be.true;
+        });
+
+        it('begins at volume level 0', function () {
+            expect(testing.vol).to.equal(0);
+        });
+    });
+
+    describe('things', function () {
+
+        it('vol()', function () {
+            testing.vol = 0.5;
+            expect(testing.vol).to.equal(0.5);
+        });
+
+        it('startSample()', function () {
+            testing.startSample(0);
+            expect(testing.stopped).to.be.false;
+        });
+
+        it('stop()', function () {
+            testing.startSample(0);
+            testing.stop();
+            expect(testing.stopped).to.be.true;
+        });
+
+        it.skip('elapsedTime()', function () {});
+
+        it('position()', function () {
+            testing.position = 10.25;
+            expect(testing.position).to.equal(10.25);
+            testing.position = 2;
+            expect(testing.position).to.equal(2);
+        });
+
+        it('len()', function () {
+            testing.len = 5;
+            expect(testing.len).to.equal(5);
+            expect(testing.loopEnd - testing.loopStart).to.equal(5);
+        });
+
+        it('do not allow length to be greater than the sample', function () {
+            testing.position = 0;
+            testing.len = 5000;
+            expect(testing.loopEnd).to.equal(testing.duration);
+        });
+
+        afterEach(function () {
+            testing.stop();
+        });
+    });
+});
+
+describe('Loop Class', function () {
+
+    var audio = '/audio/arlene.mp3';
+    var context = new AudioContext();
+    var loop = new _loop2.default(audio, context);
+
+    it('starts a new instance', function () {
+        console.log(loop);
+        return loop;
+    });
+
+    it('sets sensorPos for values above 20', function () {
+        loop.sensor(25);
+        expect(loop.sensorPos).to.equal(25);
+    });
+
+    it('sets position to 0 for values under 11', function () {
+        loop.sensor(10);
+        expect(loop.position).to.equal(0);
+    });
+
+    it('sets length to duration for values < 11', function () {
+        loop.sensor(8);
+        expect(loop.length).to.equal(loop.duration);
+    });
+
+    describe('loop points', function () {
+        it(' if value is under 21', function () {
+            loop.loop(20);
+            expect(loop.position).to.equal(0.9 * loop.duration);
+        });
+
+        it('loops at the correct spot for 21', function () {
+            loop.loop(21);
+            expect(loop.position).to.equal(0.3 * loop.duration);
+        });
+        it('loops at the correct spot for 23', function () {
+            loop.loop(23);
+            expect(loop.position).to.equal(0.4 * loop.duration);
+        });
+        it('loops at the correct spot for 25', function () {
+            loop.loop(25);
+            expect(loop.position).to.equal(0.5 * loop.duration);
+        });
+        it('loops at the correct spot for 27', function () {
+            loop.loop(27);
+            expect(loop.position).to.equal(0.6 * loop.duration);
+        });
+        it('loops at the correct spot for 29', function () {
+            loop.loop(29);
+            expect(loop.position).to.equal(0.7 * loop.duration);
+        });
+        it('loops at the correct spot for 31', function () {
+            loop.loop(31);
+            expect(loop.position).to.equal(0.8 * loop.duration);
+        });
+        it('loops at the correct spot for 33', function () {
+            loop.loop(33);
+            expect(loop.position).to.equal(0.9 * loop.duration);
+        });
+    });
+
+    describe('delay', function () {
+        it('adds things when delay is on', function () {
+            loop.delaySwitch(true);
+            expect(loop).to.have.property('delay');
+            expect(loop).to.have.property('feedback');
+            expect(loop).to.have.property('merge');;
+        });
+        it('sets the delay pan', function () {
+            expect(loop).to.have.property('panL');
+            expect(loop.panL.pan.value).to.equal(-1);
+        });
+        it('turns the delay off', function () {
+            loop.delaySwitch(false);
+            expect(function () {
+                loop.delaySwitch(false);
+            }).to.throw;
+        });
+    });
+
+    afterEach(function () {
+        loop.stop();
+    });
+});
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports) {
+
+var g;
+
+// This works in non-strict mode
+g = (function() {
+	return this;
+})();
+
+try {
+	// This works if eval is allowed (see CSP)
+	g = g || Function("return this")() || (1,eval)("this");
+} catch(e) {
+	// This works if the window reference is available
+	if(typeof window === "object")
+		g = window;
+}
+
+// g can still be undefined, but nothing to do about it...
+// We return undefined, instead of nothing here, so it's
+// easier to handle this case. if(!global) { ...}
+
+module.exports = g;
+
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
 
 
 Object.defineProperty(exports, "__esModule", {
@@ -365,6 +594,14 @@ var Loop = function (_Play) {
         value: function delaySwitch(setting) {
             if (setting) {
                 //console.log("delay on");
+                this.src.disconnect(this.volume);
+
+                this.delay = this.context.createDelay(1.0);
+                this.feedback = this.context.createGain();
+                this.merge = this.context.createChannelMerger(2);
+                this.panL = this.context.createStereoPanner();
+                this.panL.pan.value = -1;
+
                 this.delay.connect(this.feedback);
                 this.feedback.connect(this.delay);
                 this.delay.connect(this.merge, 0, 1);
@@ -372,7 +609,17 @@ var Loop = function (_Play) {
                 this.src.connect(this.delay);
                 this.panL.connect(this.volume);
             } else {
-                //console.log("delay off");
+                console.log("delay off");
+                if (this.delay) {
+                    try {
+                        console.log("this.delay exists... disconnecting");
+                        this.src.disconnect(this.panL);
+                        this.src.disconnect(this.delay);
+                    } catch (e) {
+                        throw new Error("Disconnected");
+                    }
+                }
+                console.log("connecting to volume...");
                 this.src.connect(this.volume);
             }
         }
@@ -384,7 +631,7 @@ var Loop = function (_Play) {
 exports.default = Loop;
 
 /***/ }),
-/* 2 */
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -750,161 +997,6 @@ module.exports.transferPromiseness = (assertion, promise) => {
 
 module.exports.transformAsserterArgs = values => values;
 
-
-/***/ }),
-/* 3 */
-/***/ (function(module, exports) {
-
-var g;
-
-// This works in non-strict mode
-g = (function() {
-	return this;
-})();
-
-try {
-	// This works if eval is allowed (see CSP)
-	g = g || Function("return this")() || (1,eval)("this");
-} catch(e) {
-	// This works if the window reference is available
-	if(typeof window === "object")
-		g = window;
-}
-
-// g can still be undefined, but nothing to do about it...
-// We return undefined, instead of nothing here, so it's
-// easier to handle this case. if(!global) { ...}
-
-module.exports = g;
-
-
-/***/ }),
-/* 4 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function(global) {
-
-var _play = __webpack_require__(0);
-
-var _play2 = _interopRequireDefault(_play);
-
-var _loop = __webpack_require__(1);
-
-var _loop2 = _interopRequireDefault(_loop);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-// import Playgroove from '../src/js/playgroove.js';
-// import Grainread from '../src/js/grainread.js';
-// import Playgrain from '../src/js/playgrain.js';
-
-// var chai = require('chai');
-// import { setSettings } from '../src/js/soundbridge.js';
-// import * as json from '../src/js/settings.js';
-var chaiAsPromised = __webpack_require__(2);
-chai.use(chaiAsPromised);
-// var expect = chai.expect;
-
-
-describe('Play Class', function () {
-
-    var audio = '/audio/arlene.mp3';
-    var context = new AudioContext();
-    var XMLHttpRequest = global.XMLHttpRequest;
-    var testing;
-
-    describe('initial state', function () {
-
-        before(function (done) {
-            var wait = 2000;
-            this.timeout(wait);
-            testing = new _play2.default(audio, context);
-            setTimeout(function () {
-                done();
-            }, wait / 2);
-        });
-
-        it('starts a new instance', function () {
-            console.log("testing: ", testing);
-            expect(testing).to.be.an("object");
-        });
-
-        it('names the audio file', function () {
-            expect(testing.audio).to.equal(audio);
-        });
-
-        it('fills the audio buffer', function () {
-            expect(testing.buffer.duration).to.be.within(90, 91);
-        });
-
-        it('begins at position 0', function () {
-            expect(testing.position).to.equal(0);
-        });
-
-        it('is stopped', function () {
-            expect(testing.stopped).to.be.true;
-        });
-
-        it('begins at volume level 0', function () {
-            expect(testing.vol).to.equal(0);
-        });
-    });
-
-    describe('things', function () {
-
-        it('vol()', function () {
-            testing.vol = 0.5;
-            expect(testing.vol).to.equal(0.5);
-        });
-
-        it('startSample()', function () {
-            testing.startSample(0);
-            expect(testing.stopped).to.be.false;
-        });
-
-        it('stop()', function () {
-            testing.startSample(0);
-            testing.stop();
-            expect(testing.stopped).to.be.true;
-        });
-
-        it.skip('elapsedTime()', function () {});
-
-        it('position()', function () {
-            testing.position = 10.25;
-            expect(testing.position).to.equal(10.25);
-            testing.position = 2;
-            expect(testing.position).to.equal(2);
-        });
-
-        it('len()', function () {
-            testing.len = 5;
-            expect(testing.len).to.equal(5);
-            expect(testing.loopEnd - testing.loopStart).to.equal(5);
-        });
-
-        it('do not allow length to be greater than the sample', function () {
-            testing.position = 0;
-            testing.len = 5000;
-            expect(testing.loopEnd).to.equal(testing.duration);
-        });
-
-        afterEach(function () {
-            testing.stop();
-        });
-    });
-});
-
-describe('Loop Class', function () {
-
-    it('should start a new instance', function () {
-        var audio = '/audio/arlene.mp3';
-        var context = new AudioContext();
-        return new _loop2.default(audio, context);
-    });
-});
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ }),
 /* 5 */

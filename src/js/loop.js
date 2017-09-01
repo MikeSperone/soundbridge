@@ -77,6 +77,14 @@ export default class Loop extends Play {
     delaySwitch(setting) {
         if (setting) {
             //console.log("delay on");
+            this.src.disconnect(this.volume);
+
+            this.delay = this.context.createDelay(1.0);
+            this.feedback = this.context.createGain();
+            this.merge = this.context.createChannelMerger(2);
+            this.panL = this.context.createStereoPanner();
+            this.panL.pan.value = -1;
+
             this.delay.connect(this.feedback);
             this.feedback.connect(this.delay);
             this.delay.connect(this.merge, 0, 1);
@@ -84,7 +92,17 @@ export default class Loop extends Play {
             this.src.connect(this.delay);
             this.panL.connect(this.volume);
         } else {
-            //console.log("delay off");
+            console.log("delay off");
+            if (this.delay) {
+                try {
+                    console.log("this.delay exists... disconnecting");
+                    this.src.disconnect(this.panL);
+                    this.src.disconnect(this.delay);
+                } catch(e) {
+                    throw new Error("Disconnected");
+                }
+            }
+            console.log("connecting to volume...");
             this.src.connect(this.volume);
         }
     }

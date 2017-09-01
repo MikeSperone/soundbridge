@@ -1,10 +1,5 @@
 node_modules/
-/web/.idea
-/web/build
-/web/node_modules
-/web/build
-./web/build
-/server/node_modules
+public/
 
 config.js
 
