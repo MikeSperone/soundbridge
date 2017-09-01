@@ -3,7 +3,7 @@
 import Play from '../src/js/play.js';
 import Loop from '../src/js/loop.js';
 // import Playgroove from '../src/js/playgroove.js';
-// import Grainread from '../src/js/grainread.js';
+import Grainread from '../src/js/grainread.js';
 // import Playgrain from '../src/js/playgrain.js';
 
 // var chai = require('chai');

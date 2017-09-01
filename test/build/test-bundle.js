@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 4);
+/******/ 	return __webpack_require__(__webpack_require__.s = 5);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -269,6 +269,316 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/**
+ * Grainread class
+ * a single series of grains
+  for the playgrain class
+ * Created by Mike Sperone on 8/25/16.
+ *
+*/
+var Grainread = function () {
+    function Grainread(audio, context, g_read) {
+        var g_multiply = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 1;
+        var g_fade = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 1;
+        var g_spread = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : 20;
+        var g_scatter = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : 28;
+
+        _classCallCheck(this, Grainread);
+
+        this.g_read = g_read;
+        this.g_multiply = g_multiply;
+        this.g_fade = g_fade;
+        this.g_spread = g_spread;
+        this.g_scatter = Math.random() * g_scatter / 127;
+
+        this.fb_amount = 0;
+        this.fb_position = 121;
+        this.fb_jitter = 272;
+
+        this.len = 12;
+
+        this.audio = audio;
+        this.context = context;
+        this.buffer = null;
+        this.duration = null;
+        this.stopped = true;
+
+        this.src = this.context.createBufferSource();
+        this.env = this.context.createGain();
+        this.panner = this.context.createStereoPanner();
+
+        this.splitter = this.context.createChannelSplitter(2);
+        this.merge = this.context.createChannelMerger(2);
+        this.delayA = this.context.createDelay(0.5);
+        this.delayB = this.context.createDelay(0.5);
+        this.fbkA = this.context.createGain();
+        this.fbkA.gain.value = 0.5;
+        this.fbkB = this.context.createGain();
+        this.fbkB.gain.value = 0.5;
+        this.volume = this.context.createGain();
+
+        var that = this;
+        var req = new XMLHttpRequest();
+
+        req.open('GET', audio);
+        req.responseType = 'arraybuffer';
+
+        req.onload = function () {
+            var audioData = req.response;
+
+            that.context.decodeAudioData(audioData, function (buffer) {
+                that.src.buffer = buffer;
+                that.buffer = buffer;
+                that.duration = that.buffer.duration;
+                that.src.connect(that.env);
+
+                that.env.connect(that.delayA);
+                that.env.connect(that.delayB);
+                that.delayA.connect(that.fbkA);
+                that.delayB.connect(that.fbkB);
+                that.fbkA.connect(that.delayA);
+                that.fbkB.connect(that.delayB);
+                that.delayA.connect(that.merge, 0, 0);
+                that.delayB.connect(that.merge, 0, 1);
+
+                that._connectIfPanner([that.merge, that.panner]);
+                //that.merge.connect(that.panner);
+
+                that.src.loop = true;
+                //that.env.connect(that.panner);
+                that._connectIfPanner([that.panner, that.volume], [that.merge, that.volume]);
+                that.volume.connect(context.destination);
+                that.forwardInTime();
+                that.phasor();
+            }, function (e) {
+                "Error with decoding audio data" + e.err;
+            });
+        };
+
+        req.send();
+    }
+
+    _createClass(Grainread, [{
+        key: '_connectIfPanner',
+        value: function _connectIfPanner(a) {
+            var b = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
+
+            if (this.panner.empty !== true) {
+                console.debug("connection panner");
+                a[0].connect(a[1]);
+            } else {
+                console.debug("panner left out");
+                if (b.length) {
+                    b[0].connect(b[1]);
+                }
+            }
+        }
+    }, {
+        key: 'restartAtTime',
+        value: function restartAtTime(t) {
+            console.log("restarting at time: ", t);
+            this.stop();
+            this.src = this.context.createBufferSource();
+            this.src.buffer = this.buffer;
+            this.src.loop = true;
+            this.src.connect(this.env);
+
+            this.src.start(0, t);
+            this.stopped = false;
+        }
+    }, {
+        key: 'play',
+        value: function play() {
+            this.src.start(0);
+            this.stopped = false;
+        }
+    }, {
+        key: 'start',
+        value: function start() {
+            if (this.stopped) {
+                this.restartAtTime(0);
+                this.stopped = false; // as a backup in case restartAtTime() fails... necessary?
+            }
+        }
+    }, {
+        key: 'stop',
+        value: function stop() {
+            if (!this.stopped) {
+                this.src.stop(0);
+                this.stopped = true;
+            }
+        }
+    }, {
+        key: 'toString',
+        value: function toString() {
+            return { "audio": this.audio, "context": this.context, "g_read": this.g_read, "g_speed": this.g_speed, "g_multiply": this.g_multiply, "g_fade": this.g_fade, "g_speedspread": this.g_speedspread, "g_spread": this.g_spread, "g_scatter": this.g_scatter };
+        }
+    }, {
+        key: 'readChanged',
+        value: function readChanged() {
+            console.log("read changed.  pos: ", this.position);
+            this.position = this.read * this.duration;
+        }
+    }, {
+        key: 'forwardInTime',
+        value: function forwardInTime() {
+            //console.log("forward!");
+            // scope, I think?  this inside the callback should be this out here
+            var internalCallback = function internalCallback() {
+                //return function(this) {
+                this.position = this.position + 0.1;
+                //console.log("moving forward.  pos: ", that.position);
+                window.setTimeout(internalCallback.bind(this), 100);
+                //}
+            };
+            window.setTimeout(internalCallback.bind(this), 100);
+        }
+    }, {
+        key: 'phasor',
+        value: function phasor() {
+            var _this = this;
+
+            var that = this;
+
+            var internalCallback = function internalCallback() {
+
+                var time = Math.random() * _this.read * 2 + 0.1;
+                window.setTimeout(internalCallback.bind(_this), time * 1000);
+
+                if (_this.stopped === false) {
+                    // Setting
+                    _this.position = that.read * that.duration;
+                    //console.log("grain start position: ", that.position);
+                    _this.loopLength = (_this.read * 29 + 6) * 50; // based on each sample
+                    //console.log("grain length: ", that.loopLength);
+                    _this.panner.value = _this.spread * 0.4 * Math.random() - 1;
+
+                    var now = _this.context.currentTime;
+                    var e = _this.env.gain;
+                    e.cancelScheduledValues(now);
+                    e.setValueAtTime(0.0001, now);
+
+                    _this.restartAtTime(_this.position);
+
+                    e.exponentialRampToValueAtTime(1, now + time / 2);
+                    e.exponentialRampToValueAtTime(0.0001, now + time);
+                }
+            };
+            //TODO: use AnimationFrame instead
+            window.setTimeout(internalCallback.bind(this), 500);
+        }
+    }, {
+        key: 'vol',
+        set: function set(v) {
+            this.volume.gain.value = v;
+        },
+        get: function get() {
+            return this.volume.gain.value;
+        }
+    }, {
+        key: 'delays',
+        set: function set(d) {
+            this.delayA.delayTime.value = d;
+        },
+        get: function get() {
+            return this.delayA.delayTime.value;
+        }
+    }, {
+        key: 'feedback',
+        set: function set(f) {
+            this.fbkA.gain.value = f;
+        },
+        get: function get() {
+            return this.fbkA.gain.value;
+        }
+    }, {
+        key: 'position',
+        set: function set(x) {
+            //console.log(this.src.loopStart);
+            this.src.loopStart = x;
+        },
+        get: function get() {
+            return this.src.loopStart;
+        }
+    }, {
+        key: 'loopLength',
+        set: function set(x) {
+            this.src.loopEnd = this.position + x;
+        },
+        get: function get() {
+            return this.src.loopEnd - this.src.loopStart;
+        }
+    }, {
+        key: 'read',
+        set: function set(gr) {
+            this.g_read = gr;
+            this.readChanged.bind(this);
+        },
+        get: function get() {
+            return this.g_read;
+        }
+    }, {
+        key: 'speed',
+        set: function set(gs) {
+            this.g_speed = gs;
+        },
+        get: function get() {
+            return this.g_speed;
+        }
+    }, {
+        key: 'fade',
+        set: function set(gf) {
+            this.g_fade = gf;
+        },
+        get: function get() {
+            return this.g_fade;
+        }
+    }, {
+        key: 'speedspread',
+        set: function set(ss) {
+            this.g_speedspread = ss;
+        },
+        get: function get() {
+            return this.g_speedspread;
+        }
+    }, {
+        key: 'spread',
+        set: function set(gs) {
+            this.g_spread = gs;
+        },
+        get: function get() {
+            return this.g_spread;
+        }
+    }, {
+        key: 'scatter',
+        set: function set(gs) {
+            this.g_scatter = gs;
+        },
+        get: function get() {
+            return this.g_scatter;
+        }
+    }]);
+
+    return Grainread;
+}();
+
+exports.default = Grainread;
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
 var _play = __webpack_require__(0);
 
 var _play2 = _interopRequireDefault(_play);
@@ -384,13 +694,13 @@ var Loop = function (_Play) {
 exports.default = Loop;
 
 /***/ }),
-/* 2 */
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 /* eslint-disable no-invalid-this */
-let checkError = __webpack_require__(5);
+let checkError = __webpack_require__(6);
 
 module.exports = (chai, utils) => {
     const Assertion = chai.Assertion;
@@ -752,7 +1062,7 @@ module.exports.transformAsserterArgs = values => values;
 
 
 /***/ }),
-/* 3 */
+/* 4 */
 /***/ (function(module, exports) {
 
 var g;
@@ -779,7 +1089,7 @@ module.exports = g;
 
 
 /***/ }),
-/* 4 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -789,20 +1099,24 @@ var _play = __webpack_require__(0);
 
 var _play2 = _interopRequireDefault(_play);
 
-var _loop = __webpack_require__(1);
+var _loop = __webpack_require__(2);
 
 var _loop2 = _interopRequireDefault(_loop);
 
+var _grainread = __webpack_require__(1);
+
+var _grainread2 = _interopRequireDefault(_grainread);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-// import Playgroove from '../src/js/playgroove.js';
-// import Grainread from '../src/js/grainread.js';
 // import Playgrain from '../src/js/playgrain.js';
 
 // var chai = require('chai');
+var chaiAsPromised = __webpack_require__(3);
+// import Playgroove from '../src/js/playgroove.js';
 // import { setSettings } from '../src/js/soundbridge.js';
 // import * as json from '../src/js/settings.js';
-var chaiAsPromised = __webpack_require__(2);
+
 chai.use(chaiAsPromised);
 // var expect = chai.expect;
 
@@ -904,10 +1218,91 @@ describe('Loop Class', function () {
         return new _loop2.default(audio, context);
     });
 });
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
+
+describe('Grainread Class', function () {
+
+    var audio = '/audio/arlene.mp3';
+    var context = new AudioContext();
+    var gr = new _grainread2.default(audio, context, 1);
+
+    console.log("grainread: ", gr);
+    describe('initial values', function () {
+
+        it('starts a new grainread class', function () {
+            expect(gr).to.exist;
+        });
+
+        it('sets the audio', function () {
+            expect(gr.audio).to.equal('/audio/arlene.mp3');
+        });
+
+        it('fills the audio buffer', function () {
+            expect(gr.buffer.duration).to.be.within(90, 91);
+        });
+
+        it('sets fb values', function () {
+            expect(gr.fb_amount).to.equal(0);
+            expect(gr.fb_position).to.equal(121);
+            expect(gr.fb_jitter).to.equal(272);
+        });
+
+        it('is stopped', function () {
+            expect(gr.stopped).to.be.true;
+        });
+
+        it('begins at volume level 1', function () {
+            expect(gr.vol).to.equal(1);
+        });
+    });
+
+    describe('setters and getters', function () {
+
+        it('volume', function () {
+            gr.vol = .75;
+            expect(gr.vol).to.equal(.75);
+        });
+
+        it('delay', function () {
+            gr.delays = .25;
+            expect(gr.delays).to.equal(.25);
+        });
+
+        it('feedback', function () {
+            gr.feedback = .5;
+            expect(gr.feedback).to.equal(.5);
+        });
+
+        it('position', function () {
+            gr.position = 25;
+            expect(gr.position).to.equal(25);
+        });
+
+        // loopLength, speed, fade, read, speedspread, spread, scatter
+    });
+
+    describe('methods', function () {
+
+        it('restarts at a given time', function () {
+            gr.restartAtTime(10);
+            expect(gr.stopped).to.be.false;
+        });
+
+        it('starts and stops', function () {
+            gr.start();
+            expect(gr.stopped).to.be.false;
+            gr.stop();
+            expect(gr.stopped).to.be.true;
+        });
+
+        after(function () {
+            gr.stop();
+        });
+    });
+});
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ }),
-/* 5 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";

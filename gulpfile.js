@@ -50,7 +50,7 @@ gulp.task('concat-tests', function(cb) {
                         './test/play-class-test.js',
                         './test/loop-test.js',
                         // './test/playgroove-test.js',
-                        // './test/grainread-test.js',
+                        './test/grainread-test.js',
                         // './test/playgrain-test.js'
                     ])
         .pipe(concat('all-test.js'))
@@ -91,7 +91,7 @@ gulp.task('watch:test', function() {
 });
 
 gulp.task('watch:static', function() {
-    gulp.watch(src+'/js/*.js', ['dev-js']);
+    gulp.watch(src+'/js/*.js', ['copyjslib', 'js:pack']);
     gulp.watch(src+'/scss/*.scss', ['styles']);
     gulp.watch(src+'/*.html', ['dev-html']);
 });

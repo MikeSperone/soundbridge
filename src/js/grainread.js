@@ -97,7 +97,6 @@ export default class Grainread {
         this.src = this.context.createBufferSource();
         this.src.buffer = this.buffer;
         this.src.loop = true;
-
         this.src.connect(this.env);
 
         this.src.start(0, t);
@@ -106,12 +105,13 @@ export default class Grainread {
 
     play() {
         this.src.start(0);
+        this.stopped = false;
     }
 
     start() {
         if (this.stopped) {
             this.restartAtTime(0);
-            this.stopped = false;
+            this.stopped = false;  // as a backup in case restartAtTime() fails... necessary?
         }
     }
     stop() {
@@ -157,7 +157,7 @@ export default class Grainread {
     }
 
     toString() {
-        return [{"audio":this.audio},{"context":this.context},{"g_read":this.g_read}, {"g_speed": this.g_speed}, {"g_multiply":this.g_multiply}, {"g_fade": this.g_fade}, {"g_speedspread": this.g_speedspread}, {"g_spread": this.g_spread}, {"g_scatter":this.g_scatter}];
+        return {"audio":this.audio,"context":this.context,"g_read":this.g_read, "g_speed": this.g_speed, "g_multiply":this.g_multiply, "g_fade": this.g_fade, "g_speedspread": this.g_speedspread, "g_spread": this.g_spread, "g_scatter":this.g_scatter};
     }
 
     set read(gr) {
@@ -220,36 +220,32 @@ export default class Grainread {
     phasor() {
         let that = this;
 
-        var internalCallback = function() {
+        var internalCallback = () => {
 
-            //return function() {
+            let time = ((Math.random() * this.read)*2 + 0.1);
+            window.setTimeout(internalCallback.bind(this), time * 1000);
 
-                let time = ((Math.random() * this.read)*2 + 0.1);
-                window.setTimeout(internalCallback.bind(this), time * 1000);
+            if (this.stopped === false) {
+                // Setting
+                this.position = that.read * that.duration;
+                //console.log("grain start position: ", that.position);
+                this.loopLength = ((this.read * 29) + 6) * 50;  // based on each sample
+                //console.log("grain length: ", that.loopLength);
+                this.panner.value = (this.spread * 0.4 * Math.random()) - 1;
 
-                if (this.stopped === false) {
-                    // Setting
-                    //that.position = that.read * that.duration;
-                    //console.log("grain start position: ", that.position);
-                    this.loopLength = ((this.read * 29) + 6) * 50;  // based on each sample
-                    //console.log("grain length: ", that.loopLength);
-                    this.panner.value = (this.spread * 0.4 * Math.random()) - 1;
+                let now = this.context.currentTime;
+                let e = this.env.gain;
+                e.cancelScheduledValues(now);
+                e.setValueAtTime(0.0001, now);
 
-                    let now = this.context.currentTime;
-                    let e = this.env.gain;
-                    e.cancelScheduledValues(now);
-                    e.setValueAtTime(0.0001, now);
+                this.restartAtTime(this.position);
 
-                    this.restartAtTime(this.position);
+                e.exponentialRampToValueAtTime(1, now + (time / 2));
+                e.exponentialRampToValueAtTime(0.0001, now + time);
 
-                    e.exponentialRampToValueAtTime(1, now + (time / 2));
-                    e.exponentialRampToValueAtTime(0.0001, now + time);
+            }
 
-                }
-
-            //};
-
-        }();
+        };
         //TODO: use AnimationFrame instead
         window.setTimeout(internalCallback.bind(this), 500);
     }
