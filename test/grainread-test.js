@@ -41,23 +41,62 @@ describe('Grainread Class', function() {
         it('volume', function() {
             gr.vol = .75;
             expect(gr.vol).to.equal(.75);
+            expect(gr.volume.gain.value).to.equal(.75);
         });
 
-        it('delay', function() {
+        it('delays', function() {
             gr.delays = .25;
             expect(gr.delays).to.equal(.25);
+            expect(gr.delayA.delayTime.value).to.equal(.25);
         });
 
         it('feedback', function() {
             gr.feedback = .5;
             expect(gr.feedback).to.equal(.5);
+            expect(gr.fbkA.gain.value).to.equal(.5);
         });
 
         it('position', function() {
             gr.position = 25;
             expect(gr.position).to.equal(25);
+            expect(gr.src.loopStart).to.equal(25);
         });
 
+        it('loopLength', function() {
+            gr.loopLength = 10;
+            expect(gr.loopLength).to.equal(10);
+            expect(gr.src.loopEnd - gr.src.loopStart).to.equal(10);
+        });
+        it('speed', function() {
+            gr.speed = 0.5;
+            expect(gr.speed).to.equal(0.5);
+            expect(gr.g_speed).to.equal(0.5);
+        });
+        it('fade', function() {
+            gr.fade = 100;
+            expect(gr.fade).to.equal(100);
+            expect(gr.g_fade).to.equal(100);
+        });
+        it('read', function() {
+            gr.read = 1;
+            expect(gr.read).to.equal(1);
+            expect(gr.g_read).to.equal(1);
+        });
+        it('speedspread', function() {
+            gr.speedspread = 12;
+            expect(gr.speedspread).to.equal(12);
+            expect(gr.g_speedspread).to.equal(12);
+        });
+        it('spread', function() {
+            gr.spread = 2;
+            expect(gr.spread).to.equal(2);
+            expect(gr.g_spread).to.equal(2);
+        });
+        it('scatter', function() {
+            gr.scatter = 19;
+            expect(gr.scatter).to.equal(19);
+            expect(gr.g_scatter).to.equal(19);
+        });
         // loopLength, speed, fade, read, speedspread, spread, scatter
     });
 

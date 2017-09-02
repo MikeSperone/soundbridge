@@ -18,7 +18,7 @@ export function setSettings(settings, i) {
 	return { samples: samples, grain: grainSettings, delay: delaySettings };
 }
 
-export function start(settings, ws) {
+export function start(settings, ws, openConnection) {
 
     const audiopath = 'audio/';
     /*

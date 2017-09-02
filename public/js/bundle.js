@@ -33,6 +33,9 @@
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
 /******/
+/******/ 	// identity function for calling harmony imports with the correct context
+/******/ 	__webpack_require__.i = function(value) { return value; };
+/******/
 /******/ 	// define getter function for harmony exports
 /******/ 	__webpack_require__.d = function(exports, name, getter) {
 /******/ 		if(!__webpack_require__.o(exports, name)) {
@@ -60,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 2);
+/******/ 	return __webpack_require__(__webpack_require__.s = 6);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -120,7 +123,7 @@ var Play = function () {
                     that.startSample();
                     that.volume.gain.value = vol;
                     that.audioLoadTimeOffset = (new Date() - that.contextCreationTime) / 1000;
-                    console.log(that);
+                    // console.log(that);
                 }, function (e) {
                     console.log("Error with decoding audio data" + e.err);
                 });
@@ -224,9 +227,10 @@ var Play = function () {
             return this.loopStart;
         }
     }, {
-        key: 'length',
+        key: 'len',
         set: function set(x) {
             this.loopEnd = Math.min(this.position + x, this.duration);
+            this.startSample();
         },
         get: function get() {
             return this.src.loopEnd - this.src.loopStart;
@@ -10519,54 +10523,14 @@ return jQuery;
 "use strict";
 
 
-var _soundbridge = __webpack_require__(3);
-
-var _settings = __webpack_require__(9);
-
-var json = _interopRequireWildcard(_settings);
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-
-(function () {
-
-    var DEBUG = true;
-
-    var openConnection = false;
-    var ws = typeof io !== "undefined" ? io() : false;
-    var i = 18; //Math.floor(Math.random() * 29);
-
-    if (ws) {
-        ws.on('setting', function (n) {
-            console.log("server ready");
-            openConnection = true;
-            i = n;
-        });
-    } else {
-        // allow ws.on() functions to be called with no error
-        ws = { on: function on(a, b) {} };
-        console.warn("No server, Solo Mode");
-    }
-
-    var settings = (0, _soundbridge.setSettings)(json.settings, i);
-    console.log("settings loaded");
-
-    if (typeof window !== "undefined") {
-        var $ = __webpack_require__(1);
-        (0, _soundbridge.start)(settings, ws);
-    }
-
-    console.log = function (s) {
-        var o = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
-
-        if (DEBUG) {
-            if (o !== '') {
-                console.debug(s, o);
-            } else {
-                console.debug(s);
-            }
-        }
-    };
-})();
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+var settings = exports.settings = {
+    "samples": [{ "0": "water3", "1": "drillingbursts", "2": "crickets", "3": "arleneNR", "a": "" }, { "0": "c_ray2", "1": "c_ray2", "2": "hammer", "3": "carolynNR", "a": "" }, { "0": "pno_pluck", "1": "bridgesound1", "2": "piano_hammer", "3": "walter2", "a": "" }, { "0": "rhythmicdrips", "1": "buttonholer", "2": "water3", "3": "albert_tie", "a": "" }, { "0": "glass_chipping", "1": "glass_cutting", "2": "glass_breaking", "3": "victor_glass", "a": "" }, { "0": "34sL", "1": "flagpole", "2": "facwhistle+mock", "3": "counteecullen", "a": "" }, { "0": "sandwalk", "1": "laskyrachet", "2": "rhythmicdrips", "3": "dennisfields", "a": "" }, { "0": "2_2_4_sheddrips", "1": "sax", "2": "crickets", "3": "sidcaesar1", "a": "" }, { "0": "glass_breaking", "1": "greyston2NR", "2": "bridgesound1", "3": "mosesyoho", "a": "" }, { "0": "trolley2", "1": "pinningmachine", "2": "facwhistle+mock", "3": "masefield1", "a": "" }, { "0": "montagemachine", "1": "facwhistle1srt", "2": "buttonholer", "3": "masefield2", "a": "" }, { "0": "bridgesound1", "1": "water1", "2": "rhythmicsdrips", "3": "sharonbarge", "a": "" }, { "0": "piano_tuning", "1": "glass_ice", "2": "glass_breaking", "3": "mockingbird", "a": "ambientcar_factory" }, { "0": "wavebangbuf", "1": "bridgesound1", "2": "metalhinge1", "3": "piano_tuning2", "a": "ambientfactory" }, { "0": "pno_pluck", "1": "bridgesound3", "2": "piano_hammer", "3": "elevator", "a": "marsh" }, { "0": "sax", "1": "skateboardstereo", "2": "boatreverse", "3": "elevator_old_mix", "a": "night" }, { "0": "greyston4", "1": "rightear12", "2": "sign+bell", "3": "badprinter", "a": "heliocopter" }, { "0": "night", "1": "34sL", "2": "heliocopter", "3": "hangerdoor", "a": "waterambient2" }, { "0": "tennis", "1": "waves", "2": "churchbells", "3": "mockingbird2x", "a": "farmersmarcket" }, { "0": "motorboatecho", "1": "grinder", "2": "heliocopter", "3": "skateboardmono", "a": "waveslapping" }, { "0": "pigeons", "1": "localbirds2", "2": "geese+gulls", "3": "sculpture1", "a": "springpeepers" }, { "0": "bartonsifter3", "1": "foghorn2", "2": "pno_pluck", "3": "heliocopter", "a": "ambientfactory" }, { "0": "bridgesound4", "1": "foghorn2", "2": "foghorn2", "3": "waveslapping", "a": "ambientthunderdrips" }, { "0": "rightear15", "1": "rightear15", "2": "bridgesound", "3": "pno_pluck", "a": "crickets" }, { "0": "churchbells", "1": "crickets", "2": "geese+gulls", "3": "lenfishing", "a": "" }, { "0": "paintmixer", "1": "montagemachine", "2": "elevator", "3": "lensugar", "a": "" }, { "0": "bridgesound3", "1": "pno_pluck", "2": "drillingbursts", "3": "mockingbird2x", "a": "" }, { "0": "badprinter", "1": "shakesound8", "2": "wavebangbuf2", "3": "localbirds2", "a": "" }, { "0": "dogsbarking", "1": "ferryboatbarge", "2": "pno_pluck", "3": "badprinter2", "a": "" }, { "0": "greyston2NR", "1": "bridgesound3", "2": "geese+gulls", "3": "sculpture1", "a": "" }],
+    "grain": [[28, 1, 2, 0.2], [28, 9, 2, 0.2], [39, 9, 2, 0.2], [18, 9, 2, 0.2], [39, 9, 2, 0.2], [39, 9, 2, 0.2], [28, 1, 2, 0.2], [28, 1, 2, 0.2], [39, 9, 2, 0.1], [39, 9, 2, 0.2], [73, 9, 4, 0], [28, 1, 2, 0.2], [39, 9, 2, 0.2], [39, 9, 2, 0.1], [39, 9, 2, 0.2], [39, 14, 4, 0], [73, 3, 2, 0.2], [73, 9, 4, 0.2], [11, 35, 5, 0.1], [73, 9, 4, 0.2], [39, 28, 2, 0.2], [28, 1, 2, 0], [39, 9, 2, 0.4], [39, 9, 2, 0.1], [39, 28, 2, 0.2], [28, 14, 3, 0.4], [28, 1, 2, 0.2], [28, 1, 2, 0], [28, 1, 2, 0], [39, 28, 2, 0.2]],
+    "delay": [[false, true, [], false], [true, true, [], false], [true, true, [], true], [true, false, [], true], [true, true, [], false], [false, true, [], false], [false, true, [], false], [true, true, [], false], [false, false, [], false], [true, true, [], true], [true, false, [], false], [true, false, [], false], [true, true, [], false], [false, false, [], false], [false, false, [], false], [false, true, [], false], [false, true, [], false], [false, false, [], false], [true, false, [], false], [false, true, [], false], [false, false, [], false], [false, true, [], true], [true, true, [], false], [false, false, [], true], [true, true, [], false], [false, true, [], false], [false, true, [], false], [false, true, [], true], [true, true, [], true], [true, true, [], true]]
+};
 
 /***/ }),
 /* 3 */
@@ -10593,15 +10557,15 @@ var _play = __webpack_require__(0);
 
 var _play2 = _interopRequireDefault(_play);
 
-var _playgroove = __webpack_require__(5);
+var _playgroove = __webpack_require__(9);
 
 var _playgroove2 = _interopRequireDefault(_playgroove);
 
-var _playgrain = __webpack_require__(6);
+var _playgrain = __webpack_require__(8);
 
 var _playgrain2 = _interopRequireDefault(_playgrain);
 
-var _loop = __webpack_require__(8);
+var _loop = __webpack_require__(7);
 
 var _loop2 = _interopRequireDefault(_loop);
 
@@ -10618,7 +10582,7 @@ function setSettings(settings, i) {
     return { samples: samples, grain: grainSettings, delay: delaySettings };
 }
 
-function start(settings, ws) {
+function start(settings, ws, openConnection) {
 
     var audiopath = 'audio/';
     /*
@@ -10931,9 +10895,6 @@ exports.default = Ambient;
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/**
- * Created by Mike on 8/25/16.
- */
 
 
 Object.defineProperty(exports, "__esModule", {
@@ -10944,102 +10905,495 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var Playgroove = function () {
-    function Playgroove(audio, context) {
-        _classCallCheck(this, Playgroove);
+/**
+ * Grainread class
+ * a single series of grains
+  for the playgrain class
+ * Created by Mike Sperone on 8/25/16.
+ *
+*/
+var Grainread = function () {
+    function Grainread(audio, context, g_read) {
+        var g_multiply = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 1;
+        var g_fade = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 1;
+        var g_spread = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : 20;
+        var g_scatter = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : 28;
+
+        _classCallCheck(this, Grainread);
+
+        this.g_read = g_read;
+        this.g_multiply = g_multiply;
+        this.g_fade = g_fade;
+        this.g_spread = g_spread;
+        this.g_scatter = Math.random() * g_scatter / 127;
+
+        this.fb_amount = 0;
+        this.fb_position = 121;
+        this.fb_jitter = 272;
+
+        this.len = 12;
 
         this.audio = audio;
         this.context = context;
+        this.buffer = null;
+        this.duration = null;
+        this.stopped = true;
+
         this.src = this.context.createBufferSource();
-        this.delay = this.context.createDelay(1.0);
-        this.feedback = this.context.createGain();
+        this.env = this.context.createGain();
+        this.panner = this.context.createStereoPanner();
+
+        this.splitter = this.context.createChannelSplitter(2);
+        this.merge = this.context.createChannelMerger(2);
+        this.delayA = this.context.createDelay(0.5);
+        this.delayB = this.context.createDelay(0.5);
+        this.fbkA = this.context.createGain();
+        this.fbkA.gain.value = 0.5;
+        this.fbkB = this.context.createGain();
+        this.fbkB.gain.value = 0.5;
         this.volume = this.context.createGain();
 
-        this.merge = this.context.createChannelMerger(2);
-        this.panL = this.context.createStereoPanner();
-        this.panL.pan.value = -1;
-
-        this.merge.connect(this.volume);
-
         var that = this;
-
         var req = new XMLHttpRequest();
-        req.open('GET', this.audio);
+
+        req.open('GET', audio);
         req.responseType = 'arraybuffer';
 
         req.onload = function () {
-            this.audioData = req.response;
+            var audioData = req.response;
 
-            context.decodeAudioData(this.audioData, function (buffer) {
-
+            that.context.decodeAudioData(audioData, function (buffer) {
                 that.src.buffer = buffer;
-                that.src.playbackRate.value = 1;
+                that.buffer = buffer;
+                that.duration = that.buffer.duration;
+                that.src.connect(that.env);
 
-                that.volume.connect(context.destination);
-                that.volume.gain.value = 0;
+                that.env.connect(that.delayA);
+                that.env.connect(that.delayB);
+                that.delayA.connect(that.fbkA);
+                that.delayB.connect(that.fbkB);
+                that.fbkA.connect(that.delayA);
+                that.fbkB.connect(that.delayB);
+                that.delayA.connect(that.merge, 0, 0);
+                that.delayB.connect(that.merge, 0, 1);
+
+                that._connectIfPanner([that.merge, that.panner]);
+                //that.merge.connect(that.panner);
+
                 that.src.loop = true;
+                //that.env.connect(that.panner);
+                that._connectIfPanner([that.panner, that.volume], [that.merge, that.volume]);
+                that.volume.connect(context.destination);
+                that.forwardInTime();
+                that.phasor();
             }, function (e) {
-                console.log("Error with decoding audio data " + e.err);
+                "Error with decoding audio data" + e.err;
             });
         };
 
         req.send();
-        this.src.start(0);
     }
 
-    _createClass(Playgroove, [{
-        key: 'delaySwitch',
+    _createClass(Grainread, [{
+        key: '_connectIfPanner',
+        value: function _connectIfPanner(a) {
+            var b = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
+
+            if (this.panner.empty !== true) {
+                console.debug("connection panner");
+                a[0].connect(a[1]);
+            } else {
+                console.debug("panner left out");
+                if (b.length) {
+                    b[0].connect(b[1]);
+                }
+            }
+        }
+    }, {
+        key: 'restartAtTime',
+        value: function restartAtTime(t) {
+            console.log("restarting at time: ", t);
+            this.stop();
+            this.src = this.context.createBufferSource();
+            this.src.buffer = this.buffer;
+            this.src.loop = true;
+            this.src.connect(this.env);
+
+            this.src.start(0, t);
+            this.stopped = false;
+        }
+    }, {
+        key: 'play',
+        value: function play() {
+            this.src.start(0);
+            this.stopped = false;
+        }
+    }, {
+        key: 'start',
+        value: function start() {
+            if (this.stopped) {
+                this.restartAtTime(0);
+                this.stopped = false; // as a backup in case restartAtTime() fails... necessary?
+            }
+        }
+    }, {
+        key: 'stop',
+        value: function stop() {
+            if (!this.stopped) {
+                this.src.stop(0);
+                this.stopped = true;
+            }
+        }
+    }, {
+        key: 'toString',
+        value: function toString() {
+            return { "audio": this.audio, "context": this.context, "g_read": this.g_read, "g_speed": this.g_speed, "g_multiply": this.g_multiply, "g_fade": this.g_fade, "g_speedspread": this.g_speedspread, "g_spread": this.g_spread, "g_scatter": this.g_scatter };
+        }
+    }, {
+        key: 'readChanged',
+        value: function readChanged() {
+            console.log("read changed.  pos: ", this.position);
+            this.position = this.read * this.duration;
+        }
+    }, {
+        key: 'forwardInTime',
+        value: function forwardInTime() {
+            //console.log("forward!");
+            // scope, I think?  this inside the callback should be this out here
+            var internalCallback = function internalCallback() {
+                //return function(this) {
+                this.position = this.position + 0.1;
+                //console.log("moving forward.  pos: ", that.position);
+                window.setTimeout(internalCallback.bind(this), 100);
+                //}
+            };
+            window.setTimeout(internalCallback.bind(this), 100);
+        }
+    }, {
+        key: 'phasor',
+        value: function phasor() {
+            var _this = this;
+
+            var that = this;
+
+            var internalCallback = function internalCallback() {
+
+                var time = Math.random() * _this.read * 2 + 0.1;
+                window.setTimeout(internalCallback.bind(_this), time * 1000);
+
+                if (_this.stopped === false) {
+                    // Setting
+                    _this.position = that.read * that.duration;
+                    //console.log("grain start position: ", that.position);
+                    _this.loopLength = (_this.read * 29 + 6) * 50; // based on each sample
+                    //console.log("grain length: ", that.loopLength);
+                    _this.panner.value = _this.spread * 0.4 * Math.random() - 1;
+
+                    var now = _this.context.currentTime;
+                    var e = _this.env.gain;
+                    e.cancelScheduledValues(now);
+                    e.setValueAtTime(0.0001, now);
+
+                    _this.restartAtTime(_this.position);
+
+                    e.exponentialRampToValueAtTime(1, now + time / 2);
+                    e.exponentialRampToValueAtTime(0.0001, now + time);
+                }
+            };
+            //TODO: use AnimationFrame instead
+            window.setTimeout(internalCallback.bind(this), 500);
+        }
+    }, {
+        key: 'vol',
+        set: function set(v) {
+            this.volume.gain.value = v;
+        },
+        get: function get() {
+            return this.volume.gain.value;
+        }
+    }, {
+        key: 'delays',
+        set: function set(d) {
+            this.delayA.delayTime.value = d;
+        },
+        get: function get() {
+            return this.delayA.delayTime.value;
+        }
+    }, {
+        key: 'feedback',
+        set: function set(f) {
+            this.fbkA.gain.value = f;
+        },
+        get: function get() {
+            return this.fbkA.gain.value;
+        }
+    }, {
+        key: 'position',
+        set: function set(x) {
+            //console.log(this.src.loopStart);
+            this.src.loopStart = x;
+        },
+        get: function get() {
+            return this.src.loopStart;
+        }
+    }, {
+        key: 'loopLength',
+        set: function set(x) {
+            this.src.loopEnd = this.position + x;
+        },
+        get: function get() {
+            return this.src.loopEnd - this.src.loopStart;
+        }
+    }, {
+        key: 'read',
+        set: function set(gr) {
+            this.g_read = gr;
+            this.readChanged.bind(this);
+        },
+        get: function get() {
+            return this.g_read;
+        }
+    }, {
+        key: 'speed',
+        set: function set(gs) {
+            this.g_speed = gs;
+        },
+        get: function get() {
+            return this.g_speed;
+        }
+    }, {
+        key: 'fade',
+        set: function set(gf) {
+            this.g_fade = gf;
+        },
+        get: function get() {
+            return this.g_fade;
+        }
+    }, {
+        key: 'speedspread',
+        set: function set(ss) {
+            this.g_speedspread = ss;
+        },
+        get: function get() {
+            return this.g_speedspread;
+        }
+    }, {
+        key: 'spread',
+        set: function set(gs) {
+            this.g_spread = gs;
+        },
+        get: function get() {
+            return this.g_spread;
+        }
+    }, {
+        key: 'scatter',
+        set: function set(gs) {
+            this.g_scatter = gs;
+        },
+        get: function get() {
+            return this.g_scatter;
+        }
+    }]);
+
+    return Grainread;
+}();
+
+exports.default = Grainread;
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _soundbridge = __webpack_require__(3);
+
+var _settings = __webpack_require__(2);
+
+var json = _interopRequireWildcard(_settings);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+(function () {
+
+    var DEBUG = true;
+
+    var openConnection = false;
+    var ws = typeof io !== "undefined" ? io() : false;
+    var i = void 0;
+
+    function getServerData() {
+        return new Promise(function (resolve, reject) {
+            if (ws) {
+                ws.on('setting', function (n) {
+                    console.log("server ready");
+                    openConnection = true;
+                    i = n;
+                    return resolve("connection open");
+                });
+            } else {
+                // allow ws.on() functions to be called with no error
+                i = Math.floor(Math.random() * 29);
+                ws = { on: function on(a, b) {} };
+                console.warn("No server, Solo Mode");
+                return resolve("No Server");
+            }
+        });
+    }
+
+    getServerData().then(function () {
+        var settings = (0, _soundbridge.setSettings)(json.settings, i);
+        console.log("settings loaded");
+
+        if (typeof window !== "undefined") {
+            var $ = __webpack_require__(1);
+            (0, _soundbridge.start)(settings, ws, openConnection);
+        }
+    });
+
+    console.log = function (s) {
+        var o = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
+
+        if (DEBUG) {
+            if (o !== '') {
+                console.debug(s, o);
+            } else {
+                console.debug(s);
+            }
+        }
+    };
+})();
+
+/***/ }),
+/* 7 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _play = __webpack_require__(0);
+
+var _play2 = _interopRequireDefault(_play);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * Created by Mike on 9/2/16.
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
+
+var Loop = function (_Play) {
+    _inherits(Loop, _Play);
+
+    function Loop(audio, context) {
+        _classCallCheck(this, Loop);
+
+        var _this = _possibleConstructorReturn(this, (Loop.__proto__ || Object.getPrototypeOf(Loop)).call(this, audio, context));
+
+        _this.audio = audio;
+        _this.context = context;
+        _this.position = 0;
+        _this.sensorPos = null;
+        //this.play();
+        return _this;
+    }
+
+    _createClass(Loop, [{
+        key: "sensor",
+        value: function sensor(val) {
+            var time = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+
+
+            var x = Math.floor(val);
+
+            if (x > 20) {
+
+                if (x !== this.sensorPos) {
+                    this.sensorPos = x;
+                    this.loop(x);
+                }
+            } else if (x < 11) {
+                // play
+                this.position = 0;
+                this.length = this.duration;
+                this.startSample(time);
+            }
+        }
+    }, {
+        key: "loop",
+        value: function loop(x) {
+            var start = void 0;
+            var dur = this.duration;
+            this.stop();
+            switch (x) {
+                case 21:
+                case 22:
+                    start = 0.3 * dur;
+                    break;
+                case 23:
+                case 24:
+                    start = 0.4 * dur;
+                    break;
+                case 25:
+                case 26:
+                    start = 0.5 * dur;
+                    break;
+                case 27:
+                case 28:
+                    start = 0.6 * dur;
+                    break;
+                case 29:
+                case 30:
+                    start = 0.7 * dur;
+                    break;
+                case 31:
+                case 32:
+                    start = 0.8 * dur;
+                    break;
+                default:
+                    start = 0.9 * dur;
+                    break;
+            }
+            console.log("start: " + start);
+            this.position = start;
+            this.length = 1.2;
+            this.startSample(this.position);
+        }
+    }, {
+        key: "delaySwitch",
         value: function delaySwitch(setting) {
             if (setting) {
-                console.debug("delay on");
+                //console.log("delay on");
                 this.delay.connect(this.feedback);
                 this.feedback.connect(this.delay);
-                if (this.panL.empty !== true) {
-                    console.debug("connection panL");
-                    this.delay.connect(this.merge, 0, 1);
-                    this.src.connect(this.panL);
-                    this.src.connect(this.delay);
-                    this.panL.connect(this.volume);
-                } else {
-                    console.debug("panL left out");
-                    this.delay.connect(this.merge, 0, 1);
-                    this.src.connect(this.merge, 0, 0);
-                    this.merge.connect(this.volume);
-                }
+                this.delay.connect(this.merge, 0, 1);
+                this.src.connect(this.panL);
+                this.src.connect(this.delay);
+                this.panL.connect(this.volume);
             } else {
                 //console.log("delay off");
                 this.src.connect(this.volume);
             }
         }
-    }, {
-        key: 'delTime',
-        value: function delTime(time) {
-            this.delay.delayTime.value = time;
-        }
-    }, {
-        key: 'delFeedback',
-        value: function delFeedback(fbk) {
-            this.feedback.gain.value = fbk;
-        }
-    }, {
-        key: 'pbRate',
-        value: function pbRate(rate) {
-            this.src.playbackRate.value = rate;
-        }
-    }, {
-        key: 'vol',
-        value: function vol(v) {
-            this.volume.gain.value = v;
-        }
     }]);
 
-    return Playgroove;
-}();
+    return Loop;
+}(_play2.default);
 
-exports.default = Playgroove;
+exports.default = Loop;
 
 /***/ }),
-/* 6 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11055,7 +11409,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       * Created by Mike on 9/1/16.
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       */
 
-var _grainread = __webpack_require__(7);
+var _grainread = __webpack_require__(5);
 
 var _grainread2 = _interopRequireDefault(_grainread);
 
@@ -11202,10 +11556,13 @@ var Playgrain = function () {
 exports.default = Playgrain;
 
 /***/ }),
-/* 7 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
+/**
+ * Created by Mike on 8/25/16.
+ */
 
 
 Object.defineProperty(exports, "__esModule", {
@@ -11216,445 +11573,99 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-/**
- * Grainread class
- * a single series of grains
-  for the playgrain class
- * Created by Mike Sperone on 8/25/16.
- *
-*/
-var Grainread = function () {
-    function Grainread(audio, context, g_read) {
-        var g_multiply = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 1;
-        var g_fade = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 1;
-        var g_spread = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : 20;
-        var g_scatter = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : 28;
-
-        _classCallCheck(this, Grainread);
-
-        this.g_read = g_read;
-        this.g_multiply = g_multiply;
-        this.g_fade = g_fade;
-        this.g_spread = g_spread;
-        this.g_scatter = Math.random() * g_scatter / 127;
-
-        this.fb_amount = 0;
-        this.fb_position = 121;
-        this.fb_jitter = 272;
-
-        this.len = 12;
+var Playgroove = function () {
+    function Playgroove(audio, context) {
+        _classCallCheck(this, Playgroove);
 
         this.audio = audio;
         this.context = context;
-        this.buffer = null;
-        this.duration = null;
-        this.stopped = true;
-
         this.src = this.context.createBufferSource();
-        this.env = this.context.createGain();
-        this.panner = this.context.createStereoPanner();
-
-        this.splitter = this.context.createChannelSplitter(2);
-        this.merge = this.context.createChannelMerger(2);
-        this.delayA = this.context.createDelay(0.5);
-        this.delayB = this.context.createDelay(0.5);
-        this.fbkA = this.context.createGain();
-        this.fbkA.gain.value = 0.5;
-        this.fbkB = this.context.createGain();
-        this.fbkB.gain.value = 0.5;
+        this.delay = this.context.createDelay(1.0);
+        this.feedback = this.context.createGain();
         this.volume = this.context.createGain();
 
-        var that = this;
-        var req = new XMLHttpRequest();
+        this.merge = this.context.createChannelMerger(2);
+        this.panL = this.context.createStereoPanner();
+        this.panL.pan.value = -1;
 
-        req.open('GET', audio);
+        this.merge.connect(this.volume);
+
+        var that = this;
+
+        var req = new XMLHttpRequest();
+        req.open('GET', this.audio);
         req.responseType = 'arraybuffer';
 
         req.onload = function () {
-            var audioData = req.response;
+            this.audioData = req.response;
 
-            that.context.decodeAudioData(audioData, function (buffer) {
+            context.decodeAudioData(this.audioData, function (buffer) {
+
                 that.src.buffer = buffer;
-                that.buffer = buffer;
-                that.duration = that.buffer.duration;
-                that.src.connect(that.env);
+                that.src.playbackRate.value = 1;
 
-                that.env.connect(that.delayA);
-                that.env.connect(that.delayB);
-                that.delayA.connect(that.fbkA);
-                that.delayB.connect(that.fbkB);
-                that.fbkA.connect(that.delayA);
-                that.fbkB.connect(that.delayB);
-                that.delayA.connect(that.merge, 0, 0);
-                that.delayB.connect(that.merge, 0, 1);
-
-                that._connectIfPanner([that.merge, that.panner]);
-                //that.merge.connect(that.panner);
-
-                that.src.loop = true;
-                //that.env.connect(that.panner);
-                that._connectIfPanner([that.panner, that.volume], [that.merge, that.volume]);
                 that.volume.connect(context.destination);
-                that.forwardInTime();
-                that.phasor();
+                that.volume.gain.value = 0;
+                that.src.loop = true;
             }, function (e) {
-                "Error with decoding audio data" + e.err;
+                console.log("Error with decoding audio data " + e.err);
             });
         };
 
         req.send();
+        this.src.start(0);
     }
 
-    _createClass(Grainread, [{
-        key: '_connectIfPanner',
-        value: function _connectIfPanner(a) {
-            var b = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
-
-            if (this.panner.empty !== true) {
-                console.debug("connection panner");
-                a[0].connect(a[1]);
-            } else {
-                console.debug("panner left out");
-                if (b.length) {
-                    b[0].connect(b[1]);
-                }
-            }
-        }
-    }, {
-        key: 'restartAtTime',
-        value: function restartAtTime(t) {
-            console.log("restarting at time: ", t);
-            this.stop();
-            this.src = this.context.createBufferSource();
-            this.src.buffer = this.buffer;
-            this.src.loop = true;
-
-            this.src.connect(this.env);
-
-            this.src.start(0, t);
-            this.stopped = false;
-        }
-    }, {
-        key: 'play',
-        value: function play() {
-            this.src.start(0);
-        }
-    }, {
-        key: 'start',
-        value: function start() {
-            if (this.stopped) {
-                this.restartAtTime(0);
-                this.stopped = false;
-            }
-        }
-    }, {
-        key: 'stop',
-        value: function stop() {
-            if (!this.stopped) {
-                this.src.stop(0);
-                this.stopped = true;
-            }
-        }
-    }, {
-        key: 'toString',
-        value: function toString() {
-            return [{ "audio": this.audio }, { "context": this.context }, { "g_read": this.g_read }, { "g_speed": this.g_speed }, { "g_multiply": this.g_multiply }, { "g_fade": this.g_fade }, { "g_speedspread": this.g_speedspread }, { "g_spread": this.g_spread }, { "g_scatter": this.g_scatter }];
-        }
-    }, {
-        key: 'readChanged',
-        value: function readChanged() {
-            console.log("read changed.  pos: ", this.position);
-            this.position = this.read * this.duration;
-        }
-    }, {
-        key: 'forwardInTime',
-        value: function forwardInTime() {
-            //console.log("forward!");
-            // scope, I think?  this inside the callback should be this out here
-            var internalCallback = function internalCallback() {
-                //return function(this) {
-                this.position = this.position + 0.1;
-                //console.log("moving forward.  pos: ", that.position);
-                window.setTimeout(internalCallback.bind(this), 100);
-                //}
-            };
-            window.setTimeout(internalCallback.bind(this), 100);
-        }
-    }, {
-        key: 'phasor',
-        value: function phasor() {
-            var that = this;
-
-            var internalCallback = function () {
-
-                //return function() {
-
-                var time = Math.random() * this.read * 2 + 0.1;
-                window.setTimeout(internalCallback.bind(this), time * 1000);
-
-                if (this.stopped === false) {
-                    // Setting
-                    //that.position = that.read * that.duration;
-                    //console.log("grain start position: ", that.position);
-                    this.loopLength = (this.read * 29 + 6) * 50; // based on each sample
-                    //console.log("grain length: ", that.loopLength);
-                    this.panner.value = this.spread * 0.4 * Math.random() - 1;
-
-                    var now = this.context.currentTime;
-                    var e = this.env.gain;
-                    e.cancelScheduledValues(now);
-                    e.setValueAtTime(0.0001, now);
-
-                    this.restartAtTime(this.position);
-
-                    e.exponentialRampToValueAtTime(1, now + time / 2);
-                    e.exponentialRampToValueAtTime(0.0001, now + time);
-                }
-
-                //};
-            }();
-            //TODO: use AnimationFrame instead
-            window.setTimeout(internalCallback.bind(this), 500);
-        }
-    }, {
-        key: 'vol',
-        set: function set(v) {
-            this.volume.gain.value = v;
-        },
-        get: function get() {
-            return this.volume.gain.value;
-        }
-    }, {
-        key: 'delays',
-        set: function set(d) {
-            this.delayA.delayTime.value = d;
-        },
-        get: function get() {
-            return this.delayA.delayTime.value;
-        }
-    }, {
-        key: 'feedback',
-        set: function set(f) {
-            this.fbkA.gain.value = f;
-        },
-        get: function get() {
-            return this.fbkA.gain.value;
-        }
-    }, {
-        key: 'position',
-        set: function set(x) {
-            //console.log(this.src.loopStart);
-            this.src.loopStart = x;
-        },
-        get: function get() {
-            return this.src.loopStart;
-        }
-    }, {
-        key: 'loopLength',
-        set: function set(x) {
-            this.src.loopEnd = this.position + x;
-        },
-        get: function get() {
-            return this.src.loopEnd - this.src.loopStart;
-        }
-    }, {
-        key: 'read',
-        set: function set(gr) {
-            this.g_read = gr;
-            this.readChanged.bind(this);
-        },
-        get: function get() {
-            return this.g_read;
-        }
-    }, {
-        key: 'speed',
-        set: function set(gs) {
-            this.g_speed = gs;
-        },
-        get: function get() {
-            return this.g_speed;
-        }
-    }, {
-        key: 'fade',
-        set: function set(gf) {
-            this.g_fade = gf;
-        },
-        get: function get() {
-            return this.g_fade;
-        }
-    }, {
-        key: 'speedspread',
-        set: function set(ss) {
-            this.g_speedspread = ss;
-        },
-        get: function get() {
-            return this.g_speedspread;
-        }
-    }, {
-        key: 'spread',
-        set: function set(gs) {
-            this.g_spread = gs;
-        },
-        get: function get() {
-            return this.g_spread;
-        }
-    }, {
-        key: 'scatter',
-        set: function set(gs) {
-            this.g_scatter = gs;
-        },
-        get: function get() {
-            return this.g_scatter;
-        }
-    }]);
-
-    return Grainread;
-}();
-
-exports.default = Grainread;
-
-/***/ }),
-/* 8 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _play = __webpack_require__(0);
-
-var _play2 = _interopRequireDefault(_play);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /**
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * Created by Mike on 9/2/16.
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
-
-var Loop = function (_Play) {
-    _inherits(Loop, _Play);
-
-    function Loop(audio, context) {
-        _classCallCheck(this, Loop);
-
-        var _this = _possibleConstructorReturn(this, (Loop.__proto__ || Object.getPrototypeOf(Loop)).call(this, audio, context));
-
-        _this.audio = audio;
-        _this.context = context;
-        _this.position = 0;
-        _this.sensorPos = null;
-        //this.play();
-        return _this;
-    }
-
-    _createClass(Loop, [{
-        key: "sensor",
-        value: function sensor(val) {
-            var time = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
-
-
-            var x = Math.floor(val);
-
-            if (x > 20) {
-
-                if (x !== this.sensorPos) {
-                    this.sensorPos = x;
-                    this.loop(x);
-                }
-            } else if (x < 11) {
-                // play
-                this.position = 0;
-                this.length = this.duration;
-                this.startSample(time);
-            }
-        }
-    }, {
-        key: "loop",
-        value: function loop(x) {
-            var start = void 0;
-            var dur = this.duration;
-            this.stop();
-            switch (x) {
-                case 21:
-                case 22:
-                    start = 0.3 * dur;
-                    break;
-                case 23:
-                case 24:
-                    start = 0.4 * dur;
-                    break;
-                case 25:
-                case 26:
-                    start = 0.5 * dur;
-                    break;
-                case 27:
-                case 28:
-                    start = 0.6 * dur;
-                    break;
-                case 29:
-                case 30:
-                    start = 0.7 * dur;
-                    break;
-                case 31:
-                case 32:
-                    start = 0.8 * dur;
-                    break;
-                default:
-                    start = 0.9 * dur;
-                    break;
-            }
-            console.log("start: " + start);
-            this.position = start;
-            this.length = 1.2;
-            this.startSample(this.position);
-        }
-    }, {
-        key: "delaySwitch",
+    _createClass(Playgroove, [{
+        key: 'delaySwitch',
         value: function delaySwitch(setting) {
             if (setting) {
-                //console.log("delay on");
+                console.debug("delay on");
                 this.delay.connect(this.feedback);
                 this.feedback.connect(this.delay);
-                this.delay.connect(this.merge, 0, 1);
-                this.src.connect(this.panL);
-                this.src.connect(this.delay);
-                this.panL.connect(this.volume);
+                if (this.panL.empty !== true) {
+                    console.debug("connection panL");
+                    this.delay.connect(this.merge, 0, 1);
+                    this.src.connect(this.panL);
+                    this.src.connect(this.delay);
+                    this.panL.connect(this.volume);
+                } else {
+                    console.debug("panL left out");
+                    this.delay.connect(this.merge, 0, 1);
+                    this.src.connect(this.merge, 0, 0);
+                    this.merge.connect(this.volume);
+                }
             } else {
                 //console.log("delay off");
                 this.src.connect(this.volume);
             }
         }
+    }, {
+        key: 'delTime',
+        value: function delTime(time) {
+            this.delay.delayTime.value = time;
+        }
+    }, {
+        key: 'delFeedback',
+        value: function delFeedback(fbk) {
+            this.feedback.gain.value = fbk;
+        }
+    }, {
+        key: 'pbRate',
+        value: function pbRate(rate) {
+            this.src.playbackRate.value = rate;
+        }
+    }, {
+        key: 'vol',
+        value: function vol(v) {
+            this.volume.gain.value = v;
+        }
     }]);
 
-    return Loop;
-}(_play2.default);
+    return Playgroove;
+}();
 
-exports.default = Loop;
-
-/***/ }),
-/* 9 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-var settings = exports.settings = {
-    "samples": [{ "0": "water3", "1": "drillingbursts", "2": "crickets", "3": "arleneNR", "a": "" }, { "0": "c_ray2", "1": "c_ray2", "2": "hammer", "3": "carolynNR", "a": "" }, { "0": "pno_pluck", "1": "bridgesound1", "2": "piano_hammer", "3": "walter2", "a": "" }, { "0": "rhythmicdrips", "1": "buttonholer", "2": "water3", "3": "albert_tie", "a": "" }, { "0": "glass_chipping", "1": "glass_cutting", "2": "glass_breaking", "3": "victor_glass", "a": "" }, { "0": "34sL", "1": "flagpole", "2": "facwhistle+mock", "3": "counteecullen", "a": "" }, { "0": "sandwalk", "1": "laskyrachet", "2": "rhythmicdrips", "3": "dennisfields", "a": "" }, { "0": "2_2_4_sheddrips", "1": "sax", "2": "crickets", "3": "sidcaesar1", "a": "" }, { "0": "glass_breaking", "1": "greyston2NR", "2": "bridgesound1", "3": "mosesyoho", "a": "" }, { "0": "trolley2", "1": "pinningmachine", "2": "facwhistle+mock", "3": "masefield1", "a": "" }, { "0": "montagemachine", "1": "facwhistle1srt", "2": "buttonholer", "3": "masefield2", "a": "" }, { "0": "bridgesound1", "1": "water1", "2": "rhythmicsdrips", "3": "sharonbarge", "a": "" }, { "0": "piano_tuning", "1": "glass_ice", "2": "glass_breaking", "3": "mockingbird", "a": "ambientcar_factory" }, { "0": "wavebangbuf", "1": "bridgesound1", "2": "metalhinge1", "3": "piano_tuning2", "a": "ambientfactory" }, { "0": "pno_pluck", "1": "bridgesound3", "2": "piano_hammer", "3": "elevator", "a": "marsh" }, { "0": "sax", "1": "skateboardstereo", "2": "boatreverse", "3": "elevator_old_mix", "a": "night" }, { "0": "greyston4", "1": "rightear12", "2": "sign+bell", "3": "badprinter", "a": "heliocopter" }, { "0": "night", "1": "34sL", "2": "heliocopter", "3": "hangerdoor", "a": "waterambient2" }, { "0": "tennis", "1": "waves", "2": "churchbells", "3": "mockingbird2x", "a": "farmersmarcket" }, { "0": "motorboatecho", "1": "grinder", "2": "heliocopter", "3": "skateboardmono", "a": "waveslapping" }, { "0": "pigeons", "1": "localbirds2", "2": "geese+gulls", "3": "sculpture1", "a": "springpeepers" }, { "0": "bartonsifter3", "1": "foghorn2", "2": "pno_pluck", "3": "heliocopter", "a": "ambientfactory" }, { "0": "bridgesound4", "1": "foghorn2", "2": "foghorn2", "3": "waveslapping", "a": "ambientthunderdrips" }, { "0": "rightear15", "1": "rightear15", "2": "bridgesound", "3": "pno_pluck", "a": "crickets" }, { "0": "churchbells", "1": "crickets", "2": "geese+gulls", "3": "lenfishing", "a": "" }, { "0": "paintmixer", "1": "montagemachine", "2": "elevator", "3": "lensugar", "a": "" }, { "0": "bridgesound3", "1": "pno_pluck", "2": "drillingbursts", "3": "mockingbird2x", "a": "" }, { "0": "badprinter", "1": "shakesound8", "2": "wavebangbuf2", "3": "localbirds2", "a": "" }, { "0": "dogsbarking", "1": "ferryboatbarge", "2": "pno_pluck", "3": "badprinter2", "a": "" }, { "0": "greyston2NR", "1": "bridgesound3", "2": "geese+gulls", "3": "sculpture1", "a": "" }],
-    "grain": [[28, 1, 2, 0.2], [28, 9, 2, 0.2], [39, 9, 2, 0.2], [18, 9, 2, 0.2], [39, 9, 2, 0.2], [39, 9, 2, 0.2], [28, 1, 2, 0.2], [28, 1, 2, 0.2], [39, 9, 2, 0.1], [39, 9, 2, 0.2], [73, 9, 4, 0], [28, 1, 2, 0.2], [39, 9, 2, 0.2], [39, 9, 2, 0.1], [39, 9, 2, 0.2], [39, 14, 4, 0], [73, 3, 2, 0.2], [73, 9, 4, 0.2], [11, 35, 5, 0.1], [73, 9, 4, 0.2], [39, 28, 2, 0.2], [28, 1, 2, 0], [39, 9, 2, 0.4], [39, 9, 2, 0.1], [39, 28, 2, 0.2], [28, 14, 3, 0.4], [28, 1, 2, 0.2], [28, 1, 2, 0], [28, 1, 2, 0], [39, 28, 2, 0.2]],
-    "delay": [[false, true, [], false], [true, true, [], false], [true, true, [], true], [true, false, [], true], [true, true, [], false], [false, true, [], false], [false, true, [], false], [true, true, [], false], [false, false, [], false], [true, true, [], true], [true, false, [], false], [true, false, [], false], [true, true, [], false], [false, false, [], false], [false, false, [], false], [false, true, [], false], [false, true, [], false], [false, false, [], false], [true, false, [], false], [false, true, [], false], [false, false, [], false], [false, true, [], true], [true, true, [], false], [false, false, [], true], [true, true, [], false], [false, true, [], false], [false, true, [], false], [false, true, [], true], [true, true, [], true], [true, true, [], true]]
-};
+exports.default = Playgroove;
 
 /***/ })
 /******/ ]);
