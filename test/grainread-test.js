@@ -5,7 +5,6 @@ describe('Grainread Class', function() {
     let context = new AudioContext();
     let gr = new Grainread(audio, context, 1);
 
-    console.log("grainread: ", gr);
     describe('initial values', function() {
 
         it('starts a new grainread class', function() {

@@ -11436,8 +11436,20 @@ var Playgrain = function () {
         this.j = new _grainread2.default(this.audio, this.context, 1);
     }
 
+    /**
+     * Sets the fade
+     *
+     *
+     */
+
+
     _createClass(Playgrain, [{
         key: 'start',
+
+
+        /**
+         *  Starts playing
+         */
         value: function start() {
             this.a.start();
             this.b.start();
@@ -11450,6 +11462,11 @@ var Playgrain = function () {
             this.i.start();
             this.j.start();
         }
+
+        /**
+         * Stops playing
+         */
+
     }, {
         key: 'stop',
         value: function stop() {
@@ -11464,6 +11481,11 @@ var Playgrain = function () {
             this.i.stop();
             this.j.stop();
         }
+
+        /**
+         * Sets the volume
+         */
+
     }, {
         key: 'fade',
         set: function set(f) {
@@ -11478,6 +11500,11 @@ var Playgrain = function () {
             this.i.fade = f;
             this.j.fade = f;
         }
+
+        /**
+         * Sets the delay feedback
+         */
+
     }, {
         key: 'feedback',
         set: function set(f) {
@@ -11492,6 +11519,11 @@ var Playgrain = function () {
             this.i.feedback = f;
             this.j.feedback = f;
         }
+
+        /**
+         * Sets the read point
+         */
+
     }, {
         key: 'read',
         set: function set(gr) {
@@ -11506,6 +11538,11 @@ var Playgrain = function () {
             this.i.read = gr;
             this.j.read = gr;
         }
+
+        /**
+         * Sets the grain scatter amount
+         */
+
     }, {
         key: 'scatter',
         set: function set(s) {
@@ -11520,6 +11557,11 @@ var Playgrain = function () {
             this.i.scatter = s;
             this.j.scatter = s;
         }
+
+        /**
+         * Sets the grain spread
+         */
+
     }, {
         key: 'spread',
         set: function set(s) {

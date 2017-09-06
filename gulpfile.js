@@ -49,9 +49,9 @@ gulp.task('concat-tests', function(cb) {
                         // './test/soundbridge-test.js',
                         './test/play-class-test.js',
                         './test/loop-test.js',
-                        // './test/playgroove-test.js',
+                        './test/playgroove-test.js',
                         './test/grainread-test.js',
-                        // './test/playgrain-test.js'
+                        './test/playgrain-test.js'
                     ])
         .pipe(concat('all-test.js'))
         .pipe(gulp.dest('test'));

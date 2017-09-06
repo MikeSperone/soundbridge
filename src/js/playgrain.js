@@ -26,6 +26,11 @@ export default class Playgrain {
 
     }
 
+    /**
+     * Sets the fade
+     *
+     *
+     */
     set fade(f) {
         this.a.fade = f;
         this.b.fade = f;
@@ -39,6 +44,9 @@ export default class Playgrain {
         this.j.fade = f;
     }
 
+    /**
+     * Sets the delay feedback
+     */
     set feedback(f) {
         this.a.feedback = f;
         this.b.feedback = f;
@@ -52,6 +60,9 @@ export default class Playgrain {
         this.j.feedback = f;
     }
 
+    /**
+     * Sets the read point
+     */
     set read(gr) {
         this.a.read = gr;
         this.b.read = gr;
@@ -65,6 +76,9 @@ export default class Playgrain {
         this.j.read = gr;
     }
 
+    /**
+     * Sets the grain scatter amount
+     */
     set scatter(s) {
         this.a.scatter = s;
         this.b.scatter = s;
@@ -78,6 +92,9 @@ export default class Playgrain {
         this.j.scatter = s;
     }
 
+    /**
+     * Sets the grain spread
+     */
     set spread(s) {
         this.a.spread = s;
         this.b.spread = s;
@@ -91,6 +108,9 @@ export default class Playgrain {
         this.j.spread = s;
     }
 
+    /**
+     *  Starts playing
+     */
     start() {
         this.a.start();
         this.b.start();
@@ -104,6 +124,9 @@ export default class Playgrain {
         this.j.start();
     }
 
+    /**
+     * Stops playing
+     */
     stop() {
         this.a.stop();
         this.b.stop();
@@ -116,6 +139,10 @@ export default class Playgrain {
         this.i.stop();
         this.j.stop();
     }
+
+    /**
+     * Sets the volume
+     */
     set vol(v) {
         this.a.vol = v;
         this.b.vol = v;
@@ -128,7 +155,5 @@ export default class Playgrain {
         this.i.vol = v;
         this.j.vol = v;
     }
-
-
 
 }
