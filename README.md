@@ -26,26 +26,18 @@ Requires [node](https://nodejs.org) and [npm](https://npmjs.com)
 I recently added Webpack and didn't check to see if that changed anything I documented here.  I hope not, but just an FYI this section may be out of date.
 
 ```sh
-cd web && npm install
-cd ..
-cd server && npm install
-cd ..
-cp config.bak config.js
+npm install
 ```
 and change your config host, port, etc... if necessary (if you're not using the server, it won't be)
 
 ## Run server
-`npm run server`
+`npm start`
 
-## Building in /web
+## Building
 
 Development:
 ```sh
 gulp dev
-```
-or to also start the development server
-```sh
-gulp dev-server
 ```
 
 ## Testing
@@ -65,8 +57,3 @@ css, js, html
 
 #### test
 `gulp watch:test`
-
-## Server
-
-The server works based on a correct Server setup, instructions not provided here right now.
-
