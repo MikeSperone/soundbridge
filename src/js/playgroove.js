@@ -69,20 +69,26 @@ export default class Playgroove {
         }
     }
 
+    _restrict(val) {
+        if (val < 0) val = 0;
+        if (val > 1) val = 1;
+        return val;
+    }
+
     delTime(time) {
-        this.delay.delayTime.value = time;
+        this.delay.delayTime.value = this._restrict(time);
     }
 
     delFeedback(fbk) {
-        this.feedback.gain.value = fbk;
+        this.feedback.gain.value = this._restrict(fbk);
     }
 
     pbRate(rate) {
-        this.src.playbackRate.value = rate;
+        this.src.playbackRate.value = this._restrict(rate);
     }
 
     vol(v) {
-        this.volume.gain.value = v;
+        this.volume.gain.value = this._restrict(v);
     }
 
 }

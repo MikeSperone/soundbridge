@@ -20,5 +20,38 @@ describe('Playgroove Class', function() {
             expect(pg.src.buffer.duration).to.be.within(90,91);
         });
 
-	});
+    });
+
+    describe('utility functions', function() {
+
+        it('restricts the value to between 0 and 1', function() {
+            expect(pg._restrict(1.0001)).to.equal(1);
+            expect(pg._restrict(-0.4)).to.equal(0);
+        });
+
+    });
+
+    describe('parameters', function() {
+
+        it('sets the delay time', function() {
+            pg.delTime(0.125);
+            expect(pg.delay.delayTime.value).to.equal(0.125);
+        });
+
+        it('sets the delay feedback', function() {
+            pg.delFeedback(0.5);
+            expect(pg.feedback.gain.value).to.equal(0.5);
+        });
+
+        it('sets the playback rate', function() {
+            pg.pbRate(0.25);
+            expect(pg.src.playbackRate.value).to.equal(0.25);
+        });
+
+        it('sets the volume', function() {
+            pg.vol(0.75);
+            expect(pg.volume.gain.value).to.equal(0.75);
+        });
+    });
+
 });
