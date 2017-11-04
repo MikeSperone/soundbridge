@@ -33,6 +33,9 @@
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
 /******/
+/******/ 	// identity function for calling harmony imports with the correct context
+/******/ 	__webpack_require__.i = function(value) { return value; };
+/******/
 /******/ 	// define getter function for harmony exports
 /******/ 	__webpack_require__.d = function(exports, name, getter) {
 /******/ 		if(!__webpack_require__.o(exports, name)) {
@@ -60,201 +63,11 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 2);
+/******/ 	return __webpack_require__(__webpack_require__.s = 6);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-/**
- * Created by Mike on 8/30/16.
- */
-
-var Play = function () {
-    /**
-     * Plays an audio file
-     * @param {string} audio - path to audio file
-     * @param {AudioContext} context - Web Audio Context
-     * @param {number} vol - (optional) The starting volume.  Defaults to 0
-     */
-    function Play(audio, context) {
-        var vol = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
-
-        _classCallCheck(this, Play);
-
-        this.audio = audio;
-        this.context = context;
-        this.contextCreationTime = new Date();
-        this.startTime = null;
-
-        this.buffer = null;
-        this.loopStart = 0;
-        this.loopEnd = 0;
-        this.stopped = true;
-
-        var that = this;
-        var req = new XMLHttpRequest();
-
-        req.open('GET', audio);
-        req.responseType = 'arraybuffer';
-
-        req.onreadystatechange = function () {
-            if (this.readyState == 4) {
-                var audioData = req.response;
-
-                that.context.decodeAudioData(audioData, function (buffer) {
-                    that.buffer = buffer;
-                    that.stopped = true;
-                    that.startSample();
-                    that.volume.gain.value = vol;
-                    that.audioLoadTimeOffset = (new Date() - that.contextCreationTime) / 1000;
-                    // console.log(that);
-                }, function (e) {
-                    console.log("Error with decoding audio data" + e.err);
-                });
-            }
-        };
-
-        req.send();
-    }
-
-    /**
-     * Start playing the sample at new offset
-     * @param {number} offset - How far into the sample to start playback (s)
-     */
-
-
-    _createClass(Play, [{
-        key: 'startSample',
-        value: function startSample() {
-            var offset = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
-
-            console.log("startSample");
-
-            offset = offset < 0 ? 0 : offset;
-            if (this.stopped === false) {
-                this.stop();
-            }
-            this.src = this.context.createBufferSource();
-            this.volume = this.context.createGain();
-            this.src.buffer = this.buffer;
-
-            this.src.loop = true;
-            this.src.loopStart = this.loopStart;
-            this.src.loopEnd = this.loopEnd;
-
-            this.src.connect(this.volume);
-            this.volume.connect(this.context.destination);
-            this.startTime = this.context.currentTime - offset;
-
-            this.src.start(0, offset);
-            this.stopped = false;
-        }
-
-        /**
-         * Get the duration of the audio buffer
-         * @return {number} The duration in ms
-         */
-
-    }, {
-        key: 'play',
-        value: function play() {
-            if (this.src) {
-                this.src.start();
-            }
-        }
-
-        /**
-         * Stop the audio
-         */
-
-    }, {
-        key: 'stop',
-        value: function stop() {
-            if (this.stopped === false) {
-                this.src.stop(0);
-                this.stopped = true;
-            }
-        }
-
-        /**
-         * Gets the elapsed time from start of playback
-         * @return time from start of playback until now (ms)
-         */
-
-    }, {
-        key: 'toString',
-        value: function toString() {
-            return [{ "audio": this.audio }, { "context": this.context }];
-        }
-
-        /**
-         * Set the volume
-         * @param {number} v 0.0 to 1.0
-         */
-
-    }, {
-        key: 'duration',
-        get: function get() {
-            return this.src.buffer.duration;
-        }
-    }, {
-        key: 'elapsedTime',
-        get: function get() {
-            return this.context.currentTime - this.startTime;
-        }
-    }, {
-        key: 'position',
-        set: function set(x) {
-            this.loopStart = x;
-        },
-        get: function get() {
-            return this.loopStart;
-        }
-    }, {
-        key: 'len',
-        set: function set(x) {
-            this.loopEnd = Math.min(this.position + x, this.duration);
-            this.startSample();
-        },
-        get: function get() {
-            return this.src.loopEnd - this.src.loopStart;
-        }
-    }, {
-        key: 'vol',
-        set: function set(v) {
-            this.volume.gain.value = v;
-        }
-
-        /**
-         * Get the current volume
-         * @return {Number} volume
-         */
-        ,
-        get: function get() {
-            return this.volume.gain.value;
-        }
-    }]);
-
-    return Play;
-}();
-
-exports.default = Play;
-
-/***/ }),
-/* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -566,411 +379,7 @@ var Grainread = function () {
 exports.default = Grainread;
 
 /***/ }),
-/* 2 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function(global) {
-
-var _play = __webpack_require__(0);
-
-var _play2 = _interopRequireDefault(_play);
-
-var _loop = __webpack_require__(4);
-
-var _loop2 = _interopRequireDefault(_loop);
-
-var _playgroove = __webpack_require__(5);
-
-var _playgroove2 = _interopRequireDefault(_playgroove);
-
-var _grainread = __webpack_require__(1);
-
-var _grainread2 = _interopRequireDefault(_grainread);
-
-var _playgrain = __webpack_require__(6);
-
-var _playgrain2 = _interopRequireDefault(_playgrain);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-// var chai = require('chai');
-var chaiAsPromised = __webpack_require__(7); // import { setSettings } from '../src/js/soundbridge.js';
-// import * as json from '../src/js/settings.js';
-
-chai.use(chaiAsPromised);
-// var expect = chai.expect;
-
-
-describe('Play Class', function () {
-
-    var audio = '/audio/arlene.mp3';
-    var context = new AudioContext();
-    var XMLHttpRequest = global.XMLHttpRequest;
-    var testing;
-
-    describe('initial state', function () {
-
-        before(function (done) {
-            var wait = 2000;
-            this.timeout(wait);
-            testing = new _play2.default(audio, context);
-            setTimeout(function () {
-                done();
-            }, wait / 2);
-        });
-
-        it('starts a new instance', function () {
-            console.log("testing: ", testing);
-            expect(testing).to.be.an("object");
-        });
-
-        it('names the audio file', function () {
-            expect(testing.audio).to.equal(audio);
-        });
-
-        it('fills the audio buffer', function () {
-            expect(testing.buffer.duration).to.be.within(90, 91);
-        });
-
-        it('begins at position 0', function () {
-            expect(testing.position).to.equal(0);
-        });
-
-        it('is stopped', function () {
-            expect(testing.stopped).to.be.true;
-        });
-
-        it('begins at volume level 0', function () {
-            expect(testing.vol).to.equal(0);
-        });
-    });
-
-    describe('things', function () {
-
-        it('vol()', function () {
-            testing.vol = 0.5;
-            expect(testing.vol).to.equal(0.5);
-        });
-
-        it('startSample()', function () {
-            testing.startSample(0);
-            expect(testing.stopped).to.be.false;
-        });
-
-        it('stop()', function () {
-            testing.startSample(0);
-            testing.stop();
-            expect(testing.stopped).to.be.true;
-        });
-
-        it.skip('elapsedTime()', function () {});
-
-        it('position()', function () {
-            testing.position = 10.25;
-            expect(testing.position).to.equal(10.25);
-            testing.position = 2;
-            expect(testing.position).to.equal(2);
-        });
-
-        it('len()', function () {
-            testing.len = 5;
-            expect(testing.len).to.equal(5);
-            expect(testing.loopEnd - testing.loopStart).to.equal(5);
-        });
-
-        it('do not allow length to be greater than the sample', function () {
-            testing.position = 0;
-            testing.len = 5000;
-            expect(testing.loopEnd).to.equal(testing.duration);
-        });
-
-        afterEach(function () {
-            testing.stop();
-        });
-    });
-});
-
-describe('Loop Class', function () {
-
-    it('should start a new instance', function () {
-        var audio = '/audio/arlene.mp3';
-        var context = new AudioContext();
-        return new _loop2.default(audio, context);
-    });
-});
-
-describe('Playgroove Class', function () {
-
-    var audio = '/audio/arlene.mp3';
-    var context = new AudioContext();
-    var pg = new _playgroove2.default(audio, context);
-
-    console.log(pg);
-    describe('initial values', function () {
-
-        it('starts a new Playgroove class', function () {
-            expect(pg).to.exist;
-        });
-
-        it('sets the audio', function () {
-            expect(pg.audio).to.equal('/audio/arlene.mp3');
-        });
-
-        it('fills the audio buffer', function () {
-            expect(pg.src.buffer.duration).to.be.within(90, 91);
-        });
-    });
-
-    describe('utility functions', function () {
-
-        it('restricts the value to between 0 and 1', function () {
-            expect(pg._restrict(1.0001)).to.equal(1);
-            expect(pg._restrict(-0.4)).to.equal(0);
-        });
-    });
-
-    describe('parameters', function () {
-
-        it('sets the delay time', function () {
-            pg.delTime(0.125);
-            expect(pg.delay.delayTime.value).to.equal(0.125);
-        });
-
-        it('sets the delay feedback', function () {
-            pg.delFeedback(0.5);
-            expect(pg.feedback.gain.value).to.equal(0.5);
-        });
-
-        it('sets the playback rate', function () {
-            pg.pbRate(0.25);
-            expect(pg.src.playbackRate.value).to.equal(0.25);
-        });
-
-        it('sets the volume', function () {
-            pg.vol(0.75);
-            expect(pg.volume.gain.value).to.equal(0.75);
-        });
-    });
-});
-
-describe('Grainread Class', function () {
-
-    var audio = '/audio/arlene.mp3';
-    var context = new AudioContext();
-    var gr = new _grainread2.default(audio, context, 1);
-
-    describe('initial values', function () {
-
-        it('starts a new grainread class', function () {
-            expect(gr).to.exist;
-        });
-
-        it('sets the audio', function () {
-            expect(gr.audio).to.equal('/audio/arlene.mp3');
-        });
-
-        it('fills the audio buffer', function () {
-            expect(gr.buffer.duration).to.be.within(90, 91);
-        });
-
-        it('sets fb values', function () {
-            expect(gr.fb_amount).to.equal(0);
-            expect(gr.fb_position).to.equal(121);
-            expect(gr.fb_jitter).to.equal(272);
-        });
-
-        it('is stopped', function () {
-            expect(gr.stopped).to.be.true;
-        });
-
-        it('begins at volume level 1', function () {
-            expect(gr.vol).to.equal(1);
-        });
-    });
-
-    describe('setters and getters', function () {
-
-        it('volume', function () {
-            gr.vol = .75;
-            expect(gr.vol).to.equal(.75);
-            expect(gr.volume.gain.value).to.equal(.75);
-        });
-
-        it('delays', function () {
-            gr.delays = .25;
-            expect(gr.delays).to.equal(.25);
-            expect(gr.delayA.delayTime.value).to.equal(.25);
-        });
-
-        it('feedback', function () {
-            gr.feedback = .5;
-            expect(gr.feedback).to.equal(.5);
-            expect(gr.fbkA.gain.value).to.equal(.5);
-        });
-
-        it('position', function () {
-            gr.position = 25;
-            expect(gr.position).to.equal(25);
-            expect(gr.src.loopStart).to.equal(25);
-        });
-
-        it('loopLength', function () {
-            gr.loopLength = 10;
-            expect(gr.loopLength).to.equal(10);
-            expect(gr.src.loopEnd - gr.src.loopStart).to.equal(10);
-        });
-        it('speed', function () {
-            gr.speed = 0.5;
-            expect(gr.speed).to.equal(0.5);
-            expect(gr.g_speed).to.equal(0.5);
-        });
-        it('fade', function () {
-            gr.fade = 100;
-            expect(gr.fade).to.equal(100);
-            expect(gr.g_fade).to.equal(100);
-        });
-        it('read', function () {
-            gr.read = 1;
-            expect(gr.read).to.equal(1);
-            expect(gr.g_read).to.equal(1);
-        });
-        it('speedspread', function () {
-            gr.speedspread = 12;
-            expect(gr.speedspread).to.equal(12);
-            expect(gr.g_speedspread).to.equal(12);
-        });
-        it('spread', function () {
-            gr.spread = 2;
-            expect(gr.spread).to.equal(2);
-            expect(gr.g_spread).to.equal(2);
-        });
-        it('scatter', function () {
-            gr.scatter = 19;
-            expect(gr.scatter).to.equal(19);
-            expect(gr.g_scatter).to.equal(19);
-        });
-        // loopLength, speed, fade, read, speedspread, spread, scatter
-    });
-
-    describe('methods', function () {
-
-        it('restarts at a given time', function () {
-            gr.restartAtTime(10);
-            expect(gr.stopped).to.be.false;
-        });
-
-        it('starts and stops', function () {
-            gr.start();
-            expect(gr.stopped).to.be.false;
-            gr.stop();
-            expect(gr.stopped).to.be.true;
-        });
-
-        after(function () {
-            gr.stop();
-        });
-    });
-});
-
-describe('Playgrain Class', function () {
-
-    var audio = '/audio/arlene.mp3';
-    var context = new AudioContext();
-    var pg = new _playgrain2.default(audio, context);
-
-    console.log("playgrain: ", pg);
-
-    it('starts a new play class', function () {
-        expect(pg).to.exist;
-    });
-
-    it('includes 10 instances of Grainread', function () {
-        expect(pg.a.constructor.name).to.equal("Grainread");
-        expect(pg.b.constructor.name).to.equal("Grainread");
-        expect(pg.c.constructor.name).to.equal("Grainread");
-        expect(pg.d.constructor.name).to.equal("Grainread");
-        expect(pg.e.constructor.name).to.equal("Grainread");
-        expect(pg.f.constructor.name).to.equal("Grainread");
-        expect(pg.g.constructor.name).to.equal("Grainread");
-        expect(pg.h.constructor.name).to.equal("Grainread");
-        expect(pg.i.constructor.name).to.equal("Grainread");
-        expect(pg.j.constructor.name).to.equal("Grainread");
-    });
-
-    it('sets the fade amount for all instances', function () {
-        pg.fade = .75;
-        expect(pg.a.fade).to.equal(.75);
-        expect(pg.b.fade).to.equal(.75);
-        expect(pg.c.fade).to.equal(.75);
-        expect(pg.d.fade).to.equal(.75);
-        expect(pg.e.fade).to.equal(.75);
-        expect(pg.f.fade).to.equal(.75);
-        expect(pg.g.fade).to.equal(.75);
-        expect(pg.h.fade).to.equal(.75);
-        expect(pg.i.fade).to.equal(.75);
-        expect(pg.j.fade).to.equal(.75);
-    });
-
-    it('sets the read position for all instances', function () {
-        pg.read = 12;
-        expect(pg.a.read).to.equal(12);
-        expect(pg.b.read).to.equal(12);
-        expect(pg.c.read).to.equal(12);
-        expect(pg.d.read).to.equal(12);
-        expect(pg.e.read).to.equal(12);
-        expect(pg.f.read).to.equal(12);
-        expect(pg.g.read).to.equal(12);
-        expect(pg.h.read).to.equal(12);
-        expect(pg.i.read).to.equal(12);
-        expect(pg.j.read).to.equal(12);
-    });
-
-    it('sets the feedback position for all instances', function () {
-        pg.feedback = .5;
-        expect(pg.a.feedback).to.equal(.5);
-        expect(pg.b.feedback).to.equal(.5);
-        expect(pg.c.feedback).to.equal(.5);
-        expect(pg.d.feedback).to.equal(.5);
-        expect(pg.e.feedback).to.equal(.5);
-        expect(pg.f.feedback).to.equal(.5);
-        expect(pg.g.feedback).to.equal(.5);
-        expect(pg.h.feedback).to.equal(.5);
-        expect(pg.i.feedback).to.equal(.5);
-        expect(pg.j.feedback).to.equal(.5);
-    });
-});
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
-
-/***/ }),
-/* 3 */
-/***/ (function(module, exports) {
-
-var g;
-
-// This works in non-strict mode
-g = (function() {
-	return this;
-})();
-
-try {
-	// This works if eval is allowed (see CSP)
-	g = g || Function("return this")() || (1,eval)("this");
-} catch(e) {
-	// This works if the window reference is available
-	if(typeof window === "object")
-		g = window;
-}
-
-// g can still be undefined, but nothing to do about it...
-// We return undefined, instead of nothing here, so it's
-// easier to handle this case. if(!global) { ...}
-
-module.exports = g;
-
-
-/***/ }),
-/* 4 */
+/* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -982,7 +391,197 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _play = __webpack_require__(0);
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/**
+ * Created by Mike on 8/30/16.
+ */
+
+var Play = function () {
+    /**
+     * Plays an audio file
+     * @param {string} audio - path to audio file
+     * @param {AudioContext} context - Web Audio Context
+     * @param {number} vol - (optional) The starting volume.  Defaults to 0
+     */
+    function Play(audio, context) {
+        var vol = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+
+        _classCallCheck(this, Play);
+
+        this.audio = audio;
+        this.context = context;
+        this.contextCreationTime = new Date();
+        this.startTime = null;
+
+        this.buffer = null;
+        this.loopStart = 0;
+        this.loopEnd = 0;
+        this.stopped = true;
+
+        var that = this;
+        var req = new XMLHttpRequest();
+
+        req.open('GET', audio);
+        req.responseType = 'arraybuffer';
+
+        req.onreadystatechange = function () {
+            if (this.readyState == 4) {
+                var audioData = req.response;
+
+                that.context.decodeAudioData(audioData, function (buffer) {
+                    that.buffer = buffer;
+                    that.stopped = true;
+                    that.startSample();
+                    that.volume.gain.value = vol;
+                    that.audioLoadTimeOffset = (new Date() - that.contextCreationTime) / 1000;
+                    // console.log(that);
+                }, function (e) {
+                    console.log("Error with decoding audio data" + e.err);
+                });
+            }
+        };
+
+        req.send();
+    }
+
+    /**
+     * Start playing the sample at new offset
+     * @param {number} offset - How far into the sample to start playback (s)
+     */
+
+
+    _createClass(Play, [{
+        key: 'startSample',
+        value: function startSample() {
+            var offset = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
+
+            console.log("startSample");
+
+            offset = offset < 0 ? 0 : offset;
+            if (this.stopped === false) {
+                this.stop();
+            }
+            this.src = this.context.createBufferSource();
+            this.volume = this.context.createGain();
+            this.src.buffer = this.buffer;
+
+            this.src.loop = true;
+            this.src.loopStart = this.loopStart;
+            this.src.loopEnd = this.loopEnd;
+
+            this.src.connect(this.volume);
+            this.volume.connect(this.context.destination);
+            this.startTime = this.context.currentTime - offset;
+
+            this.src.start(0, offset);
+            this.stopped = false;
+        }
+
+        /**
+         * Get the duration of the audio buffer
+         * @return {number} The duration in ms
+         */
+
+    }, {
+        key: 'play',
+        value: function play() {
+            if (this.src) {
+                this.src.start();
+            }
+        }
+
+        /**
+         * Stop the audio
+         */
+
+    }, {
+        key: 'stop',
+        value: function stop() {
+            if (this.stopped === false) {
+                this.src.stop(0);
+                this.stopped = true;
+            }
+        }
+
+        /**
+         * Gets the elapsed time from start of playback
+         * @return time from start of playback until now (ms)
+         */
+
+    }, {
+        key: 'toString',
+        value: function toString() {
+            return [{ "audio": this.audio }, { "context": this.context }];
+        }
+
+        /**
+         * Set the volume
+         * @param {number} v 0.0 to 1.0
+         */
+
+    }, {
+        key: 'duration',
+        get: function get() {
+            return this.src.buffer.duration;
+        }
+    }, {
+        key: 'elapsedTime',
+        get: function get() {
+            return this.context.currentTime - this.startTime;
+        }
+    }, {
+        key: 'position',
+        set: function set(x) {
+            this.loopStart = x;
+        },
+        get: function get() {
+            return this.loopStart;
+        }
+    }, {
+        key: 'len',
+        set: function set(x) {
+            this.loopEnd = Math.min(this.position + x, this.duration);
+            this.startSample();
+        },
+        get: function get() {
+            return this.src.loopEnd - this.src.loopStart;
+        }
+    }, {
+        key: 'vol',
+        set: function set(v) {
+            this.volume.gain.value = v;
+        }
+
+        /**
+         * Get the current volume
+         * @return {Number} volume
+         */
+        ,
+        get: function get() {
+            return this.volume.gain.value;
+        }
+    }]);
+
+    return Play;
+}();
+
+exports.default = Play;
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _play = __webpack_require__(1);
 
 var _play2 = _interopRequireDefault(_play);
 
@@ -1097,126 +696,7 @@ var Loop = function (_Play) {
 exports.default = Loop;
 
 /***/ }),
-/* 5 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/**
- * Created by Mike on 8/25/16.
- */
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var Playgroove = function () {
-    function Playgroove(audio, context) {
-        _classCallCheck(this, Playgroove);
-
-        this.audio = audio;
-        this.context = context;
-        this.src = this.context.createBufferSource();
-        this.delay = this.context.createDelay(1.0);
-        this.feedback = this.context.createGain();
-        this.volume = this.context.createGain();
-
-        this.merge = this.context.createChannelMerger(2);
-        this.panL = this.context.createStereoPanner();
-        this.panL.pan.value = -1;
-
-        this.merge.connect(this.volume);
-
-        var that = this;
-
-        var req = new XMLHttpRequest();
-        req.open('GET', this.audio);
-        req.responseType = 'arraybuffer';
-
-        req.onload = function () {
-            this.audioData = req.response;
-
-            context.decodeAudioData(this.audioData, function (buffer) {
-
-                that.src.buffer = buffer;
-                that.src.playbackRate.value = 1;
-
-                that.volume.connect(context.destination);
-                that.volume.gain.value = 0;
-                that.src.loop = true;
-            }, function (e) {
-                console.log("Error with decoding audio data " + e.err);
-            });
-        };
-
-        req.send();
-        this.src.start(0);
-    }
-
-    _createClass(Playgroove, [{
-        key: 'delaySwitch',
-        value: function delaySwitch(setting) {
-            if (setting) {
-                console.debug("delay on");
-                this.delay.connect(this.feedback);
-                this.feedback.connect(this.delay);
-                if (this.panL.empty !== true) {
-                    console.debug("connection panL");
-                    this.delay.connect(this.merge, 0, 1);
-                    this.src.connect(this.panL);
-                    this.src.connect(this.delay);
-                    this.panL.connect(this.volume);
-                } else {
-                    console.debug("panL left out");
-                    this.delay.connect(this.merge, 0, 1);
-                    this.src.connect(this.merge, 0, 0);
-                    this.merge.connect(this.volume);
-                }
-            } else {
-                //console.log("delay off");
-                this.src.connect(this.volume);
-            }
-        }
-    }, {
-        key: '_restrict',
-        value: function _restrict(val) {
-            if (val < 0) val = 0;
-            if (val > 1) val = 1;
-            return val;
-        }
-    }, {
-        key: 'delTime',
-        value: function delTime(time) {
-            this.delay.delayTime.value = this._restrict(time);
-        }
-    }, {
-        key: 'delFeedback',
-        value: function delFeedback(fbk) {
-            this.feedback.gain.value = this._restrict(fbk);
-        }
-    }, {
-        key: 'pbRate',
-        value: function pbRate(rate) {
-            this.src.playbackRate.value = this._restrict(rate);
-        }
-    }, {
-        key: 'vol',
-        value: function vol(v) {
-            this.volume.gain.value = this._restrict(v);
-        }
-    }]);
-
-    return Playgroove;
-}();
-
-exports.default = Playgroove;
-
-/***/ }),
-/* 6 */
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1232,7 +712,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       * Created by Mike on 9/1/16.
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       */
 
-var _grainread = __webpack_require__(1);
+var _grainread = __webpack_require__(0);
 
 var _grainread2 = _interopRequireDefault(_grainread);
 
@@ -1421,13 +901,131 @@ var Playgrain = function () {
 exports.default = Playgrain;
 
 /***/ }),
-/* 7 */
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/**
+ * Created by Mike on 8/25/16.
+ */
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Playgroove = function () {
+    function Playgroove(audio, context) {
+        _classCallCheck(this, Playgroove);
+
+        this.audio = audio;
+        this.context = context;
+        this.src = this.context.createBufferSource();
+        this.delay = this.context.createDelay(1.0);
+        this.feedback = this.context.createGain();
+        this.volume = this.context.createGain();
+
+        this.merge = this.context.createChannelMerger(2);
+        this.panL = this.context.createStereoPanner();
+        this.panL.pan.value = -1;
+
+        this.merge.connect(this.volume);
+
+        var that = this;
+
+        var req = new XMLHttpRequest();
+        req.open('GET', this.audio);
+        req.responseType = 'arraybuffer';
+
+        req.onload = function () {
+            this.audioData = req.response;
+
+            context.decodeAudioData(this.audioData, function (buffer) {
+
+                that.src.buffer = buffer;
+                that.src.playbackRate.value = 1;
+
+                that.volume.connect(context.destination);
+                that.volume.gain.value = 0;
+                that.src.loop = true;
+            }, function (e) {
+                console.log("Error with decoding audio data " + e.err);
+            });
+        };
+
+        req.send();
+        this.src.start(0);
+    }
+
+    _createClass(Playgroove, [{
+        key: 'delaySwitch',
+        value: function delaySwitch(setting) {
+            if (setting) {
+                console.debug("delay on");
+                this.delay.connect(this.feedback);
+                this.feedback.connect(this.delay);
+                if (this.panL.empty !== true) {
+                    console.debug("connection panL");
+                    this.delay.connect(this.merge, 0, 1);
+                    this.src.connect(this.panL);
+                    this.src.connect(this.delay);
+                    this.panL.connect(this.volume);
+                } else {
+                    console.debug("panL left out");
+                    this.delay.connect(this.merge, 0, 1);
+                    this.src.connect(this.merge, 0, 0);
+                    this.merge.connect(this.volume);
+                }
+            } else {
+                this.src.connect(this.volume);
+            }
+        }
+    }, {
+        key: '_restrict',
+        value: function _restrict(val) {
+            if (val < 0) val = 0;
+            if (val > 1) val = 1;
+            return val;
+        }
+    }, {
+        key: 'delTime',
+        value: function delTime(time) {
+            this.delay.delayTime.value = this._restrict(time);
+        }
+    }, {
+        key: 'delFeedback',
+        value: function delFeedback(fbk) {
+            this.feedback.gain.value = this._restrict(fbk);
+        }
+    }, {
+        key: 'pbRate',
+        value: function pbRate(rate) {
+            this.src.playbackRate.value = this._restrict(rate);
+        }
+    }, {
+        key: 'vol',
+        value: function vol(v) {
+            this.volume.gain.value = this._restrict(v);
+        }
+    }]);
+
+    return Playgroove;
+}();
+
+exports.default = Playgroove;
+
+/***/ }),
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 /* eslint-disable no-invalid-this */
-let checkError = __webpack_require__(8);
+let checkError = __webpack_require__(7);
 
 module.exports = (chai, utils) => {
     const Assertion = chai.Assertion;
@@ -1785,10 +1383,381 @@ module.exports.transferPromiseness = (assertion, promise) => {
     assertion.then = promise.then.bind(promise);
 };
 
-<<<<<<< HEAD
 module.exports.transformAsserterArgs = values => values;
 
-=======
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _play = __webpack_require__(1);
+
+var _play2 = _interopRequireDefault(_play);
+
+var _loop = __webpack_require__(2);
+
+var _loop2 = _interopRequireDefault(_loop);
+
+var _playgroove = __webpack_require__(4);
+
+var _playgroove2 = _interopRequireDefault(_playgroove);
+
+var _grainread = __webpack_require__(0);
+
+var _grainread2 = _interopRequireDefault(_grainread);
+
+var _playgrain = __webpack_require__(3);
+
+var _playgrain2 = _interopRequireDefault(_playgrain);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+// var chai = require('chai');
+var chaiAsPromised = __webpack_require__(5); // import { setSettings } from '../src/js/soundbridge.js';
+// import * as json from '../src/js/settings.js';
+
+chai.use(chaiAsPromised);
+// var expect = chai.expect;
+
+
+describe('Play Class', function () {
+
+    var audio = '/audio/arlene.mp3';
+    var context = new AudioContext();
+    //let XMLHttpRequest = global.XMLHttpRequest;
+    var testing;
+
+    describe('initial state', function () {
+
+        before(function (done) {
+            var wait = 2500;
+            this.timeout(wait);
+            testing = new _play2.default(audio, context);
+            setTimeout(function () {
+                done();
+            }, wait - 200);
+        });
+
+        it('starts a new instance', function () {
+            console.log("testing: ", testing);
+            expect(testing).to.be.an("object");
+        });
+
+        it('names the audio file', function () {
+            expect(testing.audio).to.equal(audio);
+        });
+
+        it('fills the audio buffer', function () {
+            expect(testing.buffer.duration).to.be.within(90, 91);
+        });
+
+        it('begins at position 0', function () {
+            expect(testing.position).to.equal(0);
+        });
+
+        it('is stopped', function () {
+            expect(testing.stopped).to.be.true;
+        });
+
+        it('begins at volume level 0', function () {
+            expect(testing.vol).to.equal(0);
+        });
+    });
+
+    describe('things', function () {
+
+        it('vol()', function () {
+            testing.vol = 0.5;
+            expect(testing.vol).to.equal(0.5);
+        });
+
+        it('startSample()', function () {
+            testing.startSample(0);
+            expect(testing.stopped).to.be.false;
+        });
+
+        it('stop()', function () {
+            testing.startSample(0);
+            testing.stop();
+            expect(testing.stopped).to.be.true;
+        });
+
+        it.skip('elapsedTime()', function () {});
+
+        it('position()', function () {
+            testing.position = 10.25;
+            expect(testing.position).to.equal(10.25);
+            testing.position = 2;
+            expect(testing.position).to.equal(2);
+        });
+
+        it('len()', function () {
+            testing.len = 5;
+            expect(testing.len).to.equal(5);
+            expect(testing.loopEnd - testing.loopStart).to.equal(5);
+        });
+
+        it('do not allow length to be greater than the sample', function () {
+            testing.position = 0;
+            testing.len = 5000;
+            expect(testing.loopEnd).to.equal(testing.duration);
+        });
+
+        afterEach(function () {
+            testing.stop();
+        });
+    });
+});
+
+describe('Loop Class', function () {
+
+    it('should start a new instance', function () {
+        var audio = '/audio/arlene.mp3';
+        var context = new AudioContext();
+        return new _loop2.default(audio, context);
+    });
+});
+
+/* global it */
+/* global describe */
+/* global expect */
+
+describe('Playgroove Class', function () {
+
+    var audio = '/audio/arlene.mp3';
+    var context = new AudioContext();
+    var pg = new _playgroove2.default(audio, context);
+
+    console.log(pg);
+    describe('initial values', function () {
+
+        it('starts a new Playgroove class', function () {
+            expect(pg).to.exist;
+        });
+
+        it('sets the audio', function () {
+            expect(pg.audio).to.equal('/audio/arlene.mp3');
+        });
+
+        it('fills the audio buffer', function () {
+            expect(pg.src.buffer.duration).to.be.within(90, 91);
+        });
+    });
+
+    describe('utility functions', function () {
+
+        it('restricts the value to between 0 and 1', function () {
+            expect(pg._restrict(1.0001)).to.equal(1);
+            expect(pg._restrict(-0.4)).to.equal(0);
+        });
+    });
+
+    describe('parameters', function () {
+
+        it('sets the delay time', function () {
+            pg.delTime(0.125);
+            expect(pg.delay.delayTime.value).to.equal(0.125);
+        });
+
+        it('sets the delay feedback', function () {
+            pg.delFeedback(0.5);
+            expect(pg.feedback.gain.value).to.equal(0.5);
+        });
+
+        it('sets the playback rate', function () {
+            pg.pbRate(0.25);
+            expect(pg.src.playbackRate.value).to.equal(0.25);
+        });
+
+        it('sets the volume', function () {
+            pg.vol(0.75);
+            expect(pg.volume.gain.value).to.equal(0.75);
+        });
+    });
+
+    describe('delay switch', function () {
+
+        it('turns the delay on', function () {
+            pg.delaySwitch(true);
+            pg.delay.disconnect(pg.feedback);
+            pg.feedback.disconnect(pg.delay);
+            //This ^^ should throw no errors...
+            //  but if it does, this test will fail
+        });
+
+        it('turns the delay off', function () {
+            pg.delaySwitch(false);
+            expect(function () {
+                return pg.delay.disconnect(pg.feedback);
+            }).to.throw;
+            expect(function () {
+                return pg.feedback.disconnect(pg.delay);
+            }).to.throw;
+        });
+    });
+});
+
+describe('Grainread Class', function () {
+
+    var audio = '/audio/arlene.mp3';
+    var context = new AudioContext();
+    var gr = new _grainread2.default(audio, context, 1);
+
+    describe('initial values', function () {
+
+        it('starts a new grainread class', function () {
+            expect(gr).to.exist;
+        });
+
+        it('sets the audio', function () {
+            expect(gr.audio).to.equal('/audio/arlene.mp3');
+        });
+
+        it('fills the audio buffer', function () {
+            expect(gr.buffer.duration).to.be.within(90, 91);
+        });
+
+        it('sets fb values', function () {
+            expect(gr.fb_amount).to.equal(0);
+            expect(gr.fb_position).to.equal(121);
+            expect(gr.fb_jitter).to.equal(272);
+        });
+
+        it('is stopped', function () {
+            expect(gr.stopped).to.be.true;
+        });
+
+        it('begins at volume level 1', function () {
+            expect(gr.vol).to.equal(1);
+        });
+    });
+
+    describe('setters and getters', function () {
+
+        it('volume', function () {
+            gr.vol = .75;
+            expect(gr.vol).to.equal(.75);
+            expect(gr.volume.gain.value).to.equal(.75);
+        });
+
+        it('delays', function () {
+            gr.delays = .25;
+            expect(gr.delays).to.equal(.25);
+            expect(gr.delayA.delayTime.value).to.equal(.25);
+        });
+
+        it('feedback', function () {
+            gr.feedback = .5;
+            expect(gr.feedback).to.equal(.5);
+            expect(gr.fbkA.gain.value).to.equal(.5);
+        });
+
+        it('position', function () {
+            gr.position = 25;
+            expect(gr.position).to.equal(25);
+            expect(gr.src.loopStart).to.equal(25);
+        });
+
+        it('loopLength', function () {
+            gr.loopLength = 10;
+            expect(gr.loopLength).to.equal(10);
+            expect(gr.src.loopEnd - gr.src.loopStart).to.equal(10);
+        });
+        it('speed', function () {
+            gr.speed = 0.5;
+            expect(gr.speed).to.equal(0.5);
+            expect(gr.g_speed).to.equal(0.5);
+        });
+        it('fade', function () {
+            gr.fade = 100;
+            expect(gr.fade).to.equal(100);
+            expect(gr.g_fade).to.equal(100);
+        });
+        it('read', function () {
+            gr.read = 1;
+            expect(gr.read).to.equal(1);
+            expect(gr.g_read).to.equal(1);
+        });
+        it('speedspread', function () {
+            gr.speedspread = 12;
+            expect(gr.speedspread).to.equal(12);
+            expect(gr.g_speedspread).to.equal(12);
+        });
+        it('spread', function () {
+            gr.spread = 2;
+            expect(gr.spread).to.equal(2);
+            expect(gr.g_spread).to.equal(2);
+        });
+        it('scatter', function () {
+            gr.scatter = 19;
+            expect(gr.scatter).to.equal(19);
+            expect(gr.g_scatter).to.equal(19);
+        });
+        // loopLength, speed, fade, read, speedspread, spread, scatter
+    });
+
+    describe('methods', function () {
+
+        it('restarts at a given time', function () {
+            gr.restartAtTime(10);
+            expect(gr.stopped).to.be.false;
+        });
+
+        it('starts and stops', function () {
+            gr.start();
+            expect(gr.stopped).to.be.false;
+            gr.stop();
+            expect(gr.stopped).to.be.true;
+        });
+
+        after(function () {
+            gr.stop();
+        });
+    });
+});
+
+describe('Playgrain Class', function () {
+
+    var audio = '/audio/arlene.mp3';
+    var context = new AudioContext();
+    var pg = new _playgrain2.default(audio, context);
+
+    console.log("playgrain: ", pg);
+
+    it('starts a new play class', function () {
+        expect(pg).to.exist;
+    });
+
+    it('includes 10 instances of Grainread', function () {
+        expect(pg.a.constructor.name).to.equal("Grainread");
+        expect(pg.b.constructor.name).to.equal("Grainread");
+        expect(pg.c.constructor.name).to.equal("Grainread");
+        expect(pg.d.constructor.name).to.equal("Grainread");
+        expect(pg.e.constructor.name).to.equal("Grainread");
+        expect(pg.f.constructor.name).to.equal("Grainread");
+        expect(pg.g.constructor.name).to.equal("Grainread");
+        expect(pg.h.constructor.name).to.equal("Grainread");
+        expect(pg.i.constructor.name).to.equal("Grainread");
+        expect(pg.j.constructor.name).to.equal("Grainread");
+    });
+
+    it('sets the fade amount for all instances', function () {
+        pg.fade = .75;
+        expect(pg.a.fade).to.equal(.75);
+        expect(pg.b.fade).to.equal(.75);
+        expect(pg.c.fade).to.equal(.75);
+        expect(pg.d.fade).to.equal(.75);
+        expect(pg.e.fade).to.equal(.75);
+        expect(pg.f.fade).to.equal(.75);
+        expect(pg.g.fade).to.equal(.75);
+        expect(pg.h.fade).to.equal(.75);
+        expect(pg.i.fade).to.equal(.75);
+        expect(pg.j.fade).to.equal(.75);
+    });
+
     it('sets the feedback position for all instances', function () {
         pg.feedback = .5;
         expect(pg.a.feedback).to.equal(.5);
@@ -1887,11 +1856,9 @@ module.exports.transformAsserterArgs = values => values;
         expect(pg.j.stopped).to.be(true);
     });
 });
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6)))
->>>>>>> 78dc822727fd984aa955b53ed46df252047e060d
 
 /***/ }),
-/* 8 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";

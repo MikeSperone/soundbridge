@@ -64,7 +64,6 @@ export default class Playgroove {
                 this.merge.connect(this.volume);
             }
         } else {
-            //console.log("delay off");
             this.src.connect(this.volume);
         }
     }

@@ -5,6 +5,8 @@ node_modules/
 /web/build
 ./web/build
 /server/node_modules
+/build
+/test/build
 
 config.js
 

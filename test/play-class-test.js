@@ -3,18 +3,18 @@ describe('Play Class', function() {
 
     const audio = '/audio/arlene.mp3';
     const context = new AudioContext();
-    let XMLHttpRequest = global.XMLHttpRequest;
+    //let XMLHttpRequest = global.XMLHttpRequest;
     var testing;
 
     describe('initial state', function() {
 
         before(function(done) {
-            var wait = 2000;
+            var wait = 2500;
             this.timeout(wait);
             testing = new Play(audio, context);
             setTimeout(function() {
                 done();
-            }, wait/2);
+            }, wait - 200);
         });
 
         it('starts a new instance', function() {

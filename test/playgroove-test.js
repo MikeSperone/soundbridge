@@ -1,3 +1,6 @@
+/* global it */
+/* global describe */
+/* global expect */
 
 describe('Playgroove Class', function() {
 
@@ -52,6 +55,24 @@ describe('Playgroove Class', function() {
             pg.vol(0.75);
             expect(pg.volume.gain.value).to.equal(0.75);
         });
+    });
+
+    describe('delay switch', function() {
+        
+        it('turns the delay on', function() {
+            pg.delaySwitch(true);
+            pg.delay.disconnect(pg.feedback);
+            pg.feedback.disconnect(pg.delay);
+            //This ^^ should throw no errors...
+            //  but if it does, this test will fail
+        });
+        
+        it('turns the delay off', function() {
+            pg.delaySwitch(false);
+            expect(() => pg.delay.disconnect(pg.feedback)).to.throw;
+            expect(() => pg.feedback.disconnect(pg.delay)).to.throw;
+        });
+
     });
 
 });
