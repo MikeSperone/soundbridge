@@ -65,7 +65,11 @@ export default class Loop extends Play {
                 start = 0.8*dur;
                 break;
             default:
-                start = 0.9*dur;
+                if (x > 32) {
+                    start = 0.9*dur;
+                } else if (x < 21) {
+                    start = 0.3 * dur;
+                }
                 break;
         }
         console.log("start: " + start);

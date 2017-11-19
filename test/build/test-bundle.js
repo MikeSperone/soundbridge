@@ -664,7 +664,11 @@ var Loop = function (_Play) {
                     start = 0.8 * dur;
                     break;
                 default:
-                    start = 0.9 * dur;
+                    if (x > 32) {
+                        start = 0.9 * dur;
+                    } else if (x < 21) {
+                        start = 0.3 * dur;
+                    }
                     break;
             }
             console.log("start: " + start);
@@ -1514,10 +1518,28 @@ describe('Play Class', function () {
 
 describe('Loop Class', function () {
 
+    var audio = '/audio/arlene.mp3';
+    var context = new AudioContext();
+    var lp = new _loop2.default(audio, context);
+
     it('should start a new instance', function () {
-        var audio = '/audio/arlene.mp3';
-        var context = new AudioContext();
-        return new _loop2.default(audio, context);
+        expect(lp).to.exist;
+    });
+
+    it('starts a loop at the correct spot', function () {
+        lp.loop(22);
+        expect(lp.position).to.equal(lp.duration * 0.3);
+    });
+
+    it('turns the delay on', function () {
+        //lp.delaySwitch(true);
+        //expect()... delay to be on
+
+    });
+
+    it('turns the delay off', function () {
+        //lp.delaySwitch(false);
+        //expect()... delay to be off
     });
 });
 

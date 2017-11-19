@@ -50,7 +50,7 @@ export function start(settings, ws, openConnection) {
 
     if (samples.a !== "") {
         let audioAmb = audiopath + samples.a + '.mp3';
-        let ambient = new Play(audioAmb, context, 0.8);
+        //let ambient = new Play(audioAmb, context, 0.8);
     }
 
     let zero = new Playgroove(audioZero, context);
