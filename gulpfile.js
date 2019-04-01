@@ -3,7 +3,6 @@ const
 	config = require('./config/config'),
 
 	gulp		= require('gulp'),
-    webserver	= require('gulp-webserver'),
     //babel		= require('gulp-babel'),
     pump  		= require('pump'),
     sass  		= require('gulp-sass'),
@@ -68,12 +67,7 @@ gulp.task('test-js', ['concat-tests'], function () {
 });
 
 gulp.task('js:pack', function () {
-    return gulp.src(src + '/js/index.js')
-        .pipe(webpack({
-            output: { filename: 'bundle.js' },
-            module: { rules: [{ test: /\.js$/, exclude: /node_modules/, loader: 'babel-loader?presets[]=es2015' }]}
-        }))
-        .pipe(gulp.dest(build + '/js/'));
+    return webpack(webpackConfig);
 });
 
 gulp.task('dev-html', function() {
@@ -81,7 +75,6 @@ gulp.task('dev-html', function() {
     .pipe(gulp.dest(build));
 });
 
-gulp.task('server', ['webserver', 'watch']);
 gulp.task('dev', ['copyjslib', 'js:pack', 'styles', 'dev-html']);
 gulp.task('production', ['prod-js', 'styles', 'prod-html']);
 gulp.task('test', ['concat-tests', 'test-js']);

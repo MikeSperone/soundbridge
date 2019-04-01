@@ -6,8 +6,10 @@ node_modules/
 ./web/build
 /server/node_modules
 /build
+dist/
 /test/build
 
 config.js
+.env
 
 .DS_Store
