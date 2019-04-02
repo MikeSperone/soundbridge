@@ -1,25 +1,16 @@
-const webpackConfig = require('./config/webpack.config.js');
 const
 	config = require('./config/config'),
-
 	gulp		= require('gulp'),
-    //babel		= require('gulp-babel'),
     pump  		= require('pump'),
     sass  		= require('gulp-sass'),
     sourcemaps	= require('gulp-sourcemaps'),
     autoprefixer= require('gulp-autoprefixer'),
-    htmlmin		= require('gulp-htmlmin'),
-
 	concat		= require('gulp-concat'),
-    stripDebug	= require('gulp-strip-debug'),
-    uglify		= require('gulp-uglify'),
-
     webpack     = require('webpack-stream');
 
 const
 	src   = config.src,
-    build = config.build,
-	host  = config.host;
+    build = config.build;
 
 gulp.task('styles', function() {
    return gulp
@@ -29,17 +20,6 @@ gulp.task('styles', function() {
        .pipe(autoprefixer())
        .pipe(sourcemaps.write('maps'))
        .pipe(gulp.dest(build+'/css'));
-});
-
-gulp.task('prod-html', function() {
-  return gulp.src(src + '/*.html')
-    .pipe(htmlmin({collapseWhitespace: true}))
-    .pipe(gulp.dest(build));
-});
-
-gulp.task('copyjslib', function() {
-    return gulp.src(src + '/js/AudioContextMonkeyPatch.js')
-        .pipe(gulp.dest(build + '/js/'));
 });
 
 gulp.task('concat-tests', function(cb) {
@@ -66,17 +46,7 @@ gulp.task('test-js', ['concat-tests'], function () {
         .pipe(gulp.dest('./test/build/'));
 });
 
-gulp.task('js:pack', function () {
-    return webpack(webpackConfig);
-});
-
-gulp.task('dev-html', function() {
-  return gulp.src(src + '/*.html')
-    .pipe(gulp.dest(build));
-});
-
-gulp.task('dev', ['copyjslib', 'js:pack', 'styles', 'dev-html']);
-gulp.task('production', ['prod-js', 'styles', 'prod-html']);
+gulp.task('dev', ['styles']);
 gulp.task('test', ['concat-tests', 'test-js']);
 
 gulp.task('watch:test', function() {
@@ -84,10 +54,7 @@ gulp.task('watch:test', function() {
 });
 
 gulp.task('watch:static', function() {
-    gulp.watch(src+'/js/*.js', ['copyjslib', 'js:pack']);
     gulp.watch(src+'/scss/*.scss', ['styles']);
-    gulp.watch(src+'/*.html', ['dev-html']);
 });
 
 gulp.task('watch', ['watch:test', 'watch:static']);
-
