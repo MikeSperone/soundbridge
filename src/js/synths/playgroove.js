@@ -8,6 +8,7 @@ export default class Playgroove {
     constructor(audio, context) {
 
         this.audio = audio;
+        console.log('this.audio: ', this.audio);
         this.context = context;
         this.src = this.context.createBufferSource();
         this.delay = this.context.createDelay(1.0);
@@ -26,15 +27,17 @@ export default class Playgroove {
             let that = this;
 
             let req = new XMLHttpRequest();
-            req.open('GET', that.audio);
+            console.log('loadAudio');
+            console.log('this.audio: ', this.audio);
+            req.open('GET', this.audio);
             req.responseType = 'arraybuffer';
 
             req.onload = function() {
                 const audioData = req.response;
 
-                that.context.decodeAudioData(audioData, function(buffer) {
+                that.context.decodeAudioData(audioData, buffer => {
 
-                        that.src.buffer = buffer;
+                        this.src.buffer = buffer;
                         that.src.playbackRate.value = 1;
 
                         that.volume.connect(that.context.destination);
@@ -44,7 +47,7 @@ export default class Playgroove {
                         that.src.start(0);
                         resolve("Audio loaded");
                     },
-                    function(e){console.log("Error with decoding audio data " + e.err);});
+                    function(e){console.log("Error decoding audio data " + e.err);});
             };
 
             req.send();

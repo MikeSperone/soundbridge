@@ -4,7 +4,8 @@
     "description": "John Morton's Soundbridge",
     "scripts": {
         "start": "nodemon ./bin/www",
-        "build": "NODE_ENV='development' webpack --display-error-details",
+        "build": "NODE_ENV='production' webpack --display-error-details",
+        "dev": "NODE_ENV='development' webpack --watch --display-error-details",
         "test": "mocha",
         "apptest": "mocha ./test/app-test.js"
     },
