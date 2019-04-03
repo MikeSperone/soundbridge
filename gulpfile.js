@@ -4,9 +4,7 @@ const
     pump  		= require('pump'),
     sass  		= require('gulp-sass'),
     sourcemaps	= require('gulp-sourcemaps'),
-    autoprefixer= require('gulp-autoprefixer'),
-	concat		= require('gulp-concat'),
-    webpack     = require('webpack-stream');
+    autoprefixer= require('gulp-autoprefixer');
 
 const
 	src   = config.src,
@@ -22,39 +20,6 @@ gulp.task('styles', function() {
        .pipe(gulp.dest(build+'/css'));
 });
 
-gulp.task('concat-tests', function(cb) {
-    return gulp.src([
-                        './test/index.js',
-                        // './test/soundbridge-test.js',
-                        './test/play-class-test.js',
-                        './test/loop-test.js',
-                        './test/playgroove-test.js',
-                        './test/grainread-test.js',
-                        './test/playgrain-test.js'
-                    ])
-        .pipe(concat('all-test.js'))
-        .pipe(gulp.dest('test'));
-        cb(err);
+gulp.task('watch', function() {
+    gulp.watch(src+'/scss/*.scss', gulp.series('styles'));
 });
-
-gulp.task('test-js', ['concat-tests'], function () {
-    return gulp.src('./test/all-test.js')
-        .pipe(webpack({
-            output: { filename: 'test-bundle.js' },
-            module: { rules: [{ test: /\.js$/, exclude: /node_modules/, loader: 'babel-loader?presets[]=es2015' }]}
-        }))
-        .pipe(gulp.dest('./test/build/'));
-});
-
-gulp.task('dev', ['styles']);
-gulp.task('test', ['concat-tests', 'test-js']);
-
-gulp.task('watch:test', function() {
-    gulp.watch("./test/*.js", ['test']);
-});
-
-gulp.task('watch:static', function() {
-    gulp.watch(src+'/scss/*.scss', ['styles']);
-});
-
-gulp.task('watch', ['watch:test', 'watch:static']);

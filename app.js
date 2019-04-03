@@ -5,8 +5,12 @@ var app = express();
 var path = require('path');
 var build_path = path.join(__dirname, config.build);
 
-app.use(express.static("public"));
-app.use("/test", express.static("test"));
+app.use(express.static("dist"));
+
+app.get("/test", function(req, res) {
+    res.status(200)
+        .sendFile(path.join(__dirname, config.build + '/test.html'));
+});
 
 app.get('/', function(req, res) {
     res.status(200).sendFile(path.join(__dirname,  config.build + '/index.html'));

@@ -1,11 +1,10 @@
 "use strict";
 import $ from 'jquery';
-import Ambient      from './ambient.js';
-import Play         from './play.js';
-import Playgroove   from './playgroove.js';
-import Playgrain    from './playgrain.js';
-import Loop         from './loop.js';
-
+import Ambient      from './synths/ambient.js';
+import Play         from './synths/play.js';
+import Playgroove   from './synths/playgroove.js';
+import Playgrain    from './synths/playgrain.js';
+import Loop         from './synths/loop.js';
 
 export function setSettings(settings, i) {
 
@@ -54,19 +53,22 @@ export function start(settings, ws, openConnection) {
     }
 
     let zero = new Playgroove(audioZero, context);
-    zero.delaySwitch(delaySettings[0]);
+    zero.loadAudio().then(() => zero.delaySwitch(delaySettings[0]));
 
     let one = new Playgroove(audioOne, context);
-    one.delaySwitch(delaySettings[1]);
+    one.loadAudio().then(() => one.delaySwitch(delaySettings[1]));
 
     let two = new Playgrain(audioTwo, context);
-    two.scatter = grainSettings[0];
-    two.fade = grainSettings[1];
-    two.spread = grainSettings[2];
-    two.feedback = grainSettings[3];
+    two.loadAudio().then(() => {
+        two.scatter = grainSettings[0];
+        two.fade = grainSettings[1];
+        two.spread = grainSettings[2];
+        two.feedback = grainSettings[3];
+    });
 
     let three = new Loop(audioThree, context);
     let threeHold = new Play(audioThreeHold, context);
+    threeHold.loadAudio().then(() => {});
     //three.delay(delaySettings[4]);
 
     let threePosition = 0;
@@ -90,7 +92,7 @@ export function start(settings, ws, openConnection) {
         }
     }
 
-    let over = function(id){
+    let over = id => {
         switch (id) {
             case 'zero':
                 zero.volume.gain.cancelScheduledValues(context.currentTime);
@@ -114,7 +116,7 @@ export function start(settings, ws, openConnection) {
 
     };
 
-    let out = function(id){
+    let out = id => {
 
         switch (id) {
             case 'zero':

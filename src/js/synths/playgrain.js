@@ -26,6 +26,21 @@ export default class Playgrain {
 
     }
 
+    loadAudio() {
+        return Promise.all([
+            this.a.loadAudio(),
+            this.b.loadAudio(),
+            this.c.loadAudio(),
+            this.d.loadAudio(),
+            this.e.loadAudio(),
+            this.f.loadAudio(),
+            this.g.loadAudio(),
+            this.h.loadAudio(),
+            this.i.loadAudio(),
+            this.j.loadAudio(),
+        ]);
+    }
+
     /**
      * Sets the fade
      *

@@ -28,7 +28,7 @@ export default class Grainread {
         this.stopped = true;
 
         this.src = this.context.createBufferSource();
-        this.env = this.context.createGain();
+        this.envelope = this.context.createGain();
         this.panner = this.context.createStereoPanner();
 
         this.splitter = this.context.createChannelSplitter(2);
@@ -41,41 +41,44 @@ export default class Grainread {
         this.fbkB.gain.value = 0.5;
         this.volume = this.context.createGain();
 
+    }
+
+    loadAudio() {
         let that = this;
         let req = new XMLHttpRequest();
 
-        req.open('GET', audio);
+        req.open('GET', that.audio);
         req.responseType = 'arraybuffer';
 
-        req.onload = function() {
+        req.onload = () => {
             let audioData = req.response;
 
-            that.context.decodeAudioData(audioData, function(buffer) {
-                    that.src.buffer = buffer;
-                    that.buffer = buffer;
-                    that.duration = that.buffer.duration;
-                    that.src.connect(that.env);
+            this.context.decodeAudioData(audioData, function(buffer) {
+                    this.src.buffer = buffer;
+                    this.buffer = buffer;
+                    this.duration = this.buffer.duration;
+                    this.src.connect(this.envelope);
 
-                    that.env.connect(that.delayA);
-                    that.env.connect(that.delayB);
-                    that.delayA.connect(that.fbkA);
-                    that.delayB.connect(that.fbkB);
-                    that.fbkA.connect(that.delayA);
-                    that.fbkB.connect(that.delayB);
-                    that.delayA.connect(that.merge, 0, 0);
-                    that.delayB.connect(that.merge, 0, 1);
+                    this.envelope.connect(this.delayA);
+                    this.envelope.connect(this.delayB);
+                    this.delayA.connect(this.fbkA);
+                    this.delayB.connect(this.fbkB);
+                    this.fbkA.connect(this.delayA);
+                    this.fbkB.connect(this.delayB);
+                    this.delayA.connect(this.merge, 0, 0);
+                    this.delayB.connect(this.merge, 0, 1);
 
-                    that._connectIfPanner([that.merge, that.panner]);
-                    //that.merge.connect(that.panner);
+                    this._connectIfPanner([this.merge, this.panner]);
+                    //this.merge.connect(this.panner);
 
-                    that.src.loop = true;
-                    //that.env.connect(that.panner);
-                    that._connectIfPanner([that.panner,that.volume], [that.merge, that.volume]);
-                    that.volume.connect(context.destination);
-                    that.forwardInTime();
-                    that.phasor();
+                    this.src.loop = true;
+                    //this.envelope.connect(this.panner);
+                    this._connectIfPanner([this.panner,this.volume], [this.merge, this.volume]);
+                    this.volume.connect(context.destination);
+                    this.forwardInTime();
+                    this.phasor();
                 },
-                function(e){"Error with decoding audio data" + e.err});
+                function(e){"Error decoding audio data" + e.err});
         };
 
         req.send();
@@ -97,7 +100,7 @@ export default class Grainread {
         this.src = this.context.createBufferSource();
         this.src.buffer = this.buffer;
         this.src.loop = true;
-        this.src.connect(this.env);
+        this.src.connect(this.envelope);
 
         this.src.start(0, t);
         this.stopped = false;
@@ -236,7 +239,7 @@ export default class Grainread {
                 this.panner.value = (this.spread * 0.4 * Math.random()) - 1;
 
                 let now = this.context.currentTime;
-                let e = this.env.gain;
+                let e = this.envelope.gain;
                 e.cancelScheduledValues(now);
                 e.setValueAtTime(0.0001, now);
 

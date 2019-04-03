@@ -4,17 +4,12 @@ describe('Play Class', function() {
     const audio = '/audio/arlene.mp3';
     const context = new AudioContext();
     //let XMLHttpRequest = global.XMLHttpRequest;
-    var testing;
+    var testing = new Play(audio, context);
 
     describe('initial state', function() {
 
         before(function(done) {
-            var wait = 2500;
-            this.timeout(wait);
-            testing = new Play(audio, context);
-            setTimeout(function() {
-                done();
-            }, wait - 200);
+            testing.loadAudio().then(() => done());
         });
 
         it('starts a new instance', function() {

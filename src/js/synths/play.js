@@ -21,33 +21,36 @@ export default class Play {
         this.loopEnd = 0;
         this.stopped = true;
 
-
-        let that = this;
-        let req = new XMLHttpRequest();
-
-        req.open('GET', audio);
-        req.responseType = 'arraybuffer';
-
-        req.onreadystatechange = function() {
-            if (this.readyState == 4) {
-                let audioData = req.response;
-
-                that.context.decodeAudioData(audioData, function(buffer) {
-                        that.buffer = buffer;
-                        that.stopped = true;
-                        that.startSample();
-                        that.volume.gain.value = vol;
-                        that.audioLoadTimeOffset = (new Date() - that.contextCreationTime) / 1000;
-                        // console.log(that);
-                    },
-                    function(e){console.log("Error with decoding audio data" + e.err);});
-            }
-        };
-
-        req.send();
-
     }
 
+    loadAudio() {
+        return new Promise(resolve => {
+            var that = this;
+
+            let req = new XMLHttpRequest();
+
+            req.open('GET', that.audio);
+            req.responseType = 'arraybuffer';
+
+            req.onreadystatechange = function() {
+                if (this.readyState == 4) {
+                    let audioData = req.response;
+
+                    that.context.decodeAudioData(audioData, function(buffer) {
+                            that.buffer = buffer;
+                            that.stopped = true;
+                            that.startSample();
+                            that.volume.gain.value = vol;
+                            that.audioLoadTimeOffset = (new Date() - that.contextCreationTime) / 1000;
+                            resolve(buffer);
+                        },
+                        function(e){console.log("Error decoding audio data" + e.err);});
+                }
+            };
+
+            req.send();
+        });
+    }
     /**
      * Start playing the sample at new offset
      * @param {number} offset - How far into the sample to start playback (s)
@@ -130,7 +133,7 @@ export default class Play {
     set vol(v) {
         this.volume.gain.value = v;
     }
-    
+
     /**
      * Get the current volume
      * @return {Number} volume

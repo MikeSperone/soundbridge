@@ -5,6 +5,10 @@ describe('Grainread Class', function() {
     let context = new AudioContext();
     let gr = new Grainread(audio, context, 1);
 
+    before(function(done) {
+        gr.loadAudio().then(() => done());
+    });
+
     describe('initial values', function() {
 
         it('starts a new grainread class', function() {

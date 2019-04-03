@@ -1,9 +1,6 @@
 var request = require('supertest');
 var app = require('../app');
 
-const getFile = function(name, d) {
-}
-
 describe('App', function() {
 
     it('Requests to the root path', function(done) {
@@ -12,7 +9,7 @@ describe('App', function() {
             .expect(200)
             .end(function(error) {
                 if(error) throw error;
-                done(); 
+                done();
             });
     });
 

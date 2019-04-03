@@ -20,30 +20,35 @@ export default class Playgroove {
 
         this.merge.connect(this.volume);
 
-        let that = this;
+    }
+    loadAudio() {
+        return new Promise(resolve => {
+            let that = this;
 
-        let req = new XMLHttpRequest();
-        req.open('GET', this.audio);
-        req.responseType = 'arraybuffer';
+            let req = new XMLHttpRequest();
+            req.open('GET', that.audio);
+            req.responseType = 'arraybuffer';
 
-        req.onload = function() {
-            this.audioData = req.response;
+            req.onload = function() {
+                const audioData = req.response;
 
-            context.decodeAudioData(this.audioData, function(buffer) {
+                that.context.decodeAudioData(audioData, function(buffer) {
 
-                    that.src.buffer = buffer;
-                    that.src.playbackRate.value = 1;
+                        that.src.buffer = buffer;
+                        that.src.playbackRate.value = 1;
 
-                    that.volume.connect(context.destination);
-                    that.volume.gain.value = 0;
-                    that.src.loop = true;
+                        that.volume.connect(that.context.destination);
+                        that.volume.gain.value = 0;
+                        that.src.loop = true;
 
-                },
-                function(e){console.log("Error with decoding audio data " + e.err);});
-        };
+                        that.src.start(0);
+                        resolve("Audio loaded");
+                    },
+                    function(e){console.log("Error with decoding audio data " + e.err);});
+            };
 
-        req.send();
-        this.src.start(0);
+            req.send();
+        });
     }
 
     delaySwitch(setting) {
