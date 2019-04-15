@@ -5,7 +5,7 @@
     "scripts": {
         "start": "nodemon ./bin/www",
         "build": "NODE_ENV='production' webpack --display-error-details",
-        "dev": "NODE_ENV='development' webpack --watch --display-error-details",
+        "dev": "NODE_ENV='development' webpack-dev-server --watch --display-error-details",
         "test": "mocha",
         "apptest": "mocha ./test/app-test.js"
     },
@@ -40,6 +40,7 @@
         "typescript": "^3.4.1",
         "webpack": "^4.29.6",
         "webpack-cli": "^3.3.0",
+        "webpack-dev-server": "^3.3.1",
         "xmlhttprequest": "^1.8.0"
     }
 }

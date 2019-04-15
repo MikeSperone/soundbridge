@@ -1,5 +1,6 @@
 require('dotenv').config();
 const CopyPlugin = require('copy-webpack-plugin');
+const path = require('path');
 
 module.exports = {
     mode: process.env.NODE_ENV,
@@ -29,6 +30,11 @@ module.exports = {
             { from: 'test/index.html', to: 'test.html' },
         ]),
     ],
+    devServer: {
+        contentBase: path.join(__dirname, 'dist'),
+        host: '0.0.0.0',
+        port: 9000
+    },
     output: {
         filename: '[name].js'
     }
