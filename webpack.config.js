@@ -23,6 +23,11 @@ module.exports = {
                 }
         }],
     },
+    resolve: {
+        modules: [
+            'node_modules', './src/js/synths'
+        ]
+    },
     plugins: [
         new CopyPlugin([
             { from: 'src/js/AudioContextMonkeyPatch.js', to: 'js/' },
@@ -31,11 +36,20 @@ module.exports = {
         ]),
     ],
     devServer: {
-        contentBase: path.join(__dirname, 'dist'),
+        contentBase: path.join(__dirname, 'public'),
         host: '0.0.0.0',
-        port: 9000
+        port: 9000,
+        disableHostCheck: process.env.NODE_ENV === 'development'
+        // proxy: {
+            // '/audio': {
+            //     target: 'http://localhost:9000',
+            //     pathRewrite: {'^/audio': path.join(__dirname, 'public/audio')},
+            //     secure: false
+            // }
+        // }
     },
     output: {
-        filename: '[name].js'
+        filename: '[name].js',
+        path: path.resolve(__dirname, 'public/js')
     }
 };

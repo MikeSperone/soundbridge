@@ -37,7 +37,7 @@ export default class Playgroove {
 
                 that.context.decodeAudioData(audioData, buffer => {
 
-                        this.src.buffer = buffer;
+                        that.src.buffer = buffer;
                         that.src.playbackRate.value = 1;
 
                         that.volume.connect(that.context.destination);

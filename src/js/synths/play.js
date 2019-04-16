@@ -15,6 +15,7 @@ export default class Play {
         this.context = context;
         this.contextCreationTime = new Date();
         this.startTime = null;
+        this.initialVol = vol;
 
         this.buffer = null;
         this.loopStart = 0;
@@ -40,7 +41,7 @@ export default class Play {
                             that.buffer = buffer;
                             that.stopped = true;
                             that.startSample();
-                            that.volume.gain.value = vol;
+                            that.volume.gain.value = that.initialVol;
                             that.audioLoadTimeOffset = (new Date() - that.contextCreationTime) / 1000;
                             resolve(buffer);
                         },

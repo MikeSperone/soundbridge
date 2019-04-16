@@ -1,9 +1,14 @@
+import Loop from 'loop';
 
 describe('Loop Class', function() {
 
 	let audio = '/audio/arlene.mp3';
 	let context = new AudioContext();
 	let lp = new Loop(audio, context);
+
+    before(function(done) {
+        lp.loadAudio().then(() => done());
+    });
 
 	it('should start a new instance', function() {
 		expect(lp).to.exist;

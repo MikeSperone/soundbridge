@@ -1,6 +1,7 @@
 /* global it */
 /* global describe */
 /* global expect */
+import Playgroove from 'playgroove';
 
 describe('Playgroove Class', function() {
 
@@ -8,7 +9,10 @@ describe('Playgroove Class', function() {
     let context = new AudioContext();
     let pg = new Playgroove(audio, context);
 
-    console.log(pg);
+    before(function(done) {
+        pg.loadAudio().then(() => done());
+    });
+
     describe('initial values', function() {
 
         it('starts a new Playgroove class', function() {

@@ -31,11 +31,13 @@ export function start(settings, ws, openConnection) {
     let zeroOut, oneOut, twoOut, threeOut;
 
     // load settings
+    console.log('1. loading settings');
     let samples = settings.samples;
     let grainSettings = settings.grain;
     let delaySettings = settings.delay;
 
     // set samples
+    console.log('2. setting samples');
     let audioZero = audiopath + samples[0] + '.mp3';
     let audioOne  = audiopath + samples[1] + '.mp3';
     let audioTwo  = audiopath + samples[2] + '.mp3';
@@ -48,6 +50,7 @@ export function start(settings, ws, openConnection) {
     let context = new window.AudioContext();
 
     if (samples.a !== "") {
+        console.log('3. starting ambient');
         let audioAmb = audiopath + samples.a + '.mp3';
         //let ambient = new Play(audioAmb, context, 0.8);
     }
@@ -58,17 +61,17 @@ export function start(settings, ws, openConnection) {
     let one = new Playgroove(audioOne, context);
     one.loadAudio().then(() => one.delaySwitch(delaySettings[1]));
 
-    let two = new Playgrain(audioTwo, context);
-    two.loadAudio().then(() => {
-        two.scatter = grainSettings[0];
-        two.fade = grainSettings[1];
-        two.spread = grainSettings[2];
-        two.feedback = grainSettings[3];
-    });
+    // let two = new Playgrain(audioTwo, context);
+    // two.loadAudio().then(() => {
+    //     two.scatter = grainSettings[0];
+    //     two.fade = grainSettings[1];
+    //     two.spread = grainSettings[2];
+    //     two.feedback = grainSettings[3];
+    // });
 
-    let three = new Loop(audioThree, context);
-    let threeHold = new Play(audioThreeHold, context);
-    threeHold.loadAudio().then(() => {});
+    // let three = new Loop(audioThree, context);
+    // let threeHold = new Play(audioThreeHold, context);
+    // threeHold.loadAudio().then(() => {});
     //three.delay(delaySettings[4]);
 
     let threePosition = 0;
@@ -158,66 +161,7 @@ export function start(settings, ws, openConnection) {
             }
         }
     );
-/*
-    let xyOffset = null;
-    let quadrant = null;
-    let xyWidth = 500,
-        xyHeight = 500,
-        xyHalfWidth = xyWidth/2,
-        xyHalfHeight = xyHeight/2;
 
-    xy.on(
-        {
-            mouseenter: function () {
-                // TODO: create "zones" or other form of multisensor pattern
-                xyOffset = xy.offset();
-
-                over(this.id);
-                // transmit('{"over": "' + this.id + '"}');
-            },
-            mouseleave: function () {
-                out(this.id);
-                // transmit('{"out": "' + this.id + '"}');
-            },
-            mousemove: function(event) {
-                let x = event.pageX - xyOffset.left,
-                    y = event.pageY - xyOffset.top;
-
-
-                if (y < xyHalfHeight) {
-                    // Top half
-                    if (x < xyHalfWidth) {
-                        // I
-                        quadrant = "zero";
-                    } else {
-                        // II
-                        x = x - xyHalfWidth;
-                        quadrant = "one";
-                    }
-                } else {
-                    // Bottom half
-                    y = y - xyHalfHeight;
-                    if (x > xyHalfWidth) {
-                        //III
-                        x = x - xyHalfWidth;
-                        quadrant = "two";
-                    } else {
-                        //IV
-
-                        quadrant = "three";
-                    }
-                }
-                let distance = Math.sqrt(x*x + y*y).toFixed(2);
-                //$(this).children('.value').text(quadrant + "(" + (x) + ", " + (y) + ")");
-                $(this).children('.value').text(quadrant + "(" + distance + ")");
-                moveHand(parseFloat(distance), quadrant, 'xy');
-                transmit('{\"data\": ["'+quadrant+'", '+parseFloat(distance)+']}');
-
-            }
-        }
-    );
-
-*/
     function moveHand(event, id, src) {
 
         //event = (src === 'local') ? event.offsetX : event;

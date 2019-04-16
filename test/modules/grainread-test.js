@@ -1,3 +1,4 @@
+import Grainread from 'grainread';
 
 describe('Grainread Class', function() {
 

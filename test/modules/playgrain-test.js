@@ -1,3 +1,4 @@
+import Playgrain from 'playgrain';
 
 describe('Playgrain Class', function() {
 

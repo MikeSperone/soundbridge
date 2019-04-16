@@ -1,3 +1,4 @@
+import Play from 'play.js';
 
 describe('Play Class', function() {
 
