@@ -1,7 +1,7 @@
 /* global it */
 /* global describe */
 /* global expect */
-import Playgroove from 'playgroove';
+import Playgroove from 'synths/playgroove';
 
 describe('Playgroove Class', function() {
 

@@ -1,4 +1,4 @@
-import Playgrain from 'playgrain';
+import Playgrain from 'synths/playgrain';
 
 describe('Playgrain Class', function() {
 

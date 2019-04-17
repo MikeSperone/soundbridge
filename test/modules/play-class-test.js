@@ -1,4 +1,4 @@
-import Play from 'play.js';
+import Play from 'synths/play.js';
 
 describe('Play Class', function() {
 

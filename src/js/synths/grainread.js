@@ -44,45 +44,53 @@ export default class Grainread {
     }
 
     loadAudio() {
-        let that = this;
-        let req = new XMLHttpRequest();
+        return new Promise((resolve, reject) => {
+            let that = this;
+            let req = new XMLHttpRequest();
 
-        req.open('GET', that.audio);
-        req.responseType = 'arraybuffer';
+            req.open('GET', that.audio);
+            req.responseType = 'arraybuffer';
 
-        req.onload = () => {
-            let audioData = req.response;
+            req.onload = () => {
+                let audioData = req.response;
 
-            this.context.decodeAudioData(audioData, function(buffer) {
-                    this.src.buffer = buffer;
-                    this.buffer = buffer;
-                    this.duration = this.buffer.duration;
-                    this.src.connect(this.envelope);
+                this.context.decodeAudioData(audioData, buffer => {
+                        this.src.buffer = buffer;
+                        this.buffer = buffer;
+                        this.duration = this.buffer.duration;
+                        this.src.connect(this.envelope);
 
-                    this.envelope.connect(this.delayA);
-                    this.envelope.connect(this.delayB);
-                    this.delayA.connect(this.fbkA);
-                    this.delayB.connect(this.fbkB);
-                    this.fbkA.connect(this.delayA);
-                    this.fbkB.connect(this.delayB);
-                    this.delayA.connect(this.merge, 0, 0);
-                    this.delayB.connect(this.merge, 0, 1);
+                        this.envelope.connect(this.delayA);
+                        this.envelope.connect(this.delayB);
+                        this.delayA.connect(this.fbkA);
+                        this.delayB.connect(this.fbkB);
+                        this.fbkA.connect(this.delayA);
+                        this.fbkB.connect(this.delayB);
+                        this.delayA.connect(this.merge, 0, 0);
+                        this.delayB.connect(this.merge, 0, 1);
 
-                    this._connectIfPanner([this.merge, this.panner]);
-                    //this.merge.connect(this.panner);
+                        this._connectIfPanner([this.merge, this.panner]);
+                        //this.merge.connect(this.panner);
 
-                    this.src.loop = true;
-                    //this.envelope.connect(this.panner);
-                    this._connectIfPanner([this.panner,this.volume], [this.merge, this.volume]);
-                    this.volume.connect(context.destination);
-                    this.forwardInTime();
-                    this.phasor();
-                },
-                function(e){"Error decoding audio data" + e.err});
-        };
+                        this.src.loop = true;
+                        //this.envelope.connect(this.panner);
+                        this._connectIfPanner([this.panner,this.volume], [this.merge, this.volume]);
+                        this.volume.connect(this.context.destination);
+                        // this.forwardInTime();
+                        // this.phasor();
+                        return resolve({status: "success", message: ""});
+                    },
+                    e => reject({
+                        status: "error",
+                        message: "Error decoding audio data" + e.err
+                    })
+                );
+            };
 
-        req.send();
+            req.onerror = err => reject({ status: "error", message: "err" });
+            req.send();
 
+        });
     }
 
     _connectIfPanner(a, b=[]) {

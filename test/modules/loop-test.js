@@ -1,4 +1,4 @@
-import Loop from 'loop';
+import Loop from 'synths/loop';
 
 describe('Loop Class', function() {
 

@@ -8,6 +8,9 @@ module.exports = {
         main: './src/js/index.js',
         test: './test/test-index.js'
     },
+    node: {
+        fs: 'empty',
+    },
     module: {
         rules: [
             {
@@ -25,7 +28,7 @@ module.exports = {
     },
     resolve: {
         modules: [
-            'node_modules', './src/js/synths'
+            'node_modules', './src/js'
         ]
     },
     plugins: [

@@ -1,4 +1,4 @@
-import Grainread from 'grainread';
+import Grainread from 'synths/grainread';
 
 describe('Grainread Class', function() {
 
@@ -101,7 +101,6 @@ describe('Grainread Class', function() {
             expect(gr.scatter).to.equal(19);
             expect(gr.g_scatter).to.equal(19);
         });
-        // loopLength, speed, fade, read, speedspread, spread, scatter
     });
 
     describe('methods', function() {

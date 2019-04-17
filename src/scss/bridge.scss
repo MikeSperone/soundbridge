@@ -7,6 +7,21 @@ body {
   color: $primary-color;
 }
 
+.notification {
+    .hidden {
+        disply: none;
+    }
+    .warning {
+        background-color: orange;
+    }
+    .error {
+        background-color: red;
+    }
+    .info {
+        background-color: blue;
+    }
+}
+
 .sensor {
   display: block;
   width: 340px;

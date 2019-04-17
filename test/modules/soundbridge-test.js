@@ -1,3 +1,5 @@
+import { setSettings } from 'soundbridge';
+import * as json from 'settings';
 
 describe('Soundbridge', function() {
 	
@@ -10,7 +12,7 @@ describe('Soundbridge', function() {
 		it('should return the correct settings', function() {
 
 			const settings = setSettings(json.settings, 0);
-			expect(settings).to.deep.equal({
+			expect(settings).to.eql({
                 samples: {
                     "0": "water3",
                     "1": "drillingbursts",
