@@ -33,9 +33,9 @@ module.exports = {
     },
     plugins: [
         new CopyPlugin([
-            { from: 'src/js/AudioContextMonkeyPatch.js', to: 'js/' },
-            { from: 'src/index.html', to: '' },
-            { from: 'test/index.html', to: 'test.html' },
+            { from: 'src/js/AudioContextMonkeyPatch.js', to: 'public/js/' },
+            { from: 'src/index.html', to: 'public' },
+            { from: 'test/index.html', to: 'public/test.html' },
         ]),
     ],
     devServer: {
@@ -43,16 +43,9 @@ module.exports = {
         host: '0.0.0.0',
         port: 9000,
         disableHostCheck: process.env.NODE_ENV === 'development'
-        // proxy: {
-            // '/audio': {
-            //     target: 'http://localhost:9000',
-            //     pathRewrite: {'^/audio': path.join(__dirname, 'public/audio')},
-            //     secure: false
-            // }
-        // }
     },
     output: {
         filename: '[name].js',
-        path: path.resolve(__dirname, 'public/js')
+        path: path.resolve(__dirname, 'public')
     }
 };
