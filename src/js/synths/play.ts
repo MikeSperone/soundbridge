@@ -3,24 +3,40 @@
  */
 
 export default class Play {
+    audio: string;
+    context: AudioContext;
+    contextCreationTime: Date;
+    startTime: number;
+    initialVol: number;
+    buffer: AudioBuffer | null;
+    audioLoadTimeOffset: number;
+    loopStart: number;
+    loopEnd: number;
+    stopped: boolean;
+    src: AudioBufferSourceNode;
+    volume: GainNode;
+
     /**
      * Plays an audio file
      * @param {string} audio - path to audio file
      * @param {AudioContext} context - Web Audio Context
      * @param {number} vol - (optional) The starting volume.  Defaults to 0
      */
-    constructor(audio, context, vol = 0) {
+    constructor(audio: string, context: AudioContext, vol: number = 0) {
 
         this.audio = audio;
         this.context = context;
         this.contextCreationTime = new Date();
-        this.startTime = null;
+        this.startTime = 0;
+        this.audioLoadTimeOffset = 0;
         this.initialVol = vol;
 
         this.buffer = null;
         this.loopStart = 0;
         this.loopEnd = 0;
         this.stopped = true;
+        this.volume = this.context.createGain();
+        this.src = this.context.createBufferSource();
 
     }
 
@@ -42,10 +58,11 @@ export default class Play {
                             that.stopped = true;
                             that.startSample();
                             that.volume.gain.value = that.initialVol;
-                            that.audioLoadTimeOffset = (new Date() - that.contextCreationTime) / 1000;
+                            that.audioLoadTimeOffset = (new Date().getTime() - that.contextCreationTime.getTime()) / 1000;
                             resolve(buffer);
                         },
-                        function(e){console.log("Error decoding audio data" + e.err);});
+                        function(e){console.log("Error decoding audio data" + e);}
+                    );
                 }
             };
 
@@ -61,8 +78,6 @@ export default class Play {
 
         offset = (offset < 0) ? 0 : offset;
         if (this.stopped === false) { this.stop(); }
-        this.src = this.context.createBufferSource();
-        this.volume = this.context.createGain();
         this.src.buffer = this.buffer;
 
         this.src.loop = true;
@@ -81,8 +96,8 @@ export default class Play {
      * Get the duration of the audio buffer
      * @return {number} The duration in ms
      */
-    get duration() {
-        return this.src.buffer.duration;
+    get duration(): number {
+        return this.src.buffer ? this.src.buffer.duration : 0;
     }
 
     play() {
@@ -105,22 +120,22 @@ export default class Play {
      * Gets the elapsed time from start of playback
      * @return time from start of playback until now (ms)
      */
-    get elapsedTime(){
+    get elapsedTime(): number {
         return this.context.currentTime - this.startTime;
     }
 
-    set position(x) {
+    set position(x: number) {
         this.loopStart = x;
     }
-    get position() {
+    get position(): number {
         return this.loopStart;
     }
-    set len(x) {
+    set len(x: number) {
         this.loopEnd = Math.min((this.position + x), this.duration);
         this.startSample();
     }
 
-    get len() {
+    get len(): number {
         return this.src.loopEnd - this.src.loopStart;
     }
     toString() {
@@ -131,7 +146,7 @@ export default class Play {
      * Set the volume
      * @param {number} v 0.0 to 1.0
      */
-    set vol(v) {
+    set vol(v: number) {
         this.volume.gain.value = v;
     }
 
@@ -139,7 +154,7 @@ export default class Play {
      * Get the current volume
      * @return {Number} volume
      */
-    get vol() {
+    get vol(): number {
         return this.volume.gain.value;
     }
 }

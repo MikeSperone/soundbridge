@@ -1,4 +1,3 @@
-
 export const settings = {
     "samples": [
         {"0": "water3",         "1": "drillingbursts",  "2": "crickets",        "3":"arleneNR",       "a":""},

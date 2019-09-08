@@ -4,25 +4,33 @@
  * Created by Mike on 9/1/16.
  */
 
-import Grainread from './grainread.js';
+import Grainread from './grainread';
 
 export default class Playgrain {
 
-    constructor(audio, context) {
+    a: Grainread;
+    b: Grainread;
+    c: Grainread;
+    d: Grainread;
+    e: Grainread;
+    f: Grainread;
+    g: Grainread;
+    h: Grainread;
+    i: Grainread;
+    j: Grainread;
 
-        this.audio = audio;
-        this.context = context;
+    constructor(audio: string, context: AudioContext) {
 
-        this.a = new Grainread(this.audio, this.context, 1);
-        this.b = new Grainread(this.audio, this.context, 1);
-        this.c = new Grainread(this.audio, this.context, 1);
-        this.d = new Grainread(this.audio, this.context, 1);
-        this.e = new Grainread(this.audio, this.context, 1);
-        this.f = new Grainread(this.audio, this.context, 1);
-        this.g = new Grainread(this.audio, this.context, 1);
-        this.h = new Grainread(this.audio, this.context, 1);
-        this.i = new Grainread(this.audio, this.context, 1);
-        this.j = new Grainread(this.audio, this.context, 1);
+        this.a = new Grainread(audio, context, 1);
+        this.b = new Grainread(audio, context, 1);
+        this.c = new Grainread(audio, context, 1);
+        this.d = new Grainread(audio, context, 1);
+        this.e = new Grainread(audio, context, 1);
+        this.f = new Grainread(audio, context, 1);
+        this.g = new Grainread(audio, context, 1);
+        this.h = new Grainread(audio, context, 1);
+        this.i = new Grainread(audio, context, 1);
+        this.j = new Grainread(audio, context, 1);
 
     }
 
@@ -46,7 +54,7 @@ export default class Playgrain {
      *
      *
      */
-    set fade(f) {
+    set fade(f: number) {
         this.a.fade = f;
         this.b.fade = f;
         this.c.fade = f;
@@ -62,7 +70,7 @@ export default class Playgrain {
     /**
      * Sets the delay feedback
      */
-    set feedback(f) {
+    set feedback(f: number) {
         this.a.feedback = f;
         this.b.feedback = f;
         this.c.feedback = f;
@@ -78,7 +86,7 @@ export default class Playgrain {
     /**
      * Sets the read point
      */
-    set read(gr) {
+    set read(gr: number) {
         this.a.read = gr;
         this.b.read = gr;
         this.c.read = gr;
@@ -94,7 +102,7 @@ export default class Playgrain {
     /**
      * Sets the grain scatter amount
      */
-    set scatter(s) {
+    set scatter(s:number) {
         this.a.scatter = s;
         this.b.scatter = s;
         this.c.scatter = s;
@@ -110,7 +118,7 @@ export default class Playgrain {
     /**
      * Sets the grain spread
      */
-    set spread(s) {
+    set spread(s:number) {
         this.a.spread = s;
         this.b.spread = s;
         this.c.spread = s;
@@ -158,7 +166,7 @@ export default class Playgrain {
     /**
      * Sets the volume
      */
-    set vol(v) {
+    set vol(v:number) {
         this.a.vol = v;
         this.b.vol = v;
         this.c.vol = v;

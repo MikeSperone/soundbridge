@@ -6,6 +6,13 @@
  *
 */
 export default class Grainread {
+    // audio: string;
+    // context: AudioContext;
+    // g_read: number;
+    // g_multiply: number;
+    // g_fade: number;
+    // g_spread: number;
+    // g_scatter: number;
 
     constructor(audio, context, g_read, g_multiply = 1, g_fade = 1, g_spread = 20, g_scatter = 28) {
 

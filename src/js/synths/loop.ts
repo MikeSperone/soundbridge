@@ -2,20 +2,29 @@
  * Created by Mike on 9/2/16.
  */
 
-import Play from './play.js';
+import Play from './play';
 
 export default class Loop extends Play {
 
-    constructor(audio, context) {
+    audio: string;
+    context: AudioContext;
+    position: number;
+    sensorPos: number;
+    length: number;
+    duration: number;
+
+    constructor(audio: string, context: AudioContext) {
         super(audio, context);
         this.audio = audio;
         this.context = context;
         this.position = 0;
-        this.sensorPos = null;
+        this.sensorPos = 0;
+        this.length = 0;
+        this.duration = 0;
         //this.play();
     }
 
-    sensor(val, time = 0) {
+    sensor(val: number, time: number = 0) {
 
         let x = Math.floor(val);
 
@@ -35,7 +44,7 @@ export default class Loop extends Play {
         }
     }
 
-    loop(x) {
+    loop(x: number) {
         let start;
         let dur = this.duration;
         this.stop();
@@ -78,7 +87,7 @@ export default class Loop extends Play {
         this.startSample(this.position);
     }
 
-    delaySwitch(setting) {
+    delaySwitch(setting: boolean) {
         if (setting) {
             //console.log("delay on");
             this.delay.connect(this.feedback);
@@ -92,7 +101,5 @@ export default class Loop extends Play {
             this.src.connect(this.volume);
         }
     }
-
-
 
 }

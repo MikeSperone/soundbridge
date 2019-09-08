@@ -4,32 +4,38 @@
 "use strict";
 
 export default class Playgroove {
+    audio: string;
+    context: AudioContext;
+    src: AudioBufferSourceNode;
+    delay: DelayNode;
+    feedback: GainNode;
+    volume: GainNode;
+    merge: ChannelMergerNode;
+    panL: StereoPannerNode;
 
-    constructor(audio, context) {
+    public constructor(audio: string, context: AudioContext) {
 
-        this.audio = audio;
-        console.log('this.audio: ', this.audio);
-        this.context = context;
-        this.src = this.context.createBufferSource();
-        this.delay = this.context.createDelay(1.0);
-        this.feedback = this.context.createGain();
-        this.volume = this.context.createGain();
+        this.src = context.createBufferSource();
+        this.delay = context.createDelay(1.0);
+        this.feedback = context.createGain();
+        this.volume = context.createGain();
 
-        this.merge = this.context.createChannelMerger(2);
-        this.panL = this.context.createStereoPanner();
+        this.merge = context.createChannelMerger(2);
+        this.panL = context.createStereoPanner();
         this.panL.pan.value = -1;
 
         this.merge.connect(this.volume);
+        this.audio = audio;
+        this.context = context;
 
     }
-    loadAudio() {
+
+    public loadAudio() {
         return new Promise(resolve => {
             let that = this;
 
             let req = new XMLHttpRequest();
-            console.log('loadAudio');
-            console.log('this.audio: ', this.audio);
-            req.open('GET', this.audio);
+            req.open('GET', that.audio);
             req.responseType = 'arraybuffer';
 
             req.onload = function() {
@@ -47,27 +53,29 @@ export default class Playgroove {
                         that.src.start(0);
                         resolve("Audio loaded");
                     },
-                    function(e){console.log("Error decoding audio data " + e.err);});
+                    (e: any) => console.log("Error decoding audio data " + e.err)
+                );
             };
 
             req.send();
         });
     }
 
-    delaySwitch(setting) {
+    delaySwitch(setting: boolean) {
         if (setting) {
             console.debug("delay on");
             this.delay.connect(this.feedback);
             this.feedback.connect(this.delay);
+            this.delay.connect(this.merge, 0, 1);
+            // "empty" property does exist on Safari, so I check for it
+            // @ts-ignore: Suppress 'Property does not exist' error
             if (this.panL.empty !== true) {
                 console.debug("connection panL");
-                this.delay.connect(this.merge, 0, 1);
                 this.src.connect(this.panL);
                 this.src.connect(this.delay);
                 this.panL.connect(this.volume);
             } else {
                 console.debug("panL left out");
-                this.delay.connect(this.merge, 0, 1);
                 this.src.connect(this.merge, 0, 0);
                 this.merge.connect(this.volume);
             }
@@ -76,25 +84,25 @@ export default class Playgroove {
         }
     }
 
-    _restrict(val) {
+    _restrict(val: number) {
         if (val < 0) val = 0;
         if (val > 1) val = 1;
         return val;
     }
 
-    delTime(time) {
+    delTime(time: number) {
         this.delay.delayTime.value = this._restrict(time);
     }
 
-    delFeedback(fbk) {
+    delFeedback(fbk: number) {
         this.feedback.gain.value = this._restrict(fbk);
     }
 
-    pbRate(rate) {
+    pbRate(rate: number) {
         this.src.playbackRate.value = this._restrict(rate);
     }
 
-    vol(v) {
+    vol(v: number) {
         this.volume.gain.value = this._restrict(v);
     }
 

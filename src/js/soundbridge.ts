@@ -1,34 +1,59 @@
 "use strict";
-import $ from 'jquery';
-import Ambient      from './synths/ambient.js';
-import Play         from './synths/play.js';
-import Playgroove   from './synths/playgroove.js';
-import Playgrain    from './synths/playgrain.js';
-import Loop         from './synths/loop.js';
+import Ambient      from './synths/ambient';
+import Play         from './synths/play';
+import Playgroove   from './synths/playgroove';
+import Playgrain    from './synths/playgrain';
+import Loop         from './synths/loop';
 
-export function setSettings(settings, i) {
-
-	console.log("setting number: ", (i + 1));
-
-	const samples = settings.samples[i],
-		  grainSettings = settings.grain[i],
-		  delaySettings = settings.delay[i];
-
-	return { samples: samples, grain: grainSettings, delay: delaySettings };
+interface AllSettings {
+    samples: {
+        '0': string;
+        '1': string;
+        '2': string;
+        '3': string;
+        'a': string;
+    }[];
+    grain: number[][];
+    delay: boolean[][];
+}
+interface Settings {
+    samples: {
+        '0': string;
+        '1': string;
+        '2': string;
+        '3': string;
+        'a': string;
+    };
+    grain: number[];
+    delay: boolean[];
 }
 
-export function start(settings, ws, openConnection) {
+export function setSettings(settings: AllSettings, i: number) {
+
+    console.log("setting number: ", (i + 1));
+
+    const samples = settings.samples[i],
+        grainSettings = settings.grain[i],
+        delaySettings = settings.delay[i];
+
+    return { samples: samples, grain: grainSettings, delay: delaySettings };
+}
+
+export function start(settings: Settings, ws: any, openConnection: boolean) {
 
     const audiopath = 'audio/';
     /*
-    * Audio setup
-    */
+     * Audio setup
+     */
 
     // Sensors
     let sensor = $('.sensor');
     let xy = $('.xy-pad');
     let rate = 1;
-    let zeroOut, oneOut, twoOut, threeOut;
+    let zeroOut,
+        oneOut: any,
+        twoOut: any,
+        threeOut;
 
     // load settings
     console.log('1. loading settings');
@@ -56,46 +81,48 @@ export function start(settings, ws, openConnection) {
     }
 
     let zero = new Playgroove(audioZero, context);
-    zero.loadAudio().then(() => zero.delaySwitch(delaySettings[0]));
+    zero.loadAudio()
+        .then(() => {
+            console.info('sensor zero audio loaded - ' + audioZero);
+            zero.delaySwitch(delaySettings[0]);
+        });
 
     let one = new Playgroove(audioOne, context);
-    one.loadAudio().then(() => one.delaySwitch(delaySettings[1]));
+    one.loadAudio()
+        .then(() => {
+            console.info('sensor one audio loaded - ' + audioOne);
+            one.delaySwitch(delaySettings[1]);
+        });
 
-    // let two = new Playgrain(audioTwo, context);
-    // two.loadAudio().then(() => {
-    //     two.scatter = grainSettings[0];
-    //     two.fade = grainSettings[1];
-    //     two.spread = grainSettings[2];
-    //     two.feedback = grainSettings[3];
-    // });
+    let two = new Playgrain(audioTwo, context);
+    two.loadAudio().then(() => {
+        two.scatter = grainSettings[0];
+        two.fade = grainSettings[1];
+        two.spread = grainSettings[2];
+        two.feedback = grainSettings[3];
+    });
 
-    // let three = new Loop(audioThree, context);
-    // let threeHold = new Play(audioThreeHold, context);
-    // threeHold.loadAudio().then(() => {});
+    let three = new Loop(audioThree, context);
+    let threeHold = new Play(audioThreeHold, context);
+    threeHold.loadAudio().then(() => {});
     //three.delay(delaySettings[4]);
 
     let threePosition = 0;
 
-	ws.on('out', function(d){
-		out(d);
-	});
+    ws.on('out', (d: any) => out(d));
 
-	ws.on('over', function(d){
-		over(d);
-	});
+    ws.on('over', (d: any) => over(d));
 
-	ws.on('data', function(d){
-		moveHand(d[1], d[0], 'remote');
-	});
+    ws.on('data', (d: any) => moveHand(d[1], d[0], 'remote'));
 
-    function transmit(dest, msg) {
+    function transmit(dest: string, msg: any) {
         if (openConnection) {
-			console.log("transmitting message to "+dest);
+            console.log("transmitting message to "+dest);
             ws.emit(dest, msg);
         }
     }
 
-    let over = id => {
+    let over = (id: string) => {
         switch (id) {
             case 'zero':
                 zero.volume.gain.cancelScheduledValues(context.currentTime);
@@ -119,7 +146,7 @@ export function start(settings, ws, openConnection) {
 
     };
 
-    let out = id => {
+    let out = (id: string) => {
 
         switch (id) {
             case 'zero':
@@ -127,13 +154,13 @@ export function start(settings, ws, openConnection) {
                 zero.volume.gain.linearRampToValueAtTime(0, context.currentTime + 5.0);
                 break;
             case 'one':
-                oneOut = setTimeout(function(){ one.vol(0); }, 5000);
+                oneOut = setTimeout(() => one.vol(0), 5000);
                 break;
             case 'two':
-                twoOut = setTimeout(function(){ two.stop(); }, 5000);
+                twoOut = setTimeout(() => two.stop(), 5000);
                 break;
             case 'three':
-                setTimeout(function(){ three.stop(); threeHold.stop();}, 5000);
+                setTimeout(() => { three.stop(); threeHold.stop();}, 5000);
                 threePosition = 0;
                 break;
             default:
@@ -152,7 +179,7 @@ export function start(settings, ws, openConnection) {
                 out(this.id);
                 transmit("out", this.id);
             },
-            mousemove: function(event) {
+            mousemove: function(event: any) {
                 //console.log(event.offsetX);
                 //event.pageX range: 60 - 400
                 moveHand(event.offsetX + 1, this.id, 'local');
@@ -162,7 +189,7 @@ export function start(settings, ws, openConnection) {
         }
     );
 
-    function moveHand(event, id, src) {
+    function moveHand(event: number, id: string, src: string) {
 
         //event = (src === 'local') ? event.offsetX : event;
         let rate = (event/270);                   // range of .225 - 1.48
