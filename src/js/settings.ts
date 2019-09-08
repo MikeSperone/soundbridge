@@ -1,4 +1,17 @@
-export const settings = {
+interface Settings {
+    "samples": {
+        "0": string;
+        "1": string;
+        "2": string;
+        "3": string;
+        "a": string;
+    }[];
+    grain: number[][];
+    delay: boolean[][];
+};
+
+
+export const settings: Settings = {
     "samples": [
         {"0": "water3",         "1": "drillingbursts",  "2": "crickets",        "3":"arleneNR",       "a":""},
         {"0": "c_ray2",         "1": "c_ray2",          "2": "hammer",          "3":"carolynNR",      "a":""},
@@ -64,35 +77,38 @@ export const settings = {
         [39, 28, 2, 0.2]
     ],
     "delay": [
-        [false, true, [], false],
-        [true,  true, [], false],
-        [true,  true, [], true],
-        [true,  false,[], true],
-        [true,  true, [], false],
-        [false, true, [], false],
-        [false, true, [], false],
-        [true,  true, [], false],
-        [false, false,[], false],
-        [true,  true, [], true],
-        [true,  false,[], false],
-        [true,  false,[], false],
-        [true,  true, [], false],
-        [false, false,[], false],
-        [false, false,[], false],
-        [false, true, [], false],
-        [false, true, [], false],
-        [false, false,[], false],
-        [true,  false,[], false],
-        [false, true, [], false],
-        [false, false,[], false],
-        [false, true, [], true],
-        [true,  true, [], false],
-        [false, false,[], true],
-        [true,  true, [], false],
-        [false, true, [], false],
-        [false, true, [], false],
-        [false, true, [], true],
-        [true, true, [], true],
-        [true, true, [], true]
+        //0    | 1   | 2    | 3
+        //------------------------
+        //     |     |unused|
+        [false, true, false, false],
+        [true,  true, false, false],
+        [true,  true, false, true],
+        [true,  false,false, true],
+        [true,  true, false, false],
+        [false, true, false, false],
+        [false, true, false, false],
+        [true,  true, false, false],
+        [false, false,false, false],
+        [true,  true, false, true],
+        [true,  false,false, false],
+        [true,  false,false, false],
+        [true,  true, false, false],
+        [false, false,false, false],
+        [false, false,false, false],
+        [false, true, false, false],
+        [false, true, false, false],
+        [false, false,false, false],
+        [true,  false,false, false],
+        [false, true, false, false],
+        [false, false,false, false],
+        [false, true, false, true],
+        [true,  true, false, false],
+        [false, false,false, true],
+        [true,  true, false, false],
+        [false, true, false, false],
+        [false, true, false, false],
+        [false, true, false, true],
+        [true, true,  false, true],
+        [true, true,  false, true]
     ]
 };

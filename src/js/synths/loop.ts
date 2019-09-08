@@ -45,8 +45,8 @@ export default class Loop extends Play {
     }
 
     loop(x: number) {
-        let start;
-        let dur = this.duration;
+        let start: number = 0;
+        let dur: number = this.duration;
         this.stop();
         switch(x) {
             case 21:
@@ -87,19 +87,19 @@ export default class Loop extends Play {
         this.startSample(this.position);
     }
 
-    delaySwitch(setting: boolean) {
-        if (setting) {
-            //console.log("delay on");
-            this.delay.connect(this.feedback);
-            this.feedback.connect(this.delay);
-            this.delay.connect(this.merge, 0, 1);
-            this.src.connect(this.panL);
-            this.src.connect(this.delay);
-            this.panL.connect(this.volume);
-        } else {
-            //console.log("delay off");
-            this.src.connect(this.volume);
-        }
-    }
+    //delaySwitch(setting: boolean) {
+    //    if (setting) {
+    //        //console.log("delay on");
+    //        this.delay.connect(this.feedback);
+    //        this.feedback.connect(this.delay);
+    //        this.delay.connect(this.merge, 0, 1);
+    //        this.src.connect(this.panL);
+    //        this.src.connect(this.delay);
+    //        this.panL.connect(this.volume);
+    //    } else {
+    //        //console.log("delay off");
+    //        this.src.connect(this.volume);
+    //    }
+    //}
 
 }
