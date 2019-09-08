@@ -77,7 +77,7 @@ export function start(settings: Settings, ws: any, openConnection: boolean) {
     if (samples.a !== "") {
         console.log('3. starting ambient');
         let audioAmb = audiopath + samples.a + '.mp3';
-        //let ambient = new Play(audioAmb, context, 0.8);
+        //let ambient = new Ambient(audioAmb, context, 0.8);
     }
 
     let zero = new Playgroove(audioZero, context);

@@ -1,4 +1,4 @@
-import Play from 'synths/play.js';
+import Play from 'synths/play';
 
 describe('Play Class', function() {
 
@@ -52,7 +52,7 @@ describe('Play Class', function() {
         });
 
         it('stop()', function() {
-            testing.startSample(0);
+            // testing.startSample(0);
             testing.stop();
             expect(testing.stopped).to.be.true;
         });
@@ -68,12 +68,12 @@ describe('Play Class', function() {
             expect(testing.position).to.equal(2);
         });
 
-        it('len()', function() {
-            testing.len = 5;
+        it('resize()', function() {
+            testing.resize(5);
             expect(testing.len).to.equal(5);
             expect(testing.loopEnd - testing.loopStart).to.equal(5);
         });
-        
+
         it('do not allow length to be greater than the sample', function() {
             testing.position = 0;
             testing.len = 5000;

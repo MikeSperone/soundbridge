@@ -1,5 +1,5 @@
-import {setSettings, start} from './soundbridge.ts';
-import * as json from './settings.js';
+import {setSettings, start} from './soundbridge';
+import * as json from './settings';
 
 var openConnection = false;
 

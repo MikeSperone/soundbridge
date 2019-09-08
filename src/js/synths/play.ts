@@ -56,12 +56,15 @@ export default class Play {
                     that.context.decodeAudioData(audioData, function(buffer) {
                             that.buffer = buffer;
                             that.stopped = true;
-                            that.startSample();
+                        // TODO: this doesn't need to start here, right?
+                            // that.startSample();
                             that.volume.gain.value = that.initialVol;
                             that.audioLoadTimeOffset = (new Date().getTime() - that.contextCreationTime.getTime()) / 1000;
                             resolve(buffer);
                         },
-                        function(e){console.log("Error decoding audio data" + e);}
+                        (e) => {
+                            console.log("Error decoding audio data" + e);
+                        }
                     );
                 }
             };
@@ -130,14 +133,15 @@ export default class Play {
     get position(): number {
         return this.loopStart;
     }
+
     set len(x: number) {
         this.loopEnd = Math.min((this.position + x), this.duration);
-        this.startSample();
     }
 
     get len(): number {
         return this.src.loopEnd - this.src.loopStart;
     }
+
     toString() {
         return [{"audio": this.audio}, {"context": this.context}];
     }
@@ -157,4 +161,10 @@ export default class Play {
     get vol(): number {
         return this.volume.gain.value;
     }
+
+    resize(x: number) {
+        this.len = x;
+        this.startSample();
+    }
+
 }
