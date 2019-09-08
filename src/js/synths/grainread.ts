@@ -6,15 +6,38 @@
  *
 */
 export default class Grainread {
-    // audio: string;
-    // context: AudioContext;
-    // g_read: number;
-    // g_multiply: number;
-    // g_fade: number;
-    // g_spread: number;
-    // g_scatter: number;
+    audio:      string;
+    context:    AudioContext;
+    g_read:     number;
+    g_multiply: number;
+    g_fade:     number;
+    g_spread:   number;
+    g_scatter:  number;
+    g_speed:    number;
+    g_speedspread: number;
 
-    constructor(audio, context, g_read, g_multiply = 1, g_fade = 1, g_spread = 20, g_scatter = 28) {
+    fb_amount:  number;
+    fb_position: number;
+    fb_jitter:  number;
+
+    len:       number;
+
+    buffer:    AudioBuffer;
+    duration:  number;
+    stopped:   boolean;
+
+    src:       AudioBufferSourceNode;
+    envelope:  GainNode;
+    panner:    StereoPannerNode;
+    splitter:  ChannelSplitterNode;
+    merge:     ChannelMergerNode;
+    delayA:    DelayNode;
+    delayB:    DelayNode;
+    feedbackA: GainNode; 
+    feedbackB: GainNode; 
+    volume:    GainNode;
+
+    constructor(audio: string, context: AudioContext, g_read: number, g_multiply: number = 1, g_fade: number = 1, g_spread: number = 20, g_scatter: number = 28) {
 
         this.g_read = g_read;
         this.g_multiply = g_multiply;
@@ -31,7 +54,7 @@ export default class Grainread {
         this.audio = audio;
         this.context = context;
         this.buffer = null;
-        this.duration = null;
+        this.duration = 0;
         this.stopped = true;
 
         this.src = this.context.createBufferSource();
@@ -42,10 +65,10 @@ export default class Grainread {
         this.merge = this.context.createChannelMerger(2);
         this.delayA = this.context.createDelay(0.5);
         this.delayB = this.context.createDelay(0.5);
-        this.fbkA = this.context.createGain();
-        this.fbkA.gain.value = 0.5;
-        this.fbkB = this.context.createGain();
-        this.fbkB.gain.value = 0.5;
+        this.feedbackA = this.context.createGain();
+        this.feedbackA.gain.value = 0.5;
+        this.feedbackB = this.context.createGain();
+        this.feedbackB.gain.value = 0.5;
         this.volume = this.context.createGain();
 
     }
@@ -69,10 +92,10 @@ export default class Grainread {
 
                         this.envelope.connect(this.delayA);
                         this.envelope.connect(this.delayB);
-                        this.delayA.connect(this.fbkA);
-                        this.delayB.connect(this.fbkB);
-                        this.fbkA.connect(this.delayA);
-                        this.fbkB.connect(this.delayB);
+                        this.delayA.connect(this.feedbackA);
+                        this.delayB.connect(this.feedbackB);
+                        this.feedbackA.connect(this.delayA);
+                        this.feedbackB.connect(this.delayB);
                         this.delayA.connect(this.merge, 0, 0);
                         this.delayB.connect(this.merge, 0, 1);
 
@@ -89,18 +112,18 @@ export default class Grainread {
                     },
                     e => reject({
                         status: "error",
-                        message: "Error decoding audio data" + e.err
+                        message: "Error decoding audio data" + e
                     })
                 );
             };
 
-            req.onerror = err => reject({ status: "error", message: "err" });
+            req.onerror = err => reject({ status: "error", message: err });
             req.send();
 
         });
     }
 
-    _connectIfPanner(a, b=[]) {
+    _connectIfPanner(a: any[], b:any=[]) {
         if (this.panner.empty !== true) {
             console.debug("connection panner");
             a[0].connect(a[1]);
@@ -109,7 +132,8 @@ export default class Grainread {
             if (b.length) { b[0].connect(b[1]); }
         }
     }
-    restartAtTime(t) {
+
+    restartAtTime(t: number) {
         console.log("restarting at time: ", t);
         this.stop();
         this.src = this.context.createBufferSource();
@@ -154,10 +178,10 @@ export default class Grainread {
     }
 
     set feedback(f) {
-        this.fbkA.gain.value = f;
+        this.feedbackA.gain.value = f;
     }
     get feedback() {
-        return this.fbkA.gain.value;
+        return this.feedbackA.gain.value;
     }
 
     set position(x) {
@@ -227,7 +251,7 @@ export default class Grainread {
     forwardInTime() {
         //console.log("forward!");
         // scope, I think?  this inside the callback should be this out here
-        const internalCallback = function() {
+        const internalCallback = () => {
             //return function(this) {
                 this.position = this.position + 0.1;
                 //console.log("moving forward.  pos: ", that.position);
@@ -251,7 +275,8 @@ export default class Grainread {
                 //console.log("grain start position: ", that.position);
                 this.loopLength = ((this.read * 29) + 6) * 50;  // based on each sample
                 //console.log("grain length: ", that.loopLength);
-                this.panner.value = (this.spread * 0.4 * Math.random()) - 1;
+                const pannerValue = (this.spread * 0.4 * Math.random()) - 1;
+                this.panner.pan.setValueAtTime(pannerValue, this.context.currentTime);
 
                 let now = this.context.currentTime;
                 let e = this.envelope.gain;
