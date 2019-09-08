@@ -15,6 +15,7 @@
         "dotenv": "^7.0.0",
         "express": "^4.16.4",
         "jquery": "^3.4.1",
+        "mini-css-extract-plugin": "^0.8.0",
         "path": "^0.12.7",
         "socket.io": "^2.2.0",
         "source-map-loader": "^0.2.4"
@@ -27,16 +28,16 @@
         "babel-loader": "^8.0.5",
         "chai": "^4.2.0",
         "chai-as-promised": "^7.1.1",
-        "copy-webpack-plugin": "^5.0.2",
+        "copy-webpack-plugin": "^5.0.4",
         "mocha": "^6.2.0",
         "nodemon": "^1.18.10",
         "sass": "^1.23.0-module.beta.1",
         "sass-loader": "^8.0.0",
         "supertest": "^4.0.2",
         "typescript": "^3.4.1",
-        "webpack": "^4.29.6",
-        "webpack-cli": "^3.3.0",
-        "webpack-dev-server": "^3.3.1",
+        "webpack": "^4.36.0",
+        "webpack-cli": "^3.3.8",
+        "webpack-dev-server": "^3.8.0",
         "xmlhttprequest": "^1.8.0"
     }
 }
