@@ -12,19 +12,21 @@
             integrity="sha256-BQ+aATuLcA6t4hrtAOYtK1Dx5VUQDSnFjOyXoO9qNz4="
             crossorigin="anonymous"
         ></script>
-        <script src="https://cdn.rawgit.com/jquery/jquery/2.1.4/dist/jquery.min.js"></script>
-        <script src="https://cdn.rawgit.com/Automattic/expect.js/0.3.1/index.js"></script>
-        <script src="https://cdn.rawgit.com/mochajs/mocha/2.2.5/mocha.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/chai/4.1.1/chai.min.js"></script>
+        <script async src="https://cdn.rawgit.com/jquery/jquery/2.1.4/dist/jquery.min.js"></script>
+        <script async src="https://cdn.rawgit.com/Automattic/expect.js/0.3.1/index.js"></script>
+        <script async src="https://cdn.rawgit.com/mochajs/mocha/2.2.5/mocha.js"></script>
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/chai/4.1.1/chai.min.js"></script>
 
         <script>mocha.setup('bdd')</script>
-        <script src="app-test.js"></script>
-        <script src="soundbridge-test.js"></script>
+        <!-- <script type="text/javascript" src="app-test.js"></script> -->
+        <script type="text/javascript" src="soundbridge-test.js"></script>
         <script type="text/javascript" src="/test.js"></script>
-        <script>
-            mocha.checkLeaks();
-            mocha.globals(['jQuery']);
-            mocha.run();
+        <script defer>
+            setTimeout(function() {
+                mocha.checkLeaks();
+                mocha.globals(['jQuery']);
+                mocha.run();
+            }, 2000);
         </script>
     </body>
 </html>

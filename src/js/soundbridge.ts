@@ -152,16 +152,25 @@ export function start(settings: Settings, ws: any, openConnection: boolean) {
             case 'zero':
                 zero.volume.gain.cancelScheduledValues(context.currentTime);
                 zero.volume.gain.linearRampToValueAtTime(0, context.currentTime + 5.0);
+                console.log('exiting zero');
                 break;
             case 'one':
-                oneOut = setTimeout(() => one.vol(0), 5000);
+                oneOut = setTimeout(() => {
+                    console.log('setting one volume to 0');
+                    one.volume.gain.cancelScheduledValues(context.currentTime);
+                    one.volume.gain.linearRampToValueAtTime(0, context.currentTime + 5.0);
+                    // one.vol(0);
+                }, 5000);
+                console.log('exiting one');
                 break;
             case 'two':
                 twoOut = setTimeout(() => two.stop(), 5000);
+                console.log('exiting two');
                 break;
             case 'three':
                 setTimeout(() => { three.stop(); threeHold.stop();}, 5000);
                 threePosition = 0;
+                console.log('exiting three');
                 break;
             default:
                 break;

@@ -80,6 +80,7 @@ export default class Play {
         console.log("startSample");
 
         offset = (offset < 0) ? 0 : offset;
+        this.src = this.context.createBufferSource();
         if (this.stopped === false) { this.stop(); }
         this.src.buffer = this.buffer;
 
@@ -91,6 +92,10 @@ export default class Play {
         this.volume.connect(this.context.destination);
         this.startTime = this.context.currentTime - offset;
 
+        //TODO: this, in the resize test is what is
+        //"not, or no longer, usable"
+        console.info('this.src', this.src);
+        console.info('offset: ', offset);
         this.src.start(0, offset);
         this.stopped = false;
     }
@@ -100,6 +105,9 @@ export default class Play {
      * @return {number} The duration in ms
      */
     get duration(): number {
+        console.info('this.src.buffer', this.src.buffer);
+        console.info('this.src.buffer.duration', this.src.buffer.duration);
+        
         return this.src.buffer ? this.src.buffer.duration : 0;
     }
 
@@ -129,17 +137,24 @@ export default class Play {
 
     set position(x: number) {
         this.loopStart = x;
+        this.src.loopStart = x;
     }
     get position(): number {
-        return this.loopStart;
+        return this.src.loopStart;
     }
 
     set len(x: number) {
-        this.loopEnd = Math.min((this.position + x), this.duration);
+        console.info('set len() - loopStart: ', this.loopStart);
+        console.info('set len() - x: ', x);
+        console.info('set len() - duration: ', this.duration);
+
+        this.loopEnd = Math.min((this.loopStart + x), this.duration);
+        console.info('set len() - loopEnd: ', this.loopEnd);
     }
 
     get len(): number {
-        return this.src.loopEnd - this.src.loopStart;
+        console.info('len: ', this.loopEnd - this.loopStart);
+        return this.loopEnd - this.loopStart;
     }
 
     toString() {

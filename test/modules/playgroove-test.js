@@ -59,6 +59,10 @@ describe('Playgroove Class', function() {
             pg.vol(0.75);
             expect(pg.volume.gain.value).to.equal(0.75);
         });
+        it('sets the volume to 0', function() {
+            pg.vol(0);
+            expect(pg.volume.gain.value).to.equal(0);
+        });
     });
 
     describe('delay switch', function() {
