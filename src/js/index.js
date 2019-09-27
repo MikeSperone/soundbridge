@@ -10,7 +10,7 @@ function startWithSettings(ws, i) {
 
 function soloStart() {
     const soloBox = document && document.getElementById('solo-box');
-    soloBox.style = 'display: block';
+    if (!!soloBox) soloBox.style = 'display: block';
     const i = Math.floor(Math.random() * 29);
     const ws = {};
     ws.on = (a,b) => {};

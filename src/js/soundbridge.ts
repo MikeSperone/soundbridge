@@ -124,11 +124,14 @@ export function start(settings: Settings, ws: any, openConnection: boolean) {
 
     let over = (id: string) => {
         switch (id) {
+            //TODO: these `fadeIn` methods don't exist yet
             case 'zero':
+                // zero.fadeIn(0.7, 0.5);
                 zero.volume.gain.cancelScheduledValues(context.currentTime);
                 zero.volume.gain.linearRampToValueAtTime(0.7, context.currentTime + 0.5);
                 break;
             case 'one':
+                // one.fadeIn(0.7, 0.5);
                 one.volume.gain.cancelScheduledValues(context.currentTime);
                 one.volume.gain.linearRampToValueAtTime(0.7, context.currentTime + 0.5);
                 clearTimeout(oneOut);
@@ -149,13 +152,16 @@ export function start(settings: Settings, ws: any, openConnection: boolean) {
     let out = (id: string) => {
 
         switch (id) {
+            //TODO: these `fadeOut` methods don't exist yet
             case 'zero':
+                // zero.fadeOut(5.0);
                 zero.volume.gain.cancelScheduledValues(context.currentTime);
                 zero.volume.gain.linearRampToValueAtTime(0, context.currentTime + 5.0);
                 console.log('exiting zero');
                 break;
             case 'one':
                 oneOut = setTimeout(() => {
+                    // one.fadeOut(5.0);
                     console.log('setting one volume to 0');
                     one.volume.gain.cancelScheduledValues(context.currentTime);
                     one.volume.gain.linearRampToValueAtTime(0, context.currentTime + 5.0);
@@ -164,6 +170,7 @@ export function start(settings: Settings, ws: any, openConnection: boolean) {
                 console.log('exiting one');
                 break;
             case 'two':
+                //TODO: can't I pass in a time here? to stop it after a certain time?
                 twoOut = setTimeout(() => two.stop(), 5000);
                 console.log('exiting two');
                 break;
