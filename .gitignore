@@ -12,4 +12,7 @@ dist/
 config.js
 .env
 
+.swp
+.swo
+/.vs
 .DS_Store
