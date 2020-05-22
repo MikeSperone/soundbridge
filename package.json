@@ -17,7 +17,7 @@
         "@types/jquery": "^3.3.31",
         "dotenv": "^7.0.0",
         "express": "^4.16.4",
-        "jquery": "^3.4.1",
+        "jquery": "^3.5.0",
         "mini-css-extract-plugin": "^0.8.0",
         "path": "^0.12.7",
         "socket.io": "^2.2.0",
