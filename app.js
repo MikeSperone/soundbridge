@@ -14,7 +14,8 @@ app.get("/test", function(req, res) {
 });
 
 app.get('/', function(req, res) {
-    res.status(200).sendFile(path.join(__dirname,  config.build + '/index.html'));
+    res.status(200)
+        .sendFile(path.join(__dirname,  config.build + '/index.html'));
 });
 
 

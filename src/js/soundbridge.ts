@@ -28,18 +28,8 @@ interface Settings {
     delay: boolean[];
 }
 
-export function setSettings(settings: AllSettings, i: number) {
 
-    console.log("setting number: ", (i + 1));
-
-    const samples = settings.samples[i],
-        grainSettings = settings.grain[i],
-        delaySettings = settings.delay[i];
-
-    return { samples: samples, grain: grainSettings, delay: delaySettings };
-}
-
-export function start(settings: Settings, ws: any, openConnection: boolean) {
+export default function soundbridge(settings: Settings, ws: any, openConnection: boolean) {
 
     const audiopath = 'audio/';
     /*

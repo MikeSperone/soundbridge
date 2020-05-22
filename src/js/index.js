@@ -1,11 +1,11 @@
-import { setSettings, start } from './soundbridge';
-import * as json from './settings';
+import soundbridge from './soundbridge';
+import getSettings from './settings';
 
 var openConnection = false;
 
 function startWithSettings(ws, i) {
-    const settings = setSettings(json.settings, i);
-    start(settings, ws, openConnection);
+    const settings = getSettings(i);
+    soundbridge(settings, ws, openConnection);
 }
 
 function soloStart() {

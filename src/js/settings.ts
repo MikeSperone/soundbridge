@@ -11,7 +11,7 @@ interface Settings {
 };
 
 
-export const settings: Settings = {
+const settings: Settings = {
     "samples": [
         {"0": "water3",         "1": "drillingbursts",  "2": "crickets",        "3":"arleneNR",       "a":""},
         {"0": "c_ray2",         "1": "c_ray2",          "2": "hammer",          "3":"carolynNR",      "a":""},
@@ -19,11 +19,11 @@ export const settings: Settings = {
         {"0": "rhythmicdrips",  "1": "buttonholer",     "2": "water3",          "3":"albert_tie",     "a":""},
         {"0": "glass_chipping", "1": "glass_cutting",   "2": "glass_breaking",  "3":"victor_glass",   "a":""},
         {"0": "34sL",           "1": "flagpole",        "2": "facwhistle+mock", "3":"counteecullen",  "a":""},
-        {"0": "sandwalk",      "1": "laskyrachet",     "2": "rhythmicdrips",   "3":"dennisfields",   "a":""},
+        {"0": "sandwalk",       "1": "laskyrachet",     "2": "rhythmicdrips",   "3":"dennisfields",   "a":""},
         {"0": "2_2_4_sheddrips", "1": "sax",            "2": "crickets",        "3":"sidcaesar1",     "a":""},
         {"0": "glass_breaking", "1": "greyston2NR",     "2": "bridgesound1",    "3":"mosesyoho",      "a":""},
         {"0": "trolley2",       "1": "pinningmachine",  "2": "facwhistle+mock", "3":"masefield1",     "a":""},
-        {"0": "montagemachine", "1": "facwhistle1srt",   "2": "buttonholer",     "3":"masefield2",     "a":""},
+        {"0": "montagemachine", "1": "facwhistle1srt",  "2": "buttonholer",     "3":"masefield2",     "a":""},
         {"0": "bridgesound1",   "1": "water1",          "2": "rhythmicsdrips",  "3":"sharonbarge",    "a":""},
         {"0": "piano_tuning",   "1": "glass_ice",       "2": "glass_breaking",  "3":"mockingbird",    "a":"ambientcar_factory"},
         {"0": "wavebangbuf",    "1": "bridgesound1",    "2": "metalhinge1",     "3":"piano_tuning2",  "a":"ambientfactory"},
@@ -112,3 +112,15 @@ export const settings: Settings = {
         [true, true,  false, true]
     ]
 };
+Object.freeze(settings); 
+
+export default function getSettings(i: number) {
+
+    console.log("setting number: ", (i + 1));
+
+    const samples = settings.samples[i],
+        grain = settings.grain[i],
+        delay = settings.delay[i];
+
+    return { samples, grain, delay };
+}
