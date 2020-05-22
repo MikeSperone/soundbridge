@@ -37,12 +37,12 @@ and change your config host, port, etc... if necessary (if you're not using the 
 
 Development:
 ```sh
-gulp dev
+npm run dev
 ```
 
 ## Testing
 ```sh
-gulp test
+npm run test
 ```
 Using the [mocha](http://mochajs.org/) testing framework, along with the [chai](http://chaijs.com/) assertion library.  This runs all tests in the /test folder.
 
