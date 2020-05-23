@@ -11,11 +11,11 @@ export default class App extends Component {
         return (
             <div id="app">
                 <h1>HELLLO</h1>
+                <Router onChange={this.handleRoute}>
+                    <Soundbridge path="/" />
+                </Router>
             </div>
         );
     }
 }
-                // <Router onChange={this.handleRoute}>
-                //     <Soundbridge path="/" />
-                // </Router>
 
