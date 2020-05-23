@@ -36,5 +36,5 @@ function init() {
 
 }
 
-setTimeout(init, 10000);
+setTimeout(init, 5000);
 // init();

@@ -1,5 +1,6 @@
 import { h, Component  } from 'preact';
 import { Router } from 'preact-router';
+import jquery from 'jquery';
 
 // import Header from './header';
 
@@ -8,8 +9,7 @@ import Soundbridge from './routes/soundbridge';
 export default class App extends Component {
     handleRoute = e => this.currentUrl = e.url;
     componentDidMount() {
-        window.$ = require('jquery');
-        require('./js/index.js');
+        window.$ = jquery;
     }
     render() {
         return (
