@@ -88,13 +88,13 @@ module.exports = {
         ]
     },
     devServer: {
-        contentBase: path.join(__dirname, '../public'),
+        contentBase: path.join(__dirname, '../../public'),
         host: '0.0.0.0',
         port: 9000,
         disableHostCheck: process.env.NODE_ENV === 'development'
     },
     output: {
         filename: '[name].js',
-        path: path.resolve(__dirname, '../public')
+        path: path.resolve(__dirname, '../../public')
     }
 };

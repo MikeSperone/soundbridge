@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import Sensor from '../../components/Sensor';
+import Sensor from '../Sensors/Sensor';
 
 const XYPad = props => {
     return <div class="xy-pad">

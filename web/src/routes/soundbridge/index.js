@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import Sensor from '../../components/Sensor';
+import { Zero, One, Two, Three } from '../../components/Sensors';
 import XYPad from '../../components/XYPad';
 import styles from '../../style/bridge.scss';
 
@@ -7,10 +7,10 @@ const Soundbridge = () => (
     <div class="soundbridge">
         <h1>Soundbridge Preact!</h1>
 
-        <Sensor name="zero" />
-        <Sensor name="one" />
-        <Sensor name="two" />
-        <Sensor name="three" />
+        <Zero />
+        <One />
+        <Two />
+        <Three />
 
         <XYPad />
     </div>
