@@ -5,6 +5,7 @@ import jquery from 'jquery';
 // import Header from './header';
 
 import Soundbridge from './routes/soundbridge';
+import Test from './routes/test';
 
 export default class App extends Component {
     handleRoute = e => this.currentUrl = e.url;

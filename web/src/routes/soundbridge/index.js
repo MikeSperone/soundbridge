@@ -2,7 +2,7 @@ import { h, Component } from 'preact';
 import { Zero, One, Two, Three } from '../../components/Sensors';
 import XYPad from '../../components/XYPad';
 import soundbridge from '../../js/soundbridge';
-import getSettings from '../../js/settings';
+import getSettings from './settings';
 import styles from '../../style/bridge.scss';
 
 class Soundbridge extends Component {

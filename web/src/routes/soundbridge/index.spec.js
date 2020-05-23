@@ -1,5 +1,5 @@
-import soundbridge from 'soundbridge';
-import getSettings from 'settings';
+// import soundbridge from 'soundbridge';
+import getSettings from './settings';
 
 describe('Soundbridge', function() {
 	
