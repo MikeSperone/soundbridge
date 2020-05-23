@@ -1,6 +1,7 @@
 import { h } from 'preact';
 import Sensor from '../../components/Sensor';
 import XYPad from '../../components/XYPad';
+import styles from '../../style/bridge.scss';
 
 const Soundbridge = () => (
     <div class="soundbridge">

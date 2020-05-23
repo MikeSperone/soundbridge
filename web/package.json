@@ -41,6 +41,7 @@
         "chai-as-promised": "^7.1.1",
         "concurrently": "^5.2.0",
         "copy-webpack-plugin": "^5.1.1",
+        "css-loader": "^3.5.3",
         "html-webpack-plugin": "^4.3.0",
         "mocha": "^7.1.2",
         "nodemon": "^2.0.4",
