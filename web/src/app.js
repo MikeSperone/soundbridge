@@ -1,5 +1,5 @@
 import { h, Component  } from 'preact';
-import { Router } from 'preact-router';
+import { Router, Link } from 'preact-router';
 import jquery from 'jquery';
 
 // import Header from './header';
@@ -15,9 +15,15 @@ export default class App extends Component {
     render() {
         return (
             <div id="app">
-                <h1>HELLLO</h1>
+                <h1>
+                    <Link activeClassName="active" href="/">Soundbridge</Link>
+                </h1>
+                <nav>
+                    <Link activeClassName="active" href="/test">Test</Link>
+                </nav>
                 <Router onChange={this.handleRoute}>
                     <Soundbridge path="/" />
+                    <Test path="/test" />
                 </Router>
             </div>
         );
