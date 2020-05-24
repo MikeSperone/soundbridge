@@ -1,7 +1,7 @@
 import { h, Component } from 'preact';
 import { Zero, One, Two, Three } from '../../components/Sensors';
 import XYPad from '../../components/XYPad';
-import soundbridge from '../../js/soundbridge';
+// import soundbridge from '../../js/soundbridge';
 import getSettings from './settings';
 import styles from '../../style/bridge.scss';
 
@@ -13,11 +13,17 @@ class Soundbridge extends Component {
 
         this.startWithSettings = this.startWithSettings.bind(this);
         this.soloStart = this.soloStart.bind(this);
+        this.state = {
+            settings: null
+        };
     }
 
     startWithSettings(ws, i) {
+        console.info('startWithSettings');
         const settings = getSettings(i);
-        soundbridge(settings, ws, this.openConnection);
+        console.info('settings: ', settings);
+        this.setState({settings});
+        // soundbridge(settings, ws, this.openConnection);
     }
 
     soloStart() {
@@ -30,6 +36,7 @@ class Soundbridge extends Component {
     }
 
     componentDidMount() {
+        window.globalAudioContext = new window.AudioContext();
         const ioScript = document.createElement('script');
         ioScript.type = 'text/javascript';
         ioScript.src = '/socket.io/socket.io.js';
@@ -47,15 +54,15 @@ class Soundbridge extends Component {
         document.getElementsByTagName('head')[0].appendChild(ioScript);
     }
 
+                // <One settings={this.state.settings} />
+                // <Two settings={this.state.settings} />
+                // <Three settings={this.state.settings} />
     render() {
         return (
             <div class="soundbridge">
                 <h1>Soundbridge Preact!</h1>
 
-                <Zero />
-                <One />
-                <Two />
-                <Three />
+                <Zero settings={this.state.settings} />
 
                 <XYPad />
             </div>

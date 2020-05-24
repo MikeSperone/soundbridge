@@ -40,7 +40,7 @@ export default function soundbridge(settings: Settings, ws: any, openConnection:
     let sensor = $('.sensor');
     let xy = $('.xy-pad');
     let rate = 1;
-    let zeroOut,
+    let //zeroOut,
         oneOut: any,
         twoOut: any,
         threeOut;
@@ -53,7 +53,7 @@ export default function soundbridge(settings: Settings, ws: any, openConnection:
 
     // set samples
     console.log('2. setting samples');
-    let audioZero = audiopath + samples[0] + '.mp3';
+    // let audioZero = audiopath + samples[0] + '.mp3';
     let audioOne  = audiopath + samples[1] + '.mp3';
     let audioTwo  = audiopath + samples[2] + '.mp3';
     let audioThree = audiopath + samples[3] + '.mp3';
@@ -70,12 +70,12 @@ export default function soundbridge(settings: Settings, ws: any, openConnection:
         //let ambient = new Ambient(audioAmb, context, 0.8);
     }
 
-    let zero = new Playgroove(audioZero, context);
-    zero.loadAudio()
-        .then(() => {
-            console.info('sensor zero audio loaded - ' + audioZero);
-            zero.delaySwitch(delaySettings[0]);
-        });
+    // let zero = new Playgroove(audioZero, context);
+    // zero.loadAudio()
+    //     .then(() => {
+    //         console.info('sensor zero audio loaded - ' + audioZero);
+    //         zero.delaySwitch(delaySettings[0]);
+    //     });
 
     let one = new Playgroove(audioOne, context);
     one.loadAudio()
@@ -115,11 +115,11 @@ export default function soundbridge(settings: Settings, ws: any, openConnection:
     let over = (id: string) => {
         switch (id) {
             //TODO: these `fadeIn` methods don't exist yet
-            case 'zero':
-                // zero.fadeIn(0.7, 0.5);
-                zero.volume.gain.cancelScheduledValues(context.currentTime);
-                zero.volume.gain.linearRampToValueAtTime(0.7, context.currentTime + 0.5);
-                break;
+            // case 'zero':
+            //     // zero.fadeIn(0.7, 0.5);
+            //     zero.volume.gain.cancelScheduledValues(context.currentTime);
+            //     zero.volume.gain.linearRampToValueAtTime(0.7, context.currentTime + 0.5);
+            //     break;
             case 'one':
                 // one.fadeIn(0.7, 0.5);
                 one.volume.gain.cancelScheduledValues(context.currentTime);
@@ -143,12 +143,12 @@ export default function soundbridge(settings: Settings, ws: any, openConnection:
 
         switch (id) {
             //TODO: these `fadeOut` methods don't exist yet
-            case 'zero':
-                // zero.fadeOut(5.0);
-                zero.volume.gain.cancelScheduledValues(context.currentTime);
-                zero.volume.gain.linearRampToValueAtTime(0, context.currentTime + 5.0);
-                console.log('exiting zero');
-                break;
+            // case 'zero':
+            //     // zero.fadeOut(5.0);
+            //     zero.volume.gain.cancelScheduledValues(context.currentTime);
+            //     zero.volume.gain.linearRampToValueAtTime(0, context.currentTime + 5.0);
+            //     console.log('exiting zero');
+            //     break;
             case 'one':
                 oneOut = setTimeout(() => {
                     // one.fadeOut(5.0);
@@ -202,13 +202,13 @@ export default function soundbridge(settings: Settings, ws: any, openConnection:
         $('#'+id).children('.value').text(rate.toFixed(2));
 
         switch (id) {
-            case 'zero':
-                zero.pbRate(rate);
-                if (delayOn) {
-                    zero.delTime(event/485);      // range of .125 - .825(s)
-                    zero.delFeedback(event/808);  // range of .075 - .495
-                }
-                break;
+            // case 'zero':
+            //     zero.pbRate(rate);
+            //     if (delayOn) {
+            //         zero.delTime(event/485);      // range of .125 - .825(s)
+            //         zero.delFeedback(event/808);  // range of .075 - .495
+            //     }
+            //     break;
             case 'one':
                 one.pbRate(rate);
                 if (delayOn) {
