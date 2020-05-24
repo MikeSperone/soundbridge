@@ -44,7 +44,7 @@ export default class Two extends Component {
         if (!settings) return false;
         this.sample = settings.samples[3];
         this.delaySettings = settings.delay[3];
-        this.grainSettings = settings.grain[3];
+        this.grainSettings = settings.grain;
 
         this.playbackHold = new Play(`/audio/hold/${this.sample}_slow.mp3`, globalAudioContext);
         this.playbackHold.loadAudio().then(() => this.playbackHoldReady = true);
@@ -61,13 +61,11 @@ export default class Two extends Component {
     }
 
     handleEnter() {
-        console.log(this.name, 'Enter')
         clearTimeout(this.timeout);
         this.synth.start();
     }
 
     handleExit() {
-        console.log(this.name, 'Exit')
         this.timeout = setTimeout(() => {
             this.synth.stop();
             this.playbackHold.stop();
@@ -76,7 +74,6 @@ export default class Two extends Component {
     }
 
     handleMove(value, _) {
-        console.log(this.name, 'Move Hand');
         if (value > 231) {
             console.log('entered 3.  From ' + this.position);
             if (this.position === 2) { this.playbackHold.stop(); }

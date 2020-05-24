@@ -19,6 +19,7 @@ export default class Playgroove {
         this.delay = context.createDelay(1.0);
         this.feedback = context.createGain();
         this.volume = context.createGain();
+        this.maximumVolume = 1.0;
 
         this.merge = context.createChannelMerger(2);
         this.panL = context.createStereoPanner();
@@ -102,8 +103,25 @@ export default class Playgroove {
         this.src.playbackRate.value = this._restrict(rate);
     }
 
-    vol(v: number) {
-        this.volume.gain.value = this._restrict(v);
+    get vol() {
+        return this.volume.gain.value;
     }
 
+    set vol(v: number) {
+        this.changeVolume(v);
+    }
+
+    changeVolume(v: number, t: number = 0) {
+        const volume = this.maximumVolume * this._restrict(v);
+        this.volume.gain
+            .cancelScheduledValues(this.context.currentTime);
+        this.volume.gain
+            .linearRampToValueAtTime(volume, this.context.currentTime + t);
+
+    }
+
+    set volumeScalar(v) {
+        this.maximumVolume = this._restrict(v);
+        this.changeVolume(v, 0.01);
+    }
 }

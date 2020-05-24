@@ -85,6 +85,8 @@ module.exports = {
             synths: path.resolve(__dirname, '../src/synths'),
             routes: path.resolve(__dirname, '../src/routes'),
             components: path.resolve(__dirname, '../src/components'),
+            react: 'preact/compat',
+            "react-dom": 'preact/compat',
         },
         extensions: [".js", ".ts"],
         modules: [

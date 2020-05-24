@@ -1,3 +1,6 @@
+@use '_sensor';
+@use '_buttons';
+
 $font-stack: Helvetica, sans-serif;
 $primary-color: #333;
 
@@ -20,15 +23,6 @@ body {
     .info {
         background-color: blue;
     }
-}
-
-.sensor {
-  display: block;
-  width: 340px;
-  height: 25px;
-  border: 1px solid $primary-color;
-  margin: 60px;
-  margin-bottom: 10%;
 }
 
 .value {

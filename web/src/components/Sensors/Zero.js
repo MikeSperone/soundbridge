@@ -51,23 +51,16 @@ export default class Zero extends Component {
     }
 
     handleEnter() {
-        console.log(this.name, 'Enter')
+        if (this.synth.isMuted()) return;
         // zero.fadeIn(0.7, 0.5);
-        this.synth.volume.gain.cancelScheduledValues(globalAudioContext.currentTime);
-        this.synth.volume.gain.linearRampToValueAtTime(0.7, globalAudioContext.currentTime + 0.5);
+        this.synth.changeVolume(0.7, 0.5);
     }
 
     handleExit() {
-        console.log(this.name, 'Exit')
-        // zero.fadeOut(5.0);
-        this.synth.volume.gain
-            .cancelScheduledValues(globalAudioContext.currentTime);
-        this.synth.volume.gain
-            .linearRampToValueAtTime(0, globalAudioContext.currentTime + 5.0);
+        this.synth.changeVolume(0, 5.0);
     }
 
     handleMove(value, rate) {
-        console.log(this.name, 'Move Hand');
         this.synth.pbRate(rate);
         if (this.state.delayOn) {
             this.synth.delTime(value/485);      // range of .125 - .825(s)

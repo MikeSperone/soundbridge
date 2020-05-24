@@ -30,6 +30,7 @@ export default class Play {
         this.startTime = 0;
         this.audioLoadTimeOffset = 0;
         this.initialVol = vol;
+        this.maximumVolume = 1.0;
 
         this.buffer = null;
         this.loopStart = 0;
@@ -166,9 +167,12 @@ export default class Play {
      * @param {number} v 0.0 to 1.0
      */
     set vol(v: number) {
-        this.volume.gain.value = v;
+        this.volume.gain.value = this.maximumVolume * v;
     }
 
+    changeVolume(v) {
+        this.vol = v;
+    }
     /**
      * Get the current volume
      * @return {Number} volume
@@ -177,6 +181,10 @@ export default class Play {
         return this.volume.gain.value;
     }
 
+    set volumeScalar(v) {
+        this.maximumVolume = v;
+        this.changeVolume(v, 0.01);
+    }
     resize(x: number) {
         this.len = x;
         this.startSample();

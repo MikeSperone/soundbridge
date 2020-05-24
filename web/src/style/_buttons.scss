@@ -1,0 +1,17 @@
+button {
+    display: block;
+    background: blue;
+    height: 2rem;
+    width: 2rem;
+    border-radius: 3px;
+
+    &.solo {
+        background: yellow;
+    }
+    &.mute {
+        background: lightblue;
+    }
+    &.muted {
+        background: red;
+    }
+}

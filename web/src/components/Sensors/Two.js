@@ -40,8 +40,7 @@ export default class Two extends Component {
     setSettings(settings) {
         if (!settings) return false;
         this.sample = settings.samples[2];
-        // this.delaySettings = settings.delay[2];
-        this.grainSettings = settings.grain[2];
+        this.grainSettings = settings.grain;
         return true;
     }
 
@@ -55,19 +54,16 @@ export default class Two extends Component {
     }
 
     handleEnter() {
-        console.log(this.name, 'Enter')
         clearTimeout(this.timeout);
         this.synth.start();
     }
 
     handleExit() {
-        console.log(this.name, 'Exit')
         //TODO: can't I pass in a time here? to stop it after a certain time?
         this.timeout = setTimeout(() => this.synth.stop(), 5000);
     }
 
     handleMove(value, rate) {
-        console.log(this.name, 'Move Hand');
         // range: 0 - 1
         this.synth.read = value/360;
     }
