@@ -10,6 +10,10 @@ class Sensor extends Component {
         this.onLoadAudio = props.onLoadAudio;
         this.onMove = props.onMove;
         this.handleMotion = this.handleMotion.bind(this);
+
+        this.state = {
+            value: 0
+        };
     }
 
     componentDidMount() {
@@ -22,6 +26,7 @@ class Sensor extends Component {
     handleMotion(e) {
         const value = e.offsetX + 1;
         const rate = value/270;
+        this.setState(() => ( {value }));
         this.onMove(value, rate);
     }
 
@@ -34,7 +39,7 @@ class Sensor extends Component {
                 onMouseMove={this.handleMotion}
                 onMouseLeave={this.props.onExit}
             >
-                <div class="value"></div>
+                <div class="value">{this.state.value}</div>
             </div>
         );
     }

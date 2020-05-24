@@ -40,10 +40,10 @@ export default function soundbridge(settings: Settings, ws: any, openConnection:
     let sensor = $('.sensor');
     let xy = $('.xy-pad');
     let rate = 1;
-    let //zeroOut,
-        oneOut: any,
-        twoOut: any,
-        threeOut;
+    // let //zeroOut,
+        // oneOut: any,
+        // twoOut: any,
+        // threeOut;
 
     // load settings
     console.log('1. loading settings');
@@ -77,24 +77,24 @@ export default function soundbridge(settings: Settings, ws: any, openConnection:
     //         zero.delaySwitch(delaySettings[0]);
     //     });
 
-    let one = new Playgroove(audioOne, context);
-    one.loadAudio()
-        .then(() => {
-            console.info('sensor one audio loaded - ' + audioOne);
-            one.delaySwitch(delaySettings[1]);
-        });
+    // let one = new Playgroove(audioOne, context);
+    // one.loadAudio()
+    //     .then(() => {
+    //         console.info('sensor one audio loaded - ' + audioOne);
+    //         one.delaySwitch(delaySettings[1]);
+    //     });
 
-    let two = new Playgrain(audioTwo, context);
-    two.loadAudio().then(() => {
-        two.scatter = grainSettings[0];
-        two.fade = grainSettings[1];
-        two.spread = grainSettings[2];
-        two.feedback = grainSettings[3];
-    });
+    // let two = new Playgrain(audioTwo, context);
+    // two.loadAudio().then(() => {
+    //     two.scatter = grainSettings[0];
+    //     two.fade = grainSettings[1];
+    //     two.spread = grainSettings[2];
+    //     two.feedback = grainSettings[3];
+    // });
 
-    let three = new Loop(audioThree, context);
-    let threeHold = new Play(audioThreeHold, context);
-    threeHold.loadAudio().then(() => {});
+    // let three = new Loop(audioThree, context);
+    // let threeHold = new Play(audioThreeHold, context);
+    // threeHold.loadAudio().then(() => {});
     //three.delay(delaySettings[4]);
 
     let threePosition = 0;
@@ -120,19 +120,19 @@ export default function soundbridge(settings: Settings, ws: any, openConnection:
             //     zero.volume.gain.cancelScheduledValues(context.currentTime);
             //     zero.volume.gain.linearRampToValueAtTime(0.7, context.currentTime + 0.5);
             //     break;
-            case 'one':
-                // one.fadeIn(0.7, 0.5);
-                one.volume.gain.cancelScheduledValues(context.currentTime);
-                one.volume.gain.linearRampToValueAtTime(0.7, context.currentTime + 0.5);
-                clearTimeout(oneOut);
-                break;
-            case 'two':
-                clearTimeout(twoOut);
-                two.start();
-                break;
-            case 'three':
-                //clearTimeout(threeOut);
-                break;
+            // case 'one':
+            //     // one.fadeIn(0.7, 0.5);
+            //     one.volume.gain.cancelScheduledValues(context.currentTime);
+            //     one.volume.gain.linearRampToValueAtTime(0.7, context.currentTime + 0.5);
+            //     clearTimeout(oneOut);
+            //     break;
+            // case 'two':
+            //     clearTimeout(twoOut);
+            //     two.start();
+            //     break;
+            //case 'three':
+            //    //clearTimeout(threeOut);
+            //    break;
             default:
                 break;
         }
@@ -149,26 +149,26 @@ export default function soundbridge(settings: Settings, ws: any, openConnection:
             //     zero.volume.gain.linearRampToValueAtTime(0, context.currentTime + 5.0);
             //     console.log('exiting zero');
             //     break;
-            case 'one':
-                oneOut = setTimeout(() => {
-                    // one.fadeOut(5.0);
-                    console.log('setting one volume to 0');
-                    one.volume.gain.cancelScheduledValues(context.currentTime);
-                    one.volume.gain.linearRampToValueAtTime(0, context.currentTime + 5.0);
-                    // one.vol(0);
-                }, 5000);
-                console.log('exiting one');
-                break;
-            case 'two':
-                //TODO: can't I pass in a time here? to stop it after a certain time?
-                twoOut = setTimeout(() => two.stop(), 5000);
-                console.log('exiting two');
-                break;
-            case 'three':
-                setTimeout(() => { three.stop(); threeHold.stop();}, 5000);
-                threePosition = 0;
-                console.log('exiting three');
-                break;
+            // case 'one':
+            //     oneOut = setTimeout(() => {
+            //         // one.fadeOut(5.0);
+            //         console.log('setting one volume to 0');
+            //         one.volume.gain.cancelScheduledValues(context.currentTime);
+            //         one.volume.gain.linearRampToValueAtTime(0, context.currentTime + 5.0);
+            //         // one.vol(0);
+            //     }, 5000);
+            //     console.log('exiting one');
+            //     break;
+            //case 'two':
+            //    //TODO: can't I pass in a time here? to stop it after a certain time?
+            //    twoOut = setTimeout(() => two.stop(), 5000);
+            //    console.log('exiting two');
+            //    break;
+            // case 'three':
+            //     setTimeout(() => { three.stop(); threeHold.stop();}, 5000);
+            //     threePosition = 0;
+            //     console.log('exiting three');
+            //     break;
             default:
                 break;
         }
@@ -209,47 +209,47 @@ export default function soundbridge(settings: Settings, ws: any, openConnection:
             //         zero.delFeedback(event/808);  // range of .075 - .495
             //     }
             //     break;
-            case 'one':
-                one.pbRate(rate);
-                if (delayOn) {
-                    one.delTime(event/485);
-                    one.delFeedback(event/808);
-                }
-                break;
-            case 'two':
-                // range: 0 - 1
-                two.read = event/360;
-                break;
-            case 'three':
+            // case 'one':
+            //     one.pbRate(rate);
+            //     if (delayOn) {
+            //         one.delTime(event/485);
+            //         one.delFeedback(event/808);
+            //     }
+                // break;
+            // case 'two':
+            //     // range: 0 - 1
+            //     two.read = event/360;
+            //     break;
+            // case 'three':
 
-                if (event > 231) {
-                    console.log('entered 3.  From ' + threePosition);
-                    if (threePosition === 2) { threeHold.stop(); }
-                    threePosition = 3;
-                    three.sensor(event / 11);
+            //     if (event > 231) {
+            //         console.log('entered 3.  From ' + threePosition);
+            //         if (threePosition === 2) { threeHold.stop(); }
+            //         threePosition = 3;
+            //         three.sensor(event / 11);
 
-                } else if (event < 121) {
-                    console.log('entered 1.  From ' + threePosition);
-                    if (threePosition !== 1) {
+            //     } else if (event < 121) {
+            //         console.log('entered 1.  From ' + threePosition);
+            //         if (threePosition !== 1) {
 
-                        time = (threePosition === 2) ? (threeHold.elapsedTime/4) : time;
-                        threeHold.stop();
-                        threePosition = 1;
-                        three.sensor(event / 11, time);
+            //             time = (threePosition === 2) ? (threeHold.elapsedTime/4) : time;
+            //             threeHold.stop();
+            //             threePosition = 1;
+            //             three.sensor(event / 11, time);
 
-                    }
+            //         }
 
-                } else {
-                    console.log('entered 2.  From ' + threePosition);
-                    if (threePosition !== 2) {
-                        time = (threePosition === 1) ? (three.elapsedTime * 4) : time;
-                        if (threePosition !== 0) { three.stop(); }
-                        threePosition = 2;
-                        threeHold.vol = 1;
-                        threeHold.startSample(time);
-                    }
+            //     } else {
+            //         console.log('entered 2.  From ' + threePosition);
+            //         if (threePosition !== 2) {
+            //             time = (threePosition === 1) ? (three.elapsedTime * 4) : time;
+            //             if (threePosition !== 0) { three.stop(); }
+            //             threePosition = 2;
+            //             threeHold.vol = 1;
+            //             threeHold.startSample(time);
+            //         }
 
-                }
+            //     }
 
                 break;
             default:

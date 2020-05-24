@@ -54,17 +54,17 @@ class Soundbridge extends Component {
         document.getElementsByTagName('head')[0].appendChild(ioScript);
     }
 
-                // <One settings={this.state.settings} />
-                // <Two settings={this.state.settings} />
-                // <Three settings={this.state.settings} />
+                // <XYPad />
     render() {
         return (
             <div class="soundbridge">
                 <h1>Soundbridge Preact!</h1>
 
                 <Zero settings={this.state.settings} />
+                <One settings={this.state.settings} />
+                <Two settings={this.state.settings} />
+                <Three settings={this.state.settings} />
 
-                <XYPad />
             </div>
         );
     }
