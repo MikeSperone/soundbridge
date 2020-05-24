@@ -1,6 +1,6 @@
 import { h, Component } from 'preact';
 import Sensor from './Sensor';
-import Playgrain from 'synths/playgrain';
+import Loop from 'synths/loop';
 import Play from 'synths/play';
 
 
@@ -62,7 +62,6 @@ export default class Two extends Component {
 
     handleEnter() {
         clearTimeout(this.timeout);
-        this.synth.start();
     }
 
     handleExit() {
@@ -75,12 +74,14 @@ export default class Two extends Component {
 
     handleMove(value, _) {
         if (value > 231) {
+            // Position 3
             console.log('entered 3.  From ' + this.position);
             if (this.position === 2) { this.playbackHold.stop(); }
             this.position = 3;
             this.synth.sensor(value / 11);
 
         } else if (value < 121) {
+            // Position 1
             console.log('entered 1.  From ' + this.position);
             if (this.position !== 1) {
 
@@ -94,6 +95,7 @@ export default class Two extends Component {
             }
 
         } else {
+            // Position 2
             console.log('entered 2.  From ' + this.position);
             if (this.position !== 2) {
                 this.time = (this.position === 1) ?
@@ -101,7 +103,7 @@ export default class Two extends Component {
                     this.time;
                 if (this.position !== 0) { this.synth.stop(); }
                 this.position = 2;
-                this.playbackHold.vol = 1;
+                this.playbackHold.changeVolume(1, 0.01);
                 this.playbackHold.startSample(this.time);
             }
 
@@ -116,7 +118,7 @@ export default class Two extends Component {
                 <Sensor
                     name={this.name}
                     sample={this.sample}
-                    synth={Playgrain}
+                    synth={Loop}
                     onEnter={this.handleEnter}
                     onMove={this.handleMove}
                     onExit={this.handleExit}

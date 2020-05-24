@@ -115,6 +115,7 @@ export default class Play {
     play() {
         if (this.src) {
             this.src.start();
+            this.stopped = false;
         }
     }
 
