@@ -3,6 +3,8 @@ import { Slider } from 'react-nexusui';
 
 const SensorContainer = (props) => <div className="sensor-container">{props.children}</div>;
 
+const MessageBox = props => <div className="message-box">{props.message}</div>;
+
 class Sensor extends Component {
     constructor(props) {
         super(props);
@@ -22,6 +24,7 @@ class Sensor extends Component {
         this.state = {
             value: 0,
             isMuted: false,
+            active: false
         };
     }
 
@@ -40,6 +43,7 @@ class Sensor extends Component {
     handleEnter(e) {
         console.info(this.name, 'Enter');
         this.props.onEnter(e);
+        this.setState(() => ({active: true}));
     }
 
     handleMotion(e) {
@@ -52,6 +56,7 @@ class Sensor extends Component {
     handleExit() {
         console.info(this.name, 'Exit');
         this.props.onExit();
+        this.setState(() => ({active: false}));
     }
 
     handleMute() {
@@ -69,7 +74,7 @@ class Sensor extends Component {
         return (
             <SensorContainer>
                 <div
-                    className={"sensor"}
+                    className={"sensor " + (this.state.active ? "active" : "inactive")}
                     id={this.name}
                     onMouseEnter={this.handleEnter}
                     onMouseMove={this.handleMotion}
@@ -91,6 +96,7 @@ class Sensor extends Component {
                     value={1.0}
                     onChange={this.setVolumeScalar}
                 />
+                <MessageBox message={this.state.message} />
             </SensorContainer>
         );
     }

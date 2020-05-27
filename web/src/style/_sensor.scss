@@ -9,11 +9,17 @@ $light-shadow: grey;
     .sensor {
       display: block;
       width: 340px;
+      background: white;
       height: 2rem;
       margin: 1rem;
       box-shadow: 0 0 1px 1px $light-shadow inset;
+
+      transition: background-color 0.5s ease;
     }
 
+    .active {
+        background: mistyrose;
+    }
     .volume {
 
     }

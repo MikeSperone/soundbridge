@@ -58,7 +58,6 @@ class Soundbridge extends Component {
     render() {
         return (
             <div class="soundbridge">
-                <h1>Soundbridge Preact!</h1>
 
                 <Zero settings={this.state.settings} />
                 <One settings={this.state.settings} />

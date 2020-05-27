@@ -21,16 +21,6 @@ export default class Playgrain {
 
     constructor(audio: string, context: AudioContext) {
 
-        // this.a = new Grainread(audio, context, 1);
-        // this.b = new Grainread(audio, context, 1);
-        // this.c = new Grainread(audio, context, 1);
-        // this.d = new Grainread(audio, context, 1);
-        // this.e = new Grainread(audio, context, 1);
-        // this.f = new Grainread(audio, context, 1);
-        // this.g = new Grainread(audio, context, 1);
-        // this.h = new Grainread(audio, context, 1);
-        // this.i = new Grainread(audio, context, 1);
-        // this.j = new Grainread(audio, context, 1);
         this.maximumVolume = 1.0;
         this.grainArray = [];
         const numberOfGrains = 10;
@@ -41,18 +31,6 @@ export default class Playgrain {
 
         this.setAllValues = this.setAllValues.bind(this);
         this.callAllFunctions = this.callAllFunctions.bind(this);
-        // this.grainArray = [
-        //     this.a,
-        //     this.b,
-        //     this.c,
-        //     this.d,
-        //     this.e,
-        //     this.f,
-        //     this.g,
-        //     this.h,
-        //     this.i,
-        //     this.j
-        // ]
     }
 
     setAllValues(parameter, value) {
