@@ -8,23 +8,17 @@ const SettingsBox = props => {
     const { sample, delay, grain } = props.settings;
     console.info(props.settings);
     return (
-        <div className="settings-box">
-            <table>
-            {sample && (
-                <tr>
-                    <td>sample</td><td>{sample}</td>
-                </tr>
-            )}
+        <table className="settings-box">
             <tr>
-                <td>delay</td><td>{delay ? "on" : "off"}</td>
+                <th>sample</th><td>{sample}</td>
             </tr>
-            {grain && (
-                <tr>
-                    <td>grain</td><td>{JSON.stringify(grain)}</td>
-                </tr>
-            )}
-            </table>
-        </div>
+            <tr>
+                <th>delay</th><td>{delay ? "on" : "off"}</td>
+            </tr>
+            <tr>
+                <th>grain</th><td>{JSON.stringify(grain)}</td>
+            </tr>
+        </table>
     );
 }
 const MessageBox = props => <div className="message-box">{props.message}</div>;
@@ -76,7 +70,7 @@ class Sensor extends Component {
     handleMotion(e) {
         const value = e.offsetX + 1;
         const rate = value/270;
-        this.setState(() => ( {value }));
+        this.setState(() => ( { value }));
         this.props.onMove(value, rate);
     }
 
@@ -107,6 +101,7 @@ class Sensor extends Component {
                     onMouseMove={this.handleMotion}
                     onMouseLeave={this.handleExit}
                 >
+                    <span class="bar" style={{left: this.state.value}}></span>
                     <span class="value">{this.state.value}</span>
                 </div>
                 <button
