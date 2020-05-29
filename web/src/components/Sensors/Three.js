@@ -16,6 +16,10 @@ export default class Two extends Component {
         this.time = 0;
         this.position = 0;
 
+        this.sample = this.props.sample;
+        this.delaySettings = this.props.delay;
+        this.grainSettings = this.props.grain;
+
         // TODO: make delayOn a button
         this.state = {
             delayOn: true
@@ -24,7 +28,7 @@ export default class Two extends Component {
     }
 
     bind() {
-        this.setup = this.setup.bind(this);
+        this.setSettings = this.setSettings.bind(this);
         this.handleLoadAudio = this.handleLoadAudio.bind(this);
         this.handleEnter = this.handleEnter.bind(this);
         this.handleExit = this.handleExit.bind(this);
@@ -33,14 +37,14 @@ export default class Two extends Component {
 
     componentDidMount() {
         if (!window.globalAudioContext) return;
-        this.setup(this.props.settings);
+        this.setSettings(this.props.settings);
     }
 
     shouldComponentUpdate(props) {
-        return this.setup(props.settings);
+        return this.setSettings(props.settings);
     }
 
-    setup(settings) {
+    setSettings(settings) {
         if (!settings) return false;
         this.sample = settings.samples[3];
         this.delaySettings = settings.delay[3];
@@ -117,7 +121,11 @@ export default class Two extends Component {
             this.sample ?
                 <Sensor
                     name={this.name}
-                    sample={this.sample}
+                    settings={{
+                        sample: this.sample,
+                        delay: this.delaySettings,
+                        grain: this.grainSettings
+                    }}
                     synth={Loop}
                     onEnter={this.handleEnter}
                     onMove={this.handleMove}

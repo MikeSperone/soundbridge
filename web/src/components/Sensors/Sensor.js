@@ -3,6 +3,30 @@ import { Slider } from 'react-nexusui';
 
 const SensorContainer = (props) => <div className="sensor-container">{props.children}</div>;
 
+const SettingsBox = props => {
+
+    const { sample, delay, grain } = props.settings;
+    console.info(props.settings);
+    return (
+        <div className="settings-box">
+            <table>
+            {sample && (
+                <tr>
+                    <td>sample</td><td>{sample}</td>
+                </tr>
+            )}
+            <tr>
+                <td>delay</td><td>{delay ? "on" : "off"}</td>
+            </tr>
+            {grain && (
+                <tr>
+                    <td>grain</td><td>{JSON.stringify(grain)}</td>
+                </tr>
+            )}
+            </table>
+        </div>
+    );
+}
 const MessageBox = props => <div className="message-box">{props.message}</div>;
 
 class Sensor extends Component {
@@ -11,7 +35,7 @@ class Sensor extends Component {
         const audioPath = '/audio';
         this.props = props;
         this.name = props.name;
-        this.audio = `${audioPath}/${props.sample}.mp3`;
+        this.audio = `${audioPath}/${props.settings.sample}.mp3`;
         this.synth = props.synth;
         this.onLoadAudio = props.onLoadAudio;
 
@@ -24,13 +48,15 @@ class Sensor extends Component {
         this.state = {
             value: 0,
             isMuted: false,
-            active: false
+            active: false,
+            message: '',
         };
     }
 
     componentDidMount() {
         if (!window.globalAudioContext) return;
         this.synth = new this.synth(this.audio, globalAudioContext);
+        console.info('Synth ', this.synth);
         this.synth.mute = this.handleMute.bind(this);
         this.synth.isMuted = () => this.state.isMuted;
         this.synth.loadAudio()
@@ -38,6 +64,7 @@ class Sensor extends Component {
     }
 
     componentWillUnmount() {
+        this.synth.destroy();
         // destroy synth
     }
     handleEnter(e) {
@@ -96,7 +123,7 @@ class Sensor extends Component {
                     value={1.0}
                     onChange={this.setVolumeScalar}
                 />
-                <MessageBox message={this.state.message} />
+                <SettingsBox settings={this.props.settings} />
             </SensorContainer>
         );
     }

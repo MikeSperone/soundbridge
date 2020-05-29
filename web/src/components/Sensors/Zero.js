@@ -11,6 +11,9 @@ export default class Zero extends Component {
         this.props = props;
         this.name="zero";
 
+        this.sample = this.props.sample;
+        this.grainSettings = this.props.grain;
+        this.delaySettings = this.props.delay;
         // TODO: make delayOn a button
         this.state = {
             delayOn: true
@@ -28,12 +31,12 @@ export default class Zero extends Component {
 
     componentDidMount() {
         if (!window.globalAudioContext) return;
-        this.context = window.globalAudioContext;
-        this.setSettings(this.props.settings);
+        // this.context = window.globalAudioContext;
+        // this.setSettings(this.props.settings);
     }
 
     shouldComponentUpdate(props) {
-        return this.setSettings(props.settings);
+        // return this.setSettings(props.settings);
     }
 
     setSettings(settings) {
@@ -74,7 +77,11 @@ export default class Zero extends Component {
             this.sample ?
                 <Sensor
                     name={this.name}
-                    sample={this.sample}
+                    settings={{
+                        sample: this.sample,
+                        delay: this.delaySettings,
+                        grain: this.grainSettings
+                    }}
                     synth={Playgroove}
                     onEnter={this.handleEnter}
                     onMove={this.handleMove}

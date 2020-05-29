@@ -11,11 +11,15 @@ export default class One extends Component {
         this.props = props;
         this.name="one";
 
+        this.sample = this.props.sample;
+        this.delaySettings = this.props.delay;
+        this.grainSettings = this.props.grain;
+
         this.synth = null;
  
         // TODO: make delayOn a button
         this.state = {
-            delayOn: true
+            delayOn: true,
         };
         this.bind.call(this);
     }
@@ -30,19 +34,19 @@ export default class One extends Component {
 
     componentDidMount() {
         if (!window.globalAudioContext) return;
-        this.context = window.globalAudioContext;
-        this.setSettings(this.props.settings);
+        // this.context = window.globalAudioContext;
+        // this.setSettings(this.props.settings);
     }
 
     shouldComponentUpdate(props) {
-        return this.setSettings(props.settings);
+        // return this.setSettings(props.settings);
     }
 
     setSettings(settings) {
         if (!settings) return false;
         this.sample = settings.samples[1];
         this.delaySettings = settings.delay[1];
-        // this.grainSettings = settings.grain[1];
+        this.grainSettings = settings.grain;
         return true;
     }
 
@@ -74,8 +78,12 @@ export default class One extends Component {
             this.sample ?
                 <Sensor
                     name={this.name}
-                    sample={this.sample}
                     synth={Playgroove}
+                    settings={{
+                        sample: this.sample,
+                        delay: this.delaySettings,
+                        grain: this.grainSettings
+                    }}
                     onEnter={this.handleEnter}
                     onMove={this.handleMove}
                     onExit={this.handleExit}
