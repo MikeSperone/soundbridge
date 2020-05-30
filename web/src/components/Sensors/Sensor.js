@@ -1,5 +1,6 @@
 import { h, Component } from 'preact';
-import { Slider } from 'react-nexusui';
+import Slider from 'components/Controls/Slider';
+import Button from 'components/Controls/Button';
 
 const SensorContainer = (props) => <div className="sensor-container">{props.children}</div>;
 
@@ -105,13 +106,11 @@ class Sensor extends Component {
                     <span class="value">{this.state.value}</span>
                 </div>
                 <button
-                    class={this.state.isMuted ? "muted" : "mute"}
+                    className={this.state.isMuted ? "muted" : "mute"}
                     onClick={this.handleMute}
-                >
-                    M
-                </button>
+                >M</button>
                 <Slider
-                    size={[18,48]}
+                    size={[18,64]}
                     mode="absolute"
                     min={0}
                     max={1.0}

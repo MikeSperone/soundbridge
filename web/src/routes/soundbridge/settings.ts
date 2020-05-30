@@ -116,8 +116,6 @@ Object.freeze(settings);
 
 export default function getSettings(i: number) {
 
-    console.log("setting number: ", (i + 1));
-
     const samples = settings.samples[i],
         grain = settings.grain[i],
         delay = settings.delay[i];

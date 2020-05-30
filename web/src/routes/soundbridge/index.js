@@ -1,7 +1,8 @@
-import { h, Component } from 'preact';
-import { Zero, One, Two, Three } from '../../components/Sensors';
-import XYPad from '../../components/XYPad';
+import { h, Component, Fragment } from 'preact';
+import { Zero, One, Two, Three } from 'components/Sensors';
+import XYPad from 'components/XYPad';
 import { Number } from 'react-nexusui';
+import Button from 'components/Controls/Button';
 
 // import soundbridge from '../../js/soundbridge';
 import getSettings from './settings';
@@ -19,19 +20,32 @@ const SelectSetting = props => {
         </div>
     );
 }
+const SoloBox = props => {
+    let soloClass = 'notification';
+    if (!props.solo) soloClass += ' hidden';
+    return (
+        <div className={soloClass}>
+            SOLO
+        </div>
+    );
+}
+
 class Soundbridge extends Component {
 
     constructor() {
         super();
         this.openConnection = false;
 
-        this.startWithSettings = this.startWithSettings.bind(this);
-        this.soloStart = this.soloStart.bind(this);
         this.state = {
+            audio: false,
             settings: false,
             settingNumber: 0,
+            solo: false,
         };
+
         this.changeSettings = this.changeSettings.bind(this);
+        this.startWithSettings = this.startWithSettings.bind(this);
+        this.soloStart = this.soloStart.bind(this);
     }
 
     startWithSettings(ws, i) {
@@ -43,8 +57,7 @@ class Soundbridge extends Component {
     }
 
     soloStart() {
-        const soloBox = document && document.getElementById('solo-box');
-        if (!!soloBox) soloBox.style = 'display: block';
+        this.setState(() => ({solo: true}));
         const i = Math.floor(Math.random() * 29);
         const ws = {};
         ws.on = (a,b) => {};
@@ -74,7 +87,10 @@ class Soundbridge extends Component {
         document.getElementsByTagName('head')[0].appendChild(ioScript);
     }
 
-                // <XYPad />
+    handleAudioOn() {
+        
+    }
+
     render() {
         return (
             <div class="soundbridge">
@@ -83,8 +99,11 @@ class Soundbridge extends Component {
                     handleChange={this.changeSettings}
                 />
 
+                <SoloBox solo={this.state.solo} />
+                <Button onChange={this.handleAudioOn} />
+
                 {this.state.settings && (
-                    <div>
+                    <Fragment>
                         <Zero
                             settings={this.state.settings}
                             sample={this.state.settings.samples[0]}   
@@ -109,7 +128,7 @@ class Soundbridge extends Component {
                             delay={this.state.settings.delay[3]}
                             grain={this.state.settings.grain}
                         />
-                    </div>
+                    </Fragment>
                 )}
 
             </div>
