@@ -56,7 +56,6 @@ export default class Two extends Component {
     }
 
     handleLoadAudio(synth) {
-        console.info(this.name, 'Audio Loaded');
         this.synth = synth;
         this.synth.scatter = this.grainSettings[0];
         this.synth.fade = this.grainSettings[1];
@@ -116,7 +115,6 @@ export default class Two extends Component {
     }
 
     render() {
-        console.info(this.name, 'rendering');
         return (
             this.sample ?
                 <Sensor

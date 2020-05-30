@@ -1,6 +1,5 @@
 import { h, Component  } from 'preact';
 import { Router, Link } from 'preact-router';
-import jquery from 'jquery';
 
 // import Header from './header';
 
@@ -9,9 +8,6 @@ import Test from './routes/test';
 
 export default class App extends Component {
     handleRoute = e => this.currentUrl = e.url;
-    componentDidMount() {
-        window.$ = jquery;
-    }
     render() {
         return (
             <div id="app">

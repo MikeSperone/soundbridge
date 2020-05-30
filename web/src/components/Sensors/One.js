@@ -60,7 +60,6 @@ export default class One extends Component {
     }
 
     handleExit() {
-        console.log('setting one volume to 0');
         this.synth.changeVolume(0, 5.0);
     }
 
@@ -73,7 +72,6 @@ export default class One extends Component {
     }
 
     render() {
-        console.info(this.name, 'rendering');
         return (
             this.sample ?
                 <Sensor

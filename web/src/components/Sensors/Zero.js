@@ -48,7 +48,6 @@ export default class Zero extends Component {
     }
 
     handleLoadAudio(synth) {
-        console.info(this.name, 'Audio Loaded');
         this.synth = synth;
         this.synth.delaySwitch(this.delaySettings);
     }
@@ -72,7 +71,6 @@ export default class Zero extends Component {
     }
 
     render() {
-        console.info(this.name, 'rendering');
         return (
             this.sample ?
                 <Sensor

@@ -2,28 +2,29 @@ import { h, Component } from 'preact';
 import Slider from 'components/Controls/Slider';
 import Button from 'components/Controls/Button';
 
-const SensorContainer = (props) => <div className="sensor-container">{props.children}</div>;
+const SensorContainer = props => <div className="sensor-container">{props.children}</div>;
 
 const SettingsBox = props => {
 
     const { sample, delay, grain } = props.settings;
-    console.info(props.settings);
     return (
         <table className="settings-box">
-            <tr>
-                <th>sample</th><td>{sample}</td>
-            </tr>
-            <tr>
-                <th>delay</th><td>{delay ? "on" : "off"}</td>
-            </tr>
-            <tr>
-                <th>grain</th><td>{JSON.stringify(grain)}</td>
-            </tr>
+            <tr><th>sample</th><td>{sample}</td></tr>
+            <tr><th>delay</th><td>{delay ? "on" : "off"}</td></tr>
+            <tr><th>grain</th><td>{JSON.stringify(grain)}</td></tr>
         </table>
     );
 }
+
 const MessageBox = props => <div className="message-box">{props.message}</div>;
 
+const TestValues = props => (
+    <div className="">
+        <ul>
+            <li>audioLoaded: {props.audioLoaded ? '√' : 'x'}</li>
+        </ul>
+    </div>
+);
 class Sensor extends Component {
     constructor(props) {
         super(props);
@@ -45,6 +46,7 @@ class Sensor extends Component {
             isMuted: false,
             active: false,
             message: '',
+            audioLoaded: false,
         };
     }
 
@@ -55,7 +57,10 @@ class Sensor extends Component {
         this.synth.mute = this.handleMute.bind(this);
         this.synth.isMuted = () => this.state.isMuted;
         this.synth.loadAudio()
-            .then(() => this.onLoadAudio(this.synth));
+            .then(() => {
+                this.setState(() => ({ audioLoaded: true }));
+                this.onLoadAudio(this.synth);
+            });
     }
 
     componentWillUnmount() {
@@ -63,7 +68,6 @@ class Sensor extends Component {
         // destroy synth
     }
     handleEnter(e) {
-        console.info(this.name, 'Enter');
         this.props.onEnter(e);
         this.setState(() => ({active: true}));
     }
@@ -76,13 +80,11 @@ class Sensor extends Component {
     }
 
     handleExit() {
-        console.info(this.name, 'Exit');
         this.props.onExit();
         this.setState(() => ({active: false}));
     }
 
     handleMute() {
-        console.info(this.state.isMuted ? 'unmuting' : 'muting', this.name);
         const vol = (this.state.isMuted) ? this.synth.vol : 0;
         this.synth.changeVolume(vol, 0.2);
         this.setState(state => ({isMuted: !state.isMuted}));
@@ -94,7 +96,7 @@ class Sensor extends Component {
 
     render() {
         return (
-            <SensorContainer>
+            <SensorContainer active={this.state.audioLoaded}>
                 <div
                     className={"sensor " + (this.state.active ? "active" : "inactive")}
                     id={this.name}
@@ -118,6 +120,7 @@ class Sensor extends Component {
                     onChange={this.setVolumeScalar}
                 />
                 <SettingsBox settings={this.props.settings} />
+                <TestValues audioLoaded={this.state.audioLoaded} />
             </SensorContainer>
         );
     }
