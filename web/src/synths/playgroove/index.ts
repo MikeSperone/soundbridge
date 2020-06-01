@@ -29,6 +29,7 @@ export default class Playgroove {
         this.audio = audio;
         this.context = context;
 
+        this.changeVolume = this.changeVolume.bind(this);
     }
 
     public loadAudio() {

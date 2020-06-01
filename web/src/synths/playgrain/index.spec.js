@@ -21,7 +21,7 @@ export default () => (
 
         it('includes 10 instances of Grainread', function() {
             expect(grainArray.length).to.equal(10);
-            grainArray.forEach(g => g.constructor.name === 'Grainread');
+            grainArray.forEach(g => expect(g.constructor.name).to.equal('Grainread'));
         });
 
         it('sets the fade amount for all instances', function() {
@@ -59,9 +59,26 @@ export default () => (
             checkEqual('spread', 2);
         });
 
-        it('sets the volume for all instances', function() {
+        it('sets the volume for playgrain', function(done) {
             pg.vol = 0.5;
-            checkEqual('vol', 0.5);
+            setTimeout(() => {
+                expect(pg.vol).to.equal(0.5);
+                done();
+            }, 50);
+        });
+
+        it('sets the volume for all instances', function(done) {
+            pg.vol = 0.5;
+            setTimeout(() => {
+                try {
+                    checkEqual('vol', 0.5);
+                }
+                catch (e) {
+                    console.error(e);
+                    return e;
+                }
+                done();
+            }, 100);
         });
         
         it('starts playing all instances', function() {

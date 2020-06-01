@@ -25,7 +25,7 @@ export default class Test extends Component {
         console.info('testing');
         mocha.setup('bdd');
         mocha.checkLeaks();
-        mocha.globals(['jQuery']);
+        // mocha.globals(['jQuery']);
         grainread();
         loop();
         play();

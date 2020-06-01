@@ -173,7 +173,7 @@ export default class Grainread {
         this.volume.gain
             .cancelScheduledValues(this.context.currentTime);
         this.volume.gain
-            .linearRampToValueAtTime(v, this.context.currentTime + 0.01);
+            .linearRampToValueAtTime(v, this.context.currentTime + 0.001);
     }
 
     get vol() {

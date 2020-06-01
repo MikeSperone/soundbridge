@@ -43,10 +43,13 @@ export default () => (
 
         describe('setters and getters', function() {
 
-            it('volume', function() {
+            it('volume', function(done) {
                 gr.vol = .75;
-                expect(gr.vol).to.equal(.75);
-                expect(gr.volume.gain.value).to.equal(.75);
+                setTimeout(() => {
+                    expect(gr.vol).to.equal(.75);
+                    expect(gr.volume.gain.value).to.equal(.75);
+                    done();
+                }, 10);
             });
 
             it('delays', function() {

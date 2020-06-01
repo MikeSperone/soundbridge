@@ -56,13 +56,19 @@ export default () => (
                 expect(pg.src.playbackRate.value).to.equal(0.25);
             });
 
-            it('sets the volume', function() {
-                pg.vol(0.75);
-                expect(pg.volume.gain.value).to.equal(0.75);
+            it('sets the volume', function(done) {
+                pg.vol = 0.75;
+                setTimeout(() => {
+                    expect(pg.volume.gain.value).to.equal(0.75);
+                    done();
+                }, 50);
             });
-            it('sets the volume to 0', function() {
-                pg.vol(0);
-                expect(pg.volume.gain.value).to.equal(0);
+            it('sets the volume to 0', function(done) {
+                pg.vol = 0;
+                setTimeout(() => {
+                    expect(pg.volume.gain.value).to.equal(0);
+                    done();
+                }, 50);
             });
         });
 
