@@ -2,13 +2,31 @@
 @use '_buttons';
 @use '_slider';
 
-$font-stack: Helvetica, sans-serif;
-$primary-color: #333;
+$font-stack: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+$primary-color: #113;
+$secondary-color: #7aa;
+$background-color: #eee;
 
-body {
+html, body {
   margin: 0;
-  font: $font-stack;
+  font-family: $font-stack;
+  background-color: $background-color;
   color: $primary-color;
+}
+a {
+    color: $primary-color;
+    text-decoration: none;
+
+    &:link, &:visited {
+        color: $primary-color;
+    }   
+    &:hover {
+        color: $secondary-color;
+    }
+
+    &:active {
+        color: $background-color;
+    }
 }
 
 .notification {

@@ -5,6 +5,11 @@ button {
     width: 2rem;
     border-radius: 3px;
 
+    &.start {
+        width: 4rem;
+        height:4rem;
+        color: white;
+    }
     &.solo {
         background: yellow;
     }
