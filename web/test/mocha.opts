@@ -1,3 +1,2 @@
 --require @babel/register
 --require chai
---require test/aaa-helper
