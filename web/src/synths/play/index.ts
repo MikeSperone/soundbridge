@@ -24,6 +24,7 @@ export default class Play {
      */
     constructor(audio: string, context: AudioContext, vol: number = 0) {
 
+        console.info('play constructor');
         this.audio = audio;
         this.context = context;
         this.contextCreationTime = new Date();
@@ -39,40 +40,55 @@ export default class Play {
         this.volume = this.context.createGain();
         this.src = this.context.createBufferSource();
 
+        this._bind.call(this);
+    }
+
+    _bind() {
+        this.loadAudio = this.loadAudio.bind(this);
+        // this.decodeAudioData = this.decodeAudioData.bind(this);
+        // this.handleAudioData = this.handleAudioData.bind(this);
     }
 
     loadAudio() {
+        console.info('play loading audio');
         return new Promise(resolve => {
-            var that = this;
+
+            const handleAudioData = function(buffer) {
+                console.info('handleAudioData');
+                this.buffer = buffer;
+                this.stopped = true;
+            // TODO: this doesn't need to start here, right?
+                // this.startSample();
+                this.volume.gain.value = this.initialVol;
+                this.audioLoadTimeOffset = (new Date().getTime() - this.contextCreationTime.getTime()) / 1000;
+                return buffer;
+            }.bind(this);
+            const decodeAudioData = function() {
+                const audioData = req.response;
+                this.context.decodeAudioData(
+                    audioData,
+                    handleAudioData,
+                    (e) => {
+                        console.log("Error decoding audio data" + e);
+                    }
+                );
+                resolve(this.buffer);
+            }.bind(this);
 
             let req = new XMLHttpRequest();
 
-            req.open('GET', that.audio);
+            req.open('GET', this.audio);
             req.responseType = 'arraybuffer';
 
-            req.onreadystatechange = function() {
-                if (this.readyState == 4) {
-                    let audioData = req.response;
-
-                    that.context.decodeAudioData(audioData, function(buffer) {
-                            that.buffer = buffer;
-                            that.stopped = true;
-                        // TODO: this doesn't need to start here, right?
-                            // that.startSample();
-                            that.volume.gain.value = that.initialVol;
-                            that.audioLoadTimeOffset = (new Date().getTime() - that.contextCreationTime.getTime()) / 1000;
-                            resolve(buffer);
-                        },
-                        (e) => {
-                            console.log("Error decoding audio data" + e);
-                        }
-                    );
-                }
-            };
+            req.onerror = () => {};
+            req.onload = decodeAudioData;
 
             req.send();
         });
     }
+
+
+
     /**
      * Start playing the sample at new offset
      * @param {number} offset - How far into the sample to start playback (s)
@@ -81,8 +97,9 @@ export default class Play {
         console.log("startSample");
 
         offset = (offset < 0) ? 0 : offset;
-        this.src = this.context.createBufferSource();
+        // TODO: offset here could be useful in the UI
         if (this.stopped === false) { this.stop(); }
+        this.src = this.context.createBufferSource();
         this.src.buffer = this.buffer;
 
         this.src.loop = true;
@@ -106,9 +123,6 @@ export default class Play {
      * @return {number} The duration in ms
      */
     get duration(): number {
-        console.info('this.src.buffer', this.src.buffer);
-        console.info('this.src.buffer.duration', this.src.buffer.duration);
-        
         return this.src.buffer ? this.src.buffer.duration : 0;
     }
 
@@ -145,17 +159,17 @@ export default class Play {
         return this.src.loopStart;
     }
 
-    set len(x: number) {
-        console.info('set len() - loopStart: ', this.loopStart);
-        console.info('set len() - x: ', x);
-        console.info('set len() - duration: ', this.duration);
+    set loopLength(x: number) {
+        console.info('set loopLength() - loopStart: ', this.loopStart);
+        console.info('set loopLength() - x: ', x);
+        console.info('set loopLength() - duration: ', this.duration);
 
         this.loopEnd = Math.min((this.loopStart + x), this.duration);
-        console.info('set len() - loopEnd: ', this.loopEnd);
+        console.info('set loopLength() - loopEnd: ', this.loopEnd);
     }
 
-    get len(): number {
-        console.info('len: ', this.loopEnd - this.loopStart);
+    get loopLength(): number {
+        console.info('loopLength: ', this.loopEnd - this.loopStart);
         return this.loopEnd - this.loopStart;
     }
 
@@ -187,7 +201,7 @@ export default class Play {
         this.changeVolume(v, 0.01);
     }
     resize(x: number) {
-        this.len = x;
+        this.loopLength = x;
         this.startSample();
     }
 

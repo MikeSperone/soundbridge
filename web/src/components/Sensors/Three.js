@@ -3,9 +3,9 @@ import Sensor from './Sensor';
 import Loop from 'synths/loop';
 import Play from 'synths/play';
 
+const log = m => console.log('[Three] ', m);
 
-//TODO: make this extend sensor?
-export default class Two extends Component {
+export default class Three extends Component {
 
     constructor(props) {
         super(props);
@@ -33,6 +33,7 @@ export default class Two extends Component {
         this.handleEnter = this.handleEnter.bind(this);
         this.handleExit = this.handleExit.bind(this);
         this.handleMove = this.handleMove.bind(this);
+        this.stopHold = this.stopHold.bind(this);
     }
 
     componentDidMount() {
@@ -56,6 +57,7 @@ export default class Two extends Component {
     }
 
     handleLoadAudio(synth) {
+        log('audio loaded');
         this.synth = synth;
         this.synth.scatter = this.grainSettings[0];
         this.synth.fade = this.grainSettings[1];
@@ -75,40 +77,48 @@ export default class Two extends Component {
         this.position = 0;
     }
 
+    stopHold() {
+        if (this.position === 2) {
+            log('stopHold');
+            this.playbackHold.stop();
+        }
+    }
+
     handleMove(value, _) {
         if (value > 231) {
             // Position 3
-            console.log('entered 3.  From ' + this.position);
-            if (this.position === 2) { this.playbackHold.stop(); }
+            if (this.position !== 3) log('entered 3.  From ' + this.position);
+            this.stopHold();
             this.position = 3;
             this.synth.sensor(value / 11);
 
-        } else if (value < 121) {
+        } else if (value > 120) {
+            // Position 2
+            if (this.position !== 2) {
+                log('entered 2.  From ' + this.position);
+                this.time = (this.position === 1) ?
+                    this.synth.elapsedTime * 4 :
+                    this.time;
+                // TODO: I guess I need this line, but it's breaking
+                // if (this.position !== 0) { this.synth.stop(); }
+                this.playbackHold.changeVolume(1, 0.01);
+                this.playbackHold.startSample(this.time);
+                this.position = 2;
+            }
+
+        } else {
             // Position 1
-            console.log('entered 1.  From ' + this.position);
             if (this.position !== 1) {
+                log('entered 1.  From ' + this.position);
 
                 this.time = (this.position === 2) ?
                     this.playbackHold.elapsedTime / 4 :
                     this.time;
-                this.playbackHold.stop();
+                this.stopHold();
+
                 this.position = 1;
-                this.synth.sensor(value / 11, this.time);
-
             }
-
-        } else {
-            // Position 2
-            console.log('entered 2.  From ' + this.position);
-            if (this.position !== 2) {
-                this.time = (this.position === 1) ?
-                    this.synth.elapsedTime * 4 :
-                    this.time;
-                if (this.position !== 0) { this.synth.stop(); }
-                this.position = 2;
-                this.playbackHold.changeVolume(1, 0.01);
-                this.playbackHold.startSample(this.time);
-            }
+            this.synth.sensor(value / 11, this.time);
 
         }
 

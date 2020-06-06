@@ -69,20 +69,20 @@ export default () => (
                 expect(testing.position).to.equal(2);
             });
 
-            it('len()', function() {
-                testing.len = 5;
-                expect(testing.len).to.equal(5);
+            it('loopLength()', function() {
+                testing.loopLength = 5;
+                expect(testing.loopLength).to.equal(5);
                 expect(testing.loopEnd - testing.loopStart).to.equal(5);
             });
             it('resize()', function() {
                 testing.resize(5);
-                expect(testing.len).to.equal(5);
+                expect(testing.loopLength).to.equal(5);
                 expect(testing.loopEnd - testing.loopStart).to.equal(5);
             });
 
-            it('do not allow length to be greater than the sample', function() {
+            it('do not allow loopLength to be greater than the sample', function() {
                 testing.position = 0;
-                testing.len = 5000;
+                testing.loopLength = 5000;
                 expect(testing.loopEnd).to.equal(testing.duration);
             });
 

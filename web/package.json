@@ -7,7 +7,7 @@
         "build": "NODE_ENV='production' webpack --display-error-details",
         "dev": "NODE_ENV='development' webpack-dev-server --watch --display-error-details --config config/webpack.config.js",
         "type-check": "tsc -p config/tsconfig.json",
-        "type-check:watch": "npm type-check -- --watch",
+        "type-check:watch": "npm run type-check -- --watch",
         "test": "mocha",
         "apptest": "mocha ./test/app-test.js"
     },
