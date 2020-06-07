@@ -1,20 +1,9 @@
 import { h, Component } from 'preact';
 import Slider from 'components/Controls/Slider';
 import Button from 'components/Controls/Button';
+import SettingsBox from 'components/Controls/SettingsBox';
 
 const SensorContainer = props => <div className="sensor-container">{props.children}</div>;
-
-const SettingsBox = props => {
-
-    const { sample, delay, grain } = props.settings;
-    return (
-        <table className="settings-box">
-            <tr><th>sample</th><td>{sample}</td></tr>
-            <tr><th>delay</th><td>{delay ? "on" : "off"}</td></tr>
-            <tr><th>grain</th><td>{JSON.stringify(grain)}</td></tr>
-        </table>
-    );
-}
 
 const MessageBox = props => <div className="message-box">{props.message}</div>;
 
@@ -25,6 +14,26 @@ const TestValues = props => (
         </ul>
     </div>
 );
+
+const SensorControls = props => {
+    return (
+        <div className="sensor-controls">
+            <button
+                className={props.muted ? "muted" : "mute"}
+                onClick={props.handleMute}
+            >M</button>
+            <Slider
+                size={[18,64]}
+                mode="absolute"
+                min={0}
+                max={1.0}
+                value={1.0}
+                onChange={props.handleVolume}
+            />
+        </div>
+    );
+}
+
 class Sensor extends Component {
     constructor(props) {
         super(props);
@@ -47,6 +56,7 @@ class Sensor extends Component {
             active: false,
             message: '',
             audioLoaded: false,
+            showSettings: true,
         };
     }
 
@@ -61,12 +71,22 @@ class Sensor extends Component {
                 this.setState(() => ({ audioLoaded: true }));
                 this.onLoadAudio(this.synth);
             });
+        this.setListeners();
     }
 
     componentWillUnmount() {
         this.synth.destroy();
         // destroy synth
     }
+
+    setListeners() {
+        window.addEventListener('sensor-settings', this.setSettings.bind(this));
+    }
+
+    setSettings(settings) {
+        this.setState(() => settings);
+    }
+
     handleEnter(e) {
         this.props.onEnter(e);
         this.setState(() => ({active: true}));
@@ -107,19 +127,12 @@ class Sensor extends Component {
                     <span class="bar" style={{left: this.state.value}}></span>
                     <span class="value">{this.state.value}</span>
                 </div>
-                <button
-                    className={this.state.isMuted ? "muted" : "mute"}
-                    onClick={this.handleMute}
-                >M</button>
-                <Slider
-                    size={[18,64]}
-                    mode="absolute"
-                    min={0}
-                    max={1.0}
-                    value={1.0}
-                    onChange={this.setVolumeScalar}
+                <SensorControls
+                    muted={this.state.isMuted}
+                    handleMute={this.handleMute}
+                    handleVolume={this.setVolumeScalar}
                 />
-                <SettingsBox settings={this.props.settings} />
+                <SettingsBox show={this.state.showSettings} settings={this.props.settings} />
                 <TestValues audioLoaded={this.state.audioLoaded} />
             </SensorContainer>
         );

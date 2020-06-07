@@ -11,10 +11,10 @@ export default class App extends Component {
     render() {
         return (
             <div id="app">
-                <h1>
-                    <Link activeClassName="active" href="/">Soundbridge</Link>
-                </h1>
-                <nav>
+                <nav className="main-nav">
+                    <h1>
+                        <Link activeClassName="active" href="/">Soundbridge</Link>
+                    </h1>
                     <Link activeClassName="active" href="/test">Test</Link>
                 </nav>
                 <Router onChange={this.handleRoute}>
