@@ -45,31 +45,30 @@ export default class Play {
 
     _bind() {
         this.loadAudio = this.loadAudio.bind(this);
-        // this.decodeAudioData = this.decodeAudioData.bind(this);
-        // this.handleAudioData = this.handleAudioData.bind(this);
     }
 
     loadAudio() {
         console.info('play loading audio');
-        return new Promise(resolve => {
+        return new Promise((resolve, reject) => {
 
             const handleAudioData = function(buffer) {
                 console.info('handleAudioData');
                 this.buffer = buffer;
                 this.stopped = true;
-            // TODO: this doesn't need to start here, right?
+                // TODO: this doesn't need to start here, right?
                 // this.startSample();
                 this.volume.gain.value = this.initialVol;
                 this.audioLoadTimeOffset = (new Date().getTime() - this.contextCreationTime.getTime()) / 1000;
                 return buffer;
             }.bind(this);
+
             const decodeAudioData = function() {
                 const audioData = req.response;
                 this.context.decodeAudioData(
                     audioData,
                     handleAudioData,
                     (e) => {
-                        console.log("Error decoding audio data" + e);
+                        reject("Error decoding audio data" + e);
                     }
                 );
                 resolve(this.buffer);
@@ -80,14 +79,12 @@ export default class Play {
             req.open('GET', this.audio);
             req.responseType = 'arraybuffer';
 
-            req.onerror = () => {};
+            req.onerror = () => reject('Error requesting audio data');
             req.onload = decodeAudioData;
 
             req.send();
         });
     }
-
-
 
     /**
      * Start playing the sample at new offset

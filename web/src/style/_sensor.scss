@@ -14,10 +14,12 @@ $light-shadow: grey;
     height: 100px;
     margin: 2rem;
 
+    min-width: 300px;
+
     .sensor {
       display: block;
       position: relative;
-      width: 340px;
+      min-width: 300px;
       background: white;
       height: 2rem;
       margin: 1rem;

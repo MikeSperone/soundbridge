@@ -22,7 +22,7 @@ const Number = props => (
 
 const SelectSetting = props => {
     return (
-        <div >
+        <div class="setting-number">
             <h3>Setting Number</h3>
             <Number
                 min={0}
@@ -44,7 +44,7 @@ const SoloBox = props => {
 
 const StartButton = props => (
     <button className='start' onClick={props.onStart}>
-        {props.text}
+        <h2>{props.text}</h2>
     </button>
 );
 

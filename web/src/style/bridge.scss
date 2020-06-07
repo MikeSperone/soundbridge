@@ -9,10 +9,14 @@ $background-color: #eee;
 
 html, body {
   margin: 0;
-  font-family: $font-stack;
   background-color: $background-color;
   color: $primary-color;
 }
+
+* {
+  font-family: $font-stack;
+}
+
 a {
     color: $primary-color;
     text-decoration: none;
@@ -29,6 +33,10 @@ a {
     }
 }
 
+#app {
+    padding: 1rem;
+}
+
 .notification {
     .hidden {
         disply: none;
@@ -42,6 +50,10 @@ a {
     .info {
         background-color: blue;
     }
+}
+
+.setting-number {
+
 }
 
 .value {
