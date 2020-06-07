@@ -65,7 +65,7 @@ export default class Two extends Component {
 
     handleMove(value, rate) {
         // range: 0 - 1
-        this.synth.read = value/360;
+        this.synth.read = value;
     }
 
     render() {

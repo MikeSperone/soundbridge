@@ -19,6 +19,7 @@ $light-shadow: grey;
     .sensor {
       display: block;
       position: relative;
+      flex: 1;
       min-width: 300px;
       background: white;
       height: 2rem;
@@ -52,6 +53,16 @@ $light-shadow: grey;
         }
     }
 
+    .sensor-controls {
+        .mute {
+            float: right;
+            margin: 0.5rem;
+        }
+        .range-slider {
+            float: left;
+            margin: 0.5rem;
+        }
+    }
     .active {
         background: mistyrose;
     }

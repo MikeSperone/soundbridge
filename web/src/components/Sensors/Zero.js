@@ -62,11 +62,12 @@ export default class Zero extends Component {
         this.synth.changeVolume(0, 5.0);
     }
 
-    handleMove(value, rate) {
+    handleMove(rate) {
+        // Value is 0.0 - 1.0
         this.synth.pbRate(rate);
         if (this.state.delayOn) {
-            this.synth.delTime(value/485);      // range of .125 - .825(s)
-            this.synth.delFeedback(value/808);  // range of .075 - .495
+            this.synth.delTime((rate * 0.7) + 0.125);      // range of .125 - .825(s)
+            this.synth.delFeedback((rate * 0.42) + 0.075);  // range of .075 - .495
         }
     }
 

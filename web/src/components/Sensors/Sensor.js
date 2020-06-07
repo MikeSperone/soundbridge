@@ -1,4 +1,4 @@
-import { h, Component } from 'preact';
+import { h, createRef, Component } from 'preact';
 import Slider from 'components/Controls/Slider';
 import Button from 'components/Controls/Button';
 import SettingsBox from 'components/Controls/SettingsBox';
@@ -44,6 +44,7 @@ class Sensor extends Component {
         this.synth = props.synth;
         this.onLoadAudio = props.onLoadAudio;
 
+        this.width = 0;
         this.handleMotion = this.handleMotion.bind(this);
         this.handleMute = this.handleMute.bind(this);
         this.handleEnter = this.handleEnter.bind(this);
@@ -60,10 +61,15 @@ class Sensor extends Component {
         };
     }
 
+    ref = createRef();
+
     componentDidMount() {
         if (!window.globalAudioContext) return;
+
+        this.width = this.ref.current.getBoundingClientRect().width;
+
+        // Set Synth
         this.synth = new this.synth(this.audio, globalAudioContext);
-        console.info('Synth ', this.synth);
         this.synth.mute = this.handleMute.bind(this);
         this.synth.isMuted = () => this.state.isMuted;
         this.synth.loadAudio()
@@ -94,9 +100,9 @@ class Sensor extends Component {
 
     handleMotion(e) {
         const value = e.offsetX + 1;
-        const rate = value/270;
+        const rate = value/this.width;
         this.setState(() => ( { value }));
-        this.props.onMove(value, rate);
+        this.props.onMove(rate);
     }
 
     handleExit() {
@@ -120,6 +126,7 @@ class Sensor extends Component {
                 <div
                     className={"sensor " + (this.state.active ? "active" : "inactive")}
                     id={this.name}
+                    ref={this.ref}
                     onMouseEnter={this.handleEnter}
                     onMouseMove={this.handleMotion}
                     onMouseLeave={this.handleExit}

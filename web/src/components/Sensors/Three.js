@@ -84,15 +84,16 @@ export default class Three extends Component {
         }
     }
 
-    handleMove(value, _) {
-        if (value > 231) {
+    handleMove(value) {
+        if (value > 0.666666666) {
             // Position 3
             if (this.position !== 3) log('entered 3.  From ' + this.position);
             this.stopHold();
             this.position = 3;
-            this.synth.sensor(value / 11);
+            const scaledValue = (0.6 * value) - 0.9;
+            this.synth.sensor(scaledValue);
 
-        } else if (value > 120) {
+        } else if (value > 0.333333333) {
             // Position 2
             if (this.position !== 2) {
                 log('entered 2.  From ' + this.position);
@@ -118,7 +119,8 @@ export default class Three extends Component {
 
                 this.position = 1;
             }
-            this.synth.sensor(value / 11, this.time);
+            // 0 instead of value, this should just playback, value is not used
+            this.synth.sensor(0, this.time);
 
         }
 

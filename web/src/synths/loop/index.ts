@@ -32,62 +32,39 @@ export default class Loop extends Play {
 
     sensor(val: number, time: number = 0) {
         console.info('loop sensor time', time);
+        //val 0 - 1
 
-        let x = Math.floor(val);
 
-        if (x > 20) {
+        console.info('val', val);
+        if (val >= .3) {
+
+            let x = Math.floor(val);
 
             if (x !== this.sensorPos) {
                 this.sensorPos = x;
                 this.loop(x);
             }
 
-        } else if (x < 11) {
+        } else if (val < 0.1) {
+            console.log('just play, loop the whole sample');
             // play
             this.position = 0;
-            this.loopLength = super.duration;
+            this.loopEnd = super.duration;
             this.startSample(time);
+            //TODO: I think I messed up with class inheritance
+            // and the issue here seems to be the Play attributes vs. this
+            // class (Loop)'s attributes.  I think
 
         }
     }
 
     loop(x: number) {
-        let start: number = 0;
-        this.duration = super.duration;
+        // .3 - .9
+
+        console.log('this duration: ', this.duration);
+        console.log('super duration: ', super.duration);
+        let start: number = x * super.duration;
         this.stop();
-        switch(x) {
-            case 21:
-            case 22:
-                start = 0.3 * this.duration;
-                break;
-            case 23:
-            case 24:
-                start = 0.4 * this.duration;
-                break;
-            case 25:
-            case 26:
-                start = 0.5 * this.duration;
-                break;
-            case 27:
-            case 28:
-                start = 0.6 * this.duration;
-                break;
-            case 29:
-            case 30:
-                start = 0.7 * this.duration;
-                break;
-            case 31:
-            case 32:
-                start = 0.8 * this.duration;
-                break;
-            default:
-                if (x > 32) {
-                    start = 0.9*this.duration;
-                } else if (x < 21) {
-                    start = 0.3 * this.duration;
-                }
-                break;
-        }
         console.log("start: " + start);
         super.position = start;
         super.loopLength = 1.2;
