@@ -77,20 +77,11 @@ class Sensor extends Component {
                 this.setState(() => ({ audioLoaded: true }));
                 this.onLoadAudio(this.synth);
             });
-        this.setListeners();
     }
 
     componentWillUnmount() {
         this.synth.destroy();
         // destroy synth
-    }
-
-    setListeners() {
-        window.addEventListener('sensor-settings', this.setSettings.bind(this));
-    }
-
-    setSettings(settings) {
-        this.setState(() => settings);
     }
 
     handleEnter(e) {
