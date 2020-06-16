@@ -3,7 +3,6 @@ import Sensor from './Sensor';
 import Playgrain from 'synths/playgrain';
 
 
-//TODO: make this extend sensor?
 export default class Two extends Component {
 
     constructor(props) {
@@ -29,12 +28,11 @@ export default class Two extends Component {
 
     componentDidMount() {
         if (!window.globalAudioContext) return;
-        // this.context = window.globalAudioContext;
         // this.setSettings(this.props.settings);
     }
 
     shouldComponentUpdate(props) {
-        return this.setSettings(props.settings);
+        // return this.setSettings(props.settings);
     }
 
     setSettings(settings) {

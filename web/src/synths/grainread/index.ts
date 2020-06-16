@@ -71,14 +71,28 @@ export default class Grainread {
         this.feedbackB.gain.value = 0.5;
         this.volume = this.context.createGain();
 
+        this.bind.call(this);
+    }
+
+    bind() {
+        this.loadAudio = this.loadAudio.bind(this);
+        this.restartAtTime = this.restartAtTime.bind(this);
+        this.play = this.play.bind(this);
+        this.start = this.start.bind(this);
+        this.stop = this.stop.bind(this);
+        this.changeVolume = this.changeVolume.bind(this);
+        this.readChanged = this.readChanged.bind(this);
+        this.forwardInTime = this.forwardInTime.bind(this);
+        this.phasor = this.phasor.bind(this);
     }
 
     loadAudio() {
+        console.info('grainread loadAudio()');
         return new Promise((resolve, reject) => {
             let that = this;
             let req = new XMLHttpRequest();
 
-            req.open('GET', that.audio);
+            req.open('GET', this.audio);
             req.responseType = 'arraybuffer';
 
             req.onload = () => {
@@ -106,8 +120,9 @@ export default class Grainread {
                         //this.envelope.connect(this.panner);
                         this._connectIfPanner([this.panner,this.volume], [this.merge, this.volume]);
                         this.volume.connect(this.context.destination);
-                        // this.forwardInTime();
-                        // this.phasor();
+                        this.forwardInTime();
+                        this.phasor();
+                        console.info('loaded and stuff');
                         return resolve({status: "success", message: ""});
                     },
                     e => reject({
@@ -146,11 +161,13 @@ export default class Grainread {
     }
 
     play() {
+        console.info('grainread: play')
         this.src.start(0);
         this.stopped = false;
     }
 
     start() {
+        console.info('grainread: start')
         if (this.stopped) {
             this.restartAtTime(0);
             this.stopped = false;  // as a backup in case restartAtTime() fails... necessary?
@@ -163,13 +180,13 @@ export default class Grainread {
         }
     }
 
-    changeVolume(v, t=0) {
+    changeVolume(v: number, t: number = 0) {
         this.volume.gain
             .cancelScheduledValues(this.context.currentTime);
         this.volume.gain
             .linearRampToValueAtTime(v, this.context.currentTime + t);
     }
-    set vol(v) {
+    set vol(v: number) {
         this.volume.gain
             .cancelScheduledValues(this.context.currentTime);
         this.volume.gain
@@ -213,6 +230,7 @@ export default class Grainread {
     }
 
     set read(gr) {
+        console.info('grainread: read ', gr);
         this.g_read = gr;
         this.readChanged.bind(this);
     }
@@ -259,19 +277,20 @@ export default class Grainread {
     }
 
     forwardInTime() {
-        //console.log("forward!");
+        console.log("forward!");
         // scope, I think?  this inside the callback should be this out here
-        const internalCallback = () => {
+        const internalCallback = function() {
             //return function(this) {
                 this.position = this.position + 0.1;
                 //console.log("moving forward.  pos: ", that.position);
-                window.setTimeout(internalCallback.bind(this), 100);
+                window.setTimeout(internalCallback, 100);
             //}
-        };
-        window.setTimeout(internalCallback.bind(this), 100);
+        }.bind(this);
+        window.setTimeout(internalCallback, 100);
     }
 
     phasor() {
+        console.info('phasor');
         let that = this;
 
         var internalCallback = () => {

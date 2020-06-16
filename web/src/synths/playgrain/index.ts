@@ -22,19 +22,19 @@ export default class Playgrain {
         this.callAllFunctions = this.callAllFunctions.bind(this);
     }
 
-    setAllValues(parameter, value) {
+    setAllValues(parameter: string, value) {
         this.grainArray.forEach(g => {
             g[parameter] = value;
         });
     }
 
-    callAllFunctions(fnName, args=[]) {
+    callAllFunctions(fnName: string, args=[]) {
         this.grainArray.forEach(g => g[fnName](...args));
     }
 
     loadAudio() {
         let promises = [];
-        this.setAllValues(g => promises.push(g.loadAudio()));
+        this.grainArray.forEach(g => promises.push(g.loadAudio()));
         return Promise.all(promises);
     }
 
@@ -105,7 +105,7 @@ export default class Playgrain {
         return this.volume;
     }
 
-    set volumeScalar(v) {
+    set volumeScalar(v: number) {
         this.maximumVolume = v;
         this.changeVolume(v, 0.01);
     }

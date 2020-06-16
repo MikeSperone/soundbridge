@@ -35,7 +35,7 @@ export default class One extends Component {
     componentDidMount() {
         if (!window.globalAudioContext) return;
         // this.context = window.globalAudioContext;
-        // this.setSettings(this.props.settings);
+        // thissetSettings(this.props.settings);
     }
 
     shouldComponentUpdate(props) {

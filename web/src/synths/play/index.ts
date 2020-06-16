@@ -45,6 +45,10 @@ export default class Play {
 
     _bind() {
         this.loadAudio = this.loadAudio.bind(this);
+        this.startSample = this.startSample.bind(this);
+        this.play = this.play.bind(this);
+        this.stop = this.stop.bind(this);
+        this.resize = this.resize.bind(this);
     }
 
     loadAudio() {
