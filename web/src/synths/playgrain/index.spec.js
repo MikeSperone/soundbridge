@@ -40,18 +40,9 @@ export default () => (
             checkEqual('read', 12);
         });
 
-        it('sets the scatter differently for each instance', function() {
+        it('sets the initial scatter for all instances', function() {
             pg.scatter = .75;
-            expect(grainArray[0].scatter).to.not.equal(grainArray[9].scatter);
-            expect(grainArray[1].scatter).to.not.equal(grainArray[8].scatter);
-            expect(grainArray[2].scatter).to.not.equal(grainArray[7].scatter);
-            expect(grainArray[3].scatter).to.not.equal(grainArray[6].scatter);
-            expect(grainArray[4].scatter).to.not.equal(grainArray[5].scatter);
-            expect(grainArray[5].scatter).to.not.equal(grainArray[4].scatter);
-            expect(grainArray[6].scatter).to.not.equal(grainArray[3].scatter);
-            expect(grainArray[7].scatter).to.not.equal(grainArray[2].scatter);
-            expect(grainArray[8].scatter).to.not.equal(grainArray[1].scatter);
-            expect(grainArray[9].scatter).to.not.equal(grainArray[0].scatter);
+            checkEqual('scatter', 0.75);
         });
         
         it('sets the spread value for all instances', function() {

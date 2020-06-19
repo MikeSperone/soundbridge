@@ -16,7 +16,7 @@ export default () => (
         });
         
         it('starts a loop at the correct spot', function() {
-            lp.loop(22);
+            lp.loop(0.3);
             expect(lp.position).to.equal(lp.duration * 0.3);
         });
 

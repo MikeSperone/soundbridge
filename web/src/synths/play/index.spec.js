@@ -5,14 +5,9 @@ export default () => (
 
         const audio = '/audio/arlene.mp3';
         const context = new AudioContext();
-        //let XMLHttpRequest = global.XMLHttpRequest;
         var testing = new Play(audio, context);
 
         describe('initial state', function() {
-
-            before(function(done) {
-                testing.loadAudio().then(() => done());
-            });
 
             it('starts a new instance', function() {
                 console.log("testing: ", testing);
@@ -23,9 +18,9 @@ export default () => (
                 expect(testing.audio).to.equal(audio);
             });
 
-            it('fills the audio buffer', function() {
-                expect(testing.buffer.duration).to.be.within(90,91);
-            });
+            it('starts with no audio', function() {
+                expect(testing.buffer).to.be(null);
+            })
 
             it('begins at position 0', function() {
                 expect(testing.position).to.equal(0);
@@ -37,11 +32,25 @@ export default () => (
 
             it('begins at volume level 0', function() {
                 expect(testing.vol).to.equal(0);
+                expect(testing.volume.gain.value).to.equal(0);
             }); 
         });
 
         describe('things', function() {
 
+            it('loads the audio buffer', function(done) {
+                testing.loadAudio().then((buffer) => {
+                        expect(buffer).to.exist;
+                        done();
+                    });
+            });
+
+            it('gets the duration', function() {
+                expect(testing.buffer.duration).to.be.greaterThan(0);
+                expect(testing.buffer.duration)
+                    .to.be.within(90,91);
+                // expect(testing.duration).to.be.within(90,91);
+            })
             it('vol()', function() {
                 testing.vol = 0.5;
                 expect(testing.vol).to.equal(0.5);

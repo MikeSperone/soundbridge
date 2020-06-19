@@ -15,6 +15,7 @@ export default class Loop extends Play {
 
     constructor(audio: string, context: AudioContext) {
         super(audio, context);
+        // this = new Play(audio, context);
         this.audio = audio;
         this.context = context;
         this.position = 0;
@@ -61,6 +62,7 @@ export default class Loop extends Play {
     loop(x: number) {
         // .3 - .9
 
+        //TODO: I think I also messed up class inheritance here
         console.log('this duration: ', this.duration);
         console.log('super duration: ', super.duration);
         let start: number = x * super.duration;

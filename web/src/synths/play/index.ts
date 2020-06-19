@@ -38,6 +38,7 @@ export default class Play {
         this.loopEnd = 0;
         this.stopped = true;
         this.volume = this.context.createGain();
+        this.volume.gain.value = this.initialVol;
         this.src = this.context.createBufferSource();
 
         this._bind.call(this);
@@ -61,9 +62,8 @@ export default class Play {
                 this.stopped = true;
                 // TODO: this doesn't need to start here, right?
                 // this.startSample();
-                this.volume.gain.value = this.initialVol;
                 this.audioLoadTimeOffset = (new Date().getTime() - this.contextCreationTime.getTime()) / 1000;
-                return buffer;
+                resolve(this.buffer);
             }.bind(this);
 
             const decodeAudioData = function() {
@@ -75,12 +75,11 @@ export default class Play {
                         reject("Error decoding audio data" + e);
                     }
                 );
-                resolve(this.buffer);
             }.bind(this);
 
             let req = new XMLHttpRequest();
 
-            req.open('GET', this.audio);
+            req.open('GET', this.audio, true);
             req.responseType = 'arraybuffer';
 
             req.onerror = () => reject('Error requesting audio data');
