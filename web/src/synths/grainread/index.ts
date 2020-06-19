@@ -1,3 +1,4 @@
+import clip from '../utils/clip';
 /**
  * Grainread class
  * a single series of grains
@@ -43,7 +44,7 @@ export default class Grainread {
         this.g_multiply = g_multiply;
         this.g_fade = g_fade;
         this.g_spread = g_spread;
-        this.g_scatter = (Math.random()*g_scatter)/127;
+        this.g_scatter = g_scatter;
 
         this.fb_amount = 0;
         this.fb_position = 121;
@@ -81,8 +82,8 @@ export default class Grainread {
         this.start = this.start.bind(this);
         this.stop = this.stop.bind(this);
         this.changeVolume = this.changeVolume.bind(this);
-        this.readChanged = this.readChanged.bind(this);
         this.forwardInTime = this.forwardInTime.bind(this);
+        this.randomScatter = this.randomScatter.bind(this);
         this.phasor = this.phasor.bind(this);
     }
 
@@ -154,6 +155,8 @@ export default class Grainread {
         this.src = this.context.createBufferSource();
         this.src.buffer = this.buffer;
         this.src.loop = true;
+        // it seems as if speed and multiply are just always 1
+        // this.src.playbackRate = (this.g_speed * this.g_multiply);
         this.src.connect(this.envelope);
 
         this.src.start(0, t);
@@ -232,7 +235,6 @@ export default class Grainread {
     set read(gr) {
         console.info('grainread: read ', gr);
         this.g_read = gr;
-        this.readChanged.bind(this);
     }
     get read() {
         return this.g_read;
@@ -265,15 +267,14 @@ export default class Grainread {
     set scatter(gs) {
         //TODO: copied this from the constructor... should this scatter be different?
         //  should both scatters be different?  Check original Max/PD Patch!
-        this.g_scatter = (Math.random()*gs)/127;
+        this.g_scatter = gs;
     }
     get scatter() {
         return this.g_scatter;
     }
 
-    readChanged() {
-        console.log("read changed.  pos: ", this.position);
-        this.position = this.read * this.duration;
+    randomScatter() {
+        return (Math.random() * this.g_scatter) / 127;
     }
 
     forwardInTime() {
@@ -295,14 +296,16 @@ export default class Grainread {
 
         var internalCallback = () => {
 
-            let time = ((Math.random() * this.read)*2 + 0.1);
+            let time = ((Math.random() * this.g_read)*2 + 0.1);
             window.setTimeout(internalCallback.bind(this), time * 1000);
 
             if (this.stopped === false) {
                 // Setting
-                this.position = that.read * that.duration;
                 //console.log("grain start position: ", that.position);
-                this.loopLength = ((this.read * 29) + 6) * 50;  // based on each sample
+                const position = (this.g_read + this.randomScatter()) * this.duration;
+                this.position = clip(position, { max: this.duration });
+
+                this.loopLength = ((this.g_read * 29) + 6) * 50;  // based on each sample
                 //console.log("grain length: ", that.loopLength);
                 const pannerValue = (this.spread * 0.4 * Math.random()) - 1;
                 this.panner.pan.setValueAtTime(pannerValue, this.context.currentTime);
