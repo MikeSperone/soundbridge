@@ -28,17 +28,23 @@ export default class Two extends Component {
 
     componentDidMount() {
         if (!window.globalAudioContext) return;
-        // this.setSettings(this.props.settings);
+        this.setSettings(this.props.settings);
     }
 
     shouldComponentUpdate(props) {
+        // TODO: is this necessary?
         // return this.setSettings(props.settings);
+    }
+
+    componentWillUnmount() {
+        if (this.timeout) clearTimeout(this.timeout);
     }
 
     setSettings(settings) {
         if (!settings) return false;
         this.sample = settings.samples[2];
         this.grainSettings = settings.grain;
+        // Sensor 2 delay settings is always false
         this.delaySettings = settings.delay[2];
         return true;
     }
