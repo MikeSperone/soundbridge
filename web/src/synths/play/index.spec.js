@@ -6,11 +6,11 @@ export default () => (
         const audio = '/audio/arlene.mp3';
         const context = new AudioContext();
         var testing = new Play(audio, context);
+        var start = 0;
 
         describe('initial state', function() {
 
             it('starts a new instance', function() {
-                console.log("testing: ", testing);
                 expect(testing).to.be.an("object");
             });
 
@@ -49,8 +49,8 @@ export default () => (
                 expect(testing.buffer.duration).to.be.greaterThan(0);
                 expect(testing.buffer.duration)
                     .to.be.within(90,91);
-                // expect(testing.duration).to.be.within(90,91);
             })
+
             it('vol()', function() {
                 testing.vol = 0.5;
                 expect(testing.vol).to.equal(0.5);
@@ -59,6 +59,7 @@ export default () => (
             it('startSample()', function() {
                 testing.startSample(0);
                 expect(testing.stopped).to.be.false;
+                start = new Date();
             });
 
             it('stop()', function() {
@@ -67,8 +68,12 @@ export default () => (
                 expect(testing.stopped).to.be.true;
             });
 
-            it.skip('elapsedTime()', function() {
-
+            it('elapsedTime()', function(done) {
+                setTimeout(() => {
+                    const elapsed = new Date() - start;
+                    expect(testing.elapsedTime).to.be.within(elapsed, elapsed + 20);
+                    done();
+                }, 50);
             });
 
             it('position()', function() {

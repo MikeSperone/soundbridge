@@ -1,5 +1,15 @@
-export default function clip(num: number, { min = 0, max = 1 }: {min?:number; max?: number}): number {
-    num = Math.max(min, num);
-    num = Math.min(max, num);
+export default function clip(num: number, m: object): number {
+    if (!m) {
+        m = {
+            min: 0,
+            max: 1,
+        }
+    } else {
+        if (!m.min) m.min = 0;
+        if (!m.max) m.max = 1;
+    }
+
+    num = Math.max(m.min, num);
+    num = Math.min(m.max, num);
     return num;
 }

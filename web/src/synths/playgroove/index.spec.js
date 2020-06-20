@@ -30,18 +30,10 @@ export default () => (
 
         });
 
-        describe('utility functions', function() {
-
-            it('restricts the value to between 0 and 1', function() {
-                expect(pg._restrict(1.0001)).to.equal(1);
-                expect(pg._restrict(-0.4)).to.equal(0);
-            });
-
-        });
-
         describe('parameters', function() {
 
             it('sets the delay time', function() {
+                console.info('setting delTime TEST');
                 pg.delTime(0.125);
                 expect(pg.delay.delayTime.value).to.equal(0.125);
             });

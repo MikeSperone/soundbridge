@@ -150,7 +150,7 @@ export default class Play {
      * @return time from start of playback until now (ms)
      */
     get elapsedTime(): number {
-        return this.context.currentTime - this.startTime;
+        return (this.context.currentTime - this.startTime) * 1000;
     }
 
     set position(x: number) {

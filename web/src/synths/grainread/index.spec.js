@@ -100,11 +100,7 @@ export default () => (
                 expect(gr.spread).to.equal(2);
                 expect(gr.g_spread).to.equal(2);
             });
-            it.skip('scatter', function() {
-                // Unclear how to test, as the result
-                // is a function of Math.random
-                // Also, there is some degree of uncertainty
-                // as to the original functionality
+            it('scatter', function() {
                 gr.scatter = 19;
                 expect(gr.scatter).to.equal(19);
                 expect(gr.g_scatter).to.equal(19);

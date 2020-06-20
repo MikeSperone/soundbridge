@@ -1,3 +1,4 @@
+import clip from '../utils/clip';
 /**
  * Created by Mike on 8/25/16.
  */
@@ -13,7 +14,7 @@ export default class Playgroove {
     merge: ChannelMergerNode;
     panL: StereoPannerNode;
 
-    public constructor(audio: string, context: AudioContext) {
+    constructor(audio: string, context: AudioContext) {
 
         this.src = context.createBufferSource();
         this.delay = context.createDelay(1.0);
@@ -29,10 +30,19 @@ export default class Playgroove {
         this.audio = audio;
         this.context = context;
 
-        this.changeVolume = this.changeVolume.bind(this);
+        this._bind.call(this);
     }
 
-    public loadAudio() {
+    _bind() {
+        this.loadAudio = this.loadAudio.bind(this);
+        this.changeVolume = this.changeVolume.bind(this);
+        this.delaySwitch = this.delaySwitch.bind(this);
+        this.delTime = this.delTime.bind(this);
+        this.delFeedback = this.delFeedback.bind(this);
+        this.pbRate = this.pbRate.bind(this);
+    }
+
+    loadAudio() {
         return new Promise(resolve => {
             let that = this;
 
@@ -86,22 +96,16 @@ export default class Playgroove {
         }
     }
 
-    _restrict(val: number) {
-        if (val < 0) val = 0;
-        if (val > 1) val = 1;
-        return val;
-    }
-
     delTime(time: number) {
-        this.delay.delayTime.value = this._restrict(time);
+        this.delay.delayTime.value = clip(time);
     }
 
     delFeedback(fbk: number) {
-        this.feedback.gain.value = this._restrict(fbk);
+        this.feedback.gain.value = clip(fbk);
     }
 
     pbRate(rate: number) {
-        this.src.playbackRate.value = this._restrict(rate);
+        this.src.playbackRate.value = clip(rate);
     }
 
     get vol() {
@@ -112,8 +116,8 @@ export default class Playgroove {
         this.changeVolume(v);
     }
 
-    changeVolume(v: number, t: number = 0) {
-        const volume = this.maximumVolume * this._restrict(v);
+    changeVolume(v: number, t: number = 0.001) {
+        const volume = this.maximumVolume * clip(v);
         this.volume.gain
             .cancelScheduledValues(this.context.currentTime);
         this.volume.gain
@@ -122,7 +126,7 @@ export default class Playgroove {
     }
 
     set volumeScalar(v) {
-        this.maximumVolume = this._restrict(v);
-        this.changeVolume(v, 0.01);
+        this.maximumVolume = clip(v);
+        this.changeVolume(v);
     }
 }

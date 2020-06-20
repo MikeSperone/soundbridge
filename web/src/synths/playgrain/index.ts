@@ -107,6 +107,6 @@ export default class Playgrain {
 
     set volumeScalar(v: number) {
         this.maximumVolume = v;
-        this.changeVolume(v, 0.01);
+        this.changeVolume(v, 0.001);
     }
 }

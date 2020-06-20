@@ -265,10 +265,9 @@ export default class Grainread {
         return this.g_spread;
     }
     set scatter(gs) {
-        //TODO: copied this from the constructor... should this scatter be different?
-        //  should both scatters be different?  Check original Max/PD Patch!
         this.g_scatter = gs;
     }
+
     get scatter() {
         return this.g_scatter;
     }

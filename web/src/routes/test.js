@@ -1,9 +1,11 @@
 import { h, Component } from 'preact';
-import grainread from 'synths/grainread/index.spec.js';
-import loop from 'synths/loop/index.spec.js';
-import play from 'synths/play/index.spec.js';
-import playgrain from 'synths/playgrain/index.spec.js';
-import playgroove from 'synths/playgroove/index.spec.js';
+
+import grainread_test  from 'synths/grainread/index.spec.js';
+import loop_test       from 'synths/loop/index.spec.js';
+import play_test       from 'synths/play/index.spec.js';
+import playgrain_test  from 'synths/playgrain/index.spec.js';
+import playgroove_test from 'synths/playgroove/index.spec.js';
+import clip_test       from 'synths/utils/clip.spec.js';
 
 export default class Test extends Component {
     constructor() {
@@ -21,16 +23,17 @@ export default class Test extends Component {
             document.head.appendChild(s);
         });
     }
+
     test() {
         console.info('testing');
         mocha.setup('bdd');
         mocha.checkLeaks();
-        // mocha.globals(['jQuery']);
-        grainread();
-        loop();
-        play();
-        playgrain();
-        playgroove();
+        grainread_test();
+        loop_test();
+        play_test();
+        playgrain_test();
+        playgroove_test();
+        clip_test();
         mocha.run();
     }
 
