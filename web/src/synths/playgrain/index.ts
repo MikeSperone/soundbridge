@@ -89,6 +89,7 @@ export default class Playgrain {
         this.callAllFunctions('stop');
     }
 
+    f
     changeVolume(v: number, t: number) {
         this.callAllFunctions('changeVolume', [v, t]);
     }

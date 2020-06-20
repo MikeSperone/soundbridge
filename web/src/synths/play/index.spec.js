@@ -71,7 +71,7 @@ export default () => (
             it('elapsedTime()', function(done) {
                 setTimeout(() => {
                     const elapsed = new Date() - start;
-                    expect(testing.elapsedTime).to.be.within(elapsed, elapsed + 20);
+                    expect(testing.elapsedTime * 1000).to.be.within(elapsed, elapsed + 20);
                     done();
                 }, 50);
             });

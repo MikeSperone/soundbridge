@@ -112,8 +112,6 @@ export default class Play {
         this.volume.connect(this.context.destination);
         this.startTime = this.context.currentTime - offset;
 
-        //TODO: this, in the resize test is what is
-        //"not, or no longer, usable"
         console.info('this.src', this.src);
         console.info('offset: ', offset);
         this.src.start(0, offset);
@@ -150,7 +148,8 @@ export default class Play {
      * @return time from start of playback until now (ms)
      */
     get elapsedTime(): number {
-        return (this.context.currentTime - this.startTime) * 1000;
+        console.log('Elapsed Time | startTime: ', this.startTime);
+        return this.context.currentTime - this.startTime;
     }
 
     set position(x: number) {
@@ -181,11 +180,14 @@ export default class Play {
      * @param {number} v 0.0 to 1.0
      */
     set vol(v: number) {
-        this.volume.gain.value = this.maximumVolume * v;
+        this.changeVolume(this.maximumVolume * v, 0);
     }
 
-    changeVolume(v) {
-        this.vol = v;
+    changeVolume(v: number, t:number =0.001) {
+        this.volume.gain
+            .cancelScheduledValues(this.context.currentTime);
+        this.volume.gain
+            .linearRampToValueAtTime(v, this.context.currentTime + t);
     }
     /**
      * Get the current volume
@@ -195,9 +197,10 @@ export default class Play {
         return this.volume.gain.value;
     }
 
-    set volumeScalar(v) {
+    set volumeScalar(v: number) {
         this.maximumVolume = v;
-        this.changeVolume(v, 0.01);
+        // TODO: should I change the volume here?
+        this.changeVolume(this.vol);
     }
     resize(x: number) {
         this.loopLength = x;

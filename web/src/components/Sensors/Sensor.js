@@ -73,10 +73,10 @@ class Sensor extends Component {
         this.synth.mute = this.handleMute.bind(this);
         this.synth.isMuted = () => this.state.isMuted;
         this.synth.loadAudio()
-            .then(() => {
+            .then(function() {
                 this.setState(() => ({ audioLoaded: true }));
                 this.onLoadAudio(this.synth);
-            });
+            }.bind(this));
     }
 
     componentWillUnmount() {
