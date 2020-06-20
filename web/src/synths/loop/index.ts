@@ -4,25 +4,18 @@
 
 import Play from '../play';
 
-export default class Loop extends Play {
+export default class Loop {
 
     audio: string;
     context: AudioContext;
-    position: number;
     sensorPos: number;
-    length: number;
-    duration: number;
 
     constructor(audio: string, context: AudioContext) {
-        super(audio, context);
-        // this = new Play(audio, context);
-        this.audio = audio;
-        this.context = context;
-        this.position = 0;
+        this.play = new Play(audio, context);
         this.sensorPos = 0;
-        // this.length = 0;
-        // this.duration = 0;
-        //this.play();
+        this.startSample = this.play.startSample;
+        this.loadAudio = this.play.loadAudio;
+        this.stop = this.play.stop;
         this._bind.call(this);
     }
 
@@ -34,7 +27,6 @@ export default class Loop extends Play {
     sensor(val: number, time: number = 0) {
         console.info('loop sensor time', time);
         //val 0 - 1
-
 
         console.info('val', val);
         if (val >= .3) {
@@ -50,27 +42,52 @@ export default class Loop extends Play {
             console.log('just play, loop the whole sample');
             // play
             this.position = 0;
-            this.loopEnd = super.duration;
+            this.loopEnd = this.duration;
             this.startSample(time);
-            //TODO: I think I messed up with class inheritance
-            // and the issue here seems to be the Play attributes vs. this
-            // class (Loop)'s attributes.  I think
-
         }
+    }
+
+    set duration(d) {
+        this.play.duration = d;
+    }
+
+    get duration() {
+        return this.play.duration;
+    }
+
+    set position(p) {
+        this.play.position = p;
+    }
+
+    get position() {
+        return this.play.position;
+    }
+
+    set loopEnd(l) {
+        this.play.loopEnd = l;
+    }
+
+    get loopEnd() {
+        return this.play.loopEnd;
+    }
+
+    set loopLength(l) {
+        this.play.loopLength = l;
+    }
+
+    get loopLength() {
+        return this.play.loopLength;
     }
 
     loop(x: number) {
         // .3 - .9
 
-        //TODO: I think I also messed up class inheritance here
-        console.log('this duration: ', this.duration);
-        console.log('super duration: ', super.duration);
-        let start: number = x * super.duration;
+        console.log('this duration: ', this.play.duration);
+        this.position = x * this.duration;
         this.stop();
-        console.log("start: " + start);
-        super.position = start;
-        super.loopLength = 1.2;
-        super.startSample(super.position);
+        console.log("start: " + this.position);
+        this.loopLength = 1.2;
+        this.startSample(this.position);
     }
 
     //delaySwitch(setting: boolean) {

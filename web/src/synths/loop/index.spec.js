@@ -7,14 +7,20 @@ export default () => (
         let context = new AudioContext();
         let lp = new Loop(audio, context);
 
-        before(function(done) {
-            lp.loadAudio().then(() => done());
-        });
-
         it('should start a new instance', function() {
             expect(lp).to.exist;
         });
-        
+
+        it('should load the audio', function(done) {
+            lp.loadAudio().then((b) => {
+                expect(lp.play.buffer).to.exist;
+                console.log('test buffer: ', lp.play.buffer);
+                expect(lp.play.duration).to.exist;
+                console.log('test duration: ', lp.play.duration);
+                done();
+            });
+        });
+
         it('starts a loop at the correct spot', function() {
             lp.loop(0.3);
             expect(lp.position).to.equal(lp.duration * 0.3);

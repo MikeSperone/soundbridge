@@ -57,8 +57,9 @@ export default class Play {
         return new Promise((resolve, reject) => {
 
             const handleAudioData = function(buffer) {
-                console.info('handleAudioData');
+                console.info('handleAudioData()');
                 this.buffer = buffer;
+                console.info('this.buffer: ', this.buffer);
                 this.stopped = true;
                 // TODO: this doesn't need to start here, right?
                 // this.startSample();
@@ -67,6 +68,7 @@ export default class Play {
             }.bind(this);
 
             const decodeAudioData = function() {
+                console.info('decodeAudioData()');
                 const audioData = req.response;
                 this.context.decodeAudioData(
                     audioData,
@@ -79,7 +81,7 @@ export default class Play {
 
             let req = new XMLHttpRequest();
 
-            req.open('GET', this.audio, true);
+            req.open('GET', this.audio);
             req.responseType = 'arraybuffer';
 
             req.onerror = () => reject('Error requesting audio data');
@@ -123,7 +125,7 @@ export default class Play {
      * @return {number} The duration in ms
      */
     get duration(): number {
-        return this.src.buffer ? this.src.buffer.duration : 0;
+        return this.buffer ? this.buffer.duration : 0;
     }
 
     play() {
@@ -153,16 +155,13 @@ export default class Play {
 
     set position(x: number) {
         this.loopStart = x;
-        this.src.loopStart = x;
     }
     get position(): number {
-        return this.src.loopStart;
+        return this.loopStart;
     }
 
     set loopLength(x: number) {
         console.info('set loopLength() - loopStart: ', this.loopStart);
-        console.info('set loopLength() - x: ', x);
-        console.info('set loopLength() - duration: ', this.duration);
 
         this.loopEnd = Math.min((this.loopStart + x), this.duration);
         console.info('set loopLength() - loopEnd: ', this.loopEnd);
