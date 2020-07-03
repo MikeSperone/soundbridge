@@ -1,4 +1,6 @@
 node_modules/
+tags/
+
 /web/.idea
 /web/build
 /web/node_modules

@@ -34,11 +34,9 @@ export default class Loop {
         //val 0 - 1
 
         if (val >= .3) {
-            console.info('val', val);
+            console.info('sensor val', val);
 
-            let x = Math.floor(val * 10);
-            console.info('x', x);
-            console.info('this.sensorPos: ', this.sensorPos);
+            let x = Math.floor(val * 10) / 10;
 
             if (x !== this.sensorPos) {
                 this.sensorPos = x;
@@ -90,7 +88,7 @@ export default class Loop {
         // .3 - .9
 
         console.log('this duration: ', this.play.duration);
-        this.position = (x / 10) * this.duration;
+        this.position = x * this.duration;
         this.stop();
         console.log("start: " + this.position);
         this.loopLength = 1.2;
