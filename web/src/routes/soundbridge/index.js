@@ -25,6 +25,9 @@ class Soundbridge extends Component {
         this.state = {
             audio: false,
             ioReady: false,
+            messages: {
+                debug: '',
+            },
             started: false,
             settings: false,
             settingNumber: 0,

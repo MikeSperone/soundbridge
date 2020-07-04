@@ -1,38 +1,12 @@
 import { h, createRef, Component } from 'preact';
-import Slider from 'components/Controls/Slider';
 import Button from 'components/Controls/Button';
 import SettingsBox from 'components/Controls/SettingsBox';
+import SensorControls from 'components/Controls/SensorControls';
 
 const SensorContainer = props => <div className="sensor-container">{props.children}</div>;
 
 const MessageBox = props => <div className="message-box">{props.message}</div>;
 
-const TestValues = props => (
-    <div className="">
-        <ul>
-            <li>audioLoaded: {props.audioLoaded ? '√' : 'x'}</li>
-        </ul>
-    </div>
-);
-
-const SensorControls = props => {
-    return (
-        <div className="sensor-controls">
-            <button
-                className={props.muted ? "muted" : "mute"}
-                onClick={props.handleMute}
-            >M</button>
-            <Slider
-                size={[18,64]}
-                mode="absolute"
-                min={0}
-                max={1.0}
-                value={1.0}
-                onChange={props.handleVolume}
-            />
-        </div>
-    );
-}
 
 class Sensor extends Component {
     constructor(props) {
@@ -57,7 +31,7 @@ class Sensor extends Component {
             active: false,
             message: '',
             audioLoaded: false,
-            showSettings: true,
+            showSettings: false,
         };
     }
 
@@ -65,6 +39,9 @@ class Sensor extends Component {
 
     componentDidMount() {
         if (!window.globalAudioContext) return;
+        if (window && window.location.search && window.location.search.match(/(\?|&)settings/)) {
+            this.setState(() => ({ showSettings: true }));
+        }
 
         this.width = this.ref.current.getBoundingClientRect().width;
 
@@ -131,7 +108,6 @@ class Sensor extends Component {
                     handleVolume={this.setVolumeScalar}
                 />
                 <SettingsBox show={this.state.showSettings} settings={this.props.settings} />
-                <TestValues audioLoaded={this.state.audioLoaded} />
             </SensorContainer>
         );
     }

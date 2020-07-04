@@ -12,7 +12,7 @@ $light-shadow: grey;
 .sensor-container {
     display:flex;
     height: 100px;
-    margin: 2rem;
+    margin: 2rem 0;
 
     min-width: 300px;
 
@@ -23,7 +23,7 @@ $light-shadow: grey;
       min-width: 300px;
       background: white;
       height: 2rem;
-      margin: 1rem;
+      margin: 1rem 0;
       box-shadow: 0 0 2px 2px $light-shadow inset;
 
       transition: background-color 0.5s ease, height 0.5s ease, transform 0.5s ease;
@@ -54,14 +54,34 @@ $light-shadow: grey;
     }
 
     .sensor-controls {
+        display: flex;
+        background-color: ghostwhite;
+        height: 4rem;
+
+        .sensor-menu {
+            flex: 1;
+            height: 2rem;
+            width: 2rem;
+            min-width: 2rem;
+            text-align: center;
+            line-height: 2rem;
+            margin: 1rem 0.5rem;
+            background-color: gainsboro;
+            border-radius: 2px;
+            cursor: pointer;
+        }
         .mute {
-            float: right;
-            margin: 0.5rem;
+            flex: 1;
+            height: 2rem;
+            width: 2rem;
+            margin: 1rem 0.5rem;
         }
         .range-slider {
-            float: left;
-            margin: 0.5rem;
+            flex: 1;
+            margin: 0 0.5rem;
+            height: 4rem;
         }
+
     }
     .active {
         background: mistyrose;
