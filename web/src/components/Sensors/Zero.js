@@ -2,92 +2,38 @@ import { h, Component } from 'preact';
 import Sensor from './Sensor';
 import Playgroove from 'synths/playgroove';
 
+export default function Zero (props) {
 
-//TODO: make this extend sensor?
-export default class Zero extends Component {
+    const name="zero";
+    const settings = props.settings;
+    var synth;
 
-    constructor(props) {
-        super(props);
-        this.props = props;
-        this.name="zero";
-
-        this.sample = this.props.sample;
-        this.grainSettings = this.props.grain;
-        this.delaySettings = this.props.delay;
-        // TODO: make delayOn a button
-        this.state = {
-            delayOn: true
-        };
-        this.bind.call(this);
+    const handleLoadAudio = s => {
+        synth = s;
+        synth.delaySwitch(settings.delay);
     }
 
-    bind() {
-        this.setSettings = this.setSettings.bind(this);
-        this.handleLoadAudio = this.handleLoadAudio.bind(this);
-        this.handleEnter = this.handleEnter.bind(this);
-        this.handleExit = this.handleExit.bind(this);
-        this.handleMove = this.handleMove.bind(this);
+    const handleEnter = () => {
+        if (synth.isMuted()) return;
+        synth.changeVolume(0.7, 0.5);
     }
 
-    componentDidMount() {
-        if (!window.globalAudioContext) return;
-        // this.context = window.globalAudioContext;
-        // this.setSettings(this.props.settings);
-    }
+    const handleExit = () => synth.changeVolume(0, 5.0);
 
-    shouldComponentUpdate(props) {
-        // return this.setSettings(props.settings);
-    }
-
-    setSettings(settings) {
-        if (!settings) return false;
-        this.sample = settings.samples[0];
-        this.delaySettings = settings.delay[0];
-        this.grainSettings = settings.grain[0];
-        return true;
-    }
-
-    handleLoadAudio(synth) {
-        this.synth = synth;
-        this.synth.delaySwitch(this.delaySettings);
-    }
-
-    handleEnter() {
-        if (this.synth.isMuted()) return;
-        // zero.fadeIn(0.7, 0.5);
-        this.synth.changeVolume(0.7, 0.5);
-    }
-
-    handleExit() {
-        this.synth.changeVolume(0, 5.0);
-    }
-
-    handleMove(rate) {
+    const handleMove = value => {
         // Value is 0.0 - 1.0
-        this.synth.pbRate(rate);
-        if (this.state.delayOn) {
-            this.synth.delTime((rate * 0.7) + 0.125);      // range of .125 - .825(s)
-            this.synth.delFeedback((rate * 0.42) + 0.075);  // range of .075 - .495
-        }
+        synth.pbRate(value);
+        synth.delTime((value * 0.7) + 0.125);      // range of .125 - .825(s)
+        synth.delFeedback((value * 0.42) + 0.075);  // range of .075 - .495
     }
 
-    render() {
-        return (
-            this.sample ?
-                <Sensor
-                    name={this.name}
-                    settings={{
-                        sample: this.sample,
-                        delay: this.delaySettings,
-                        grain: this.grainSettings
-                    }}
-                    synth={Playgroove}
-                    onEnter={this.handleEnter}
-                    onMove={this.handleMove}
-                    onExit={this.handleExit}
-                    onLoadAudio={this.handleLoadAudio}
-                /> :
-                null
-        );
-    }
+    return <Sensor
+        name={this.name}
+        synth={Playgroove}
+        settings={settings}
+        onEnter={handleEnter}
+        onMove={handleMove}
+        onExit={handleExit}
+        onLoadAudio={handleLoadAudio}
+    />;
 }

@@ -1,5 +1,5 @@
 node_modules/
-tags/
+tags
 
 /web/.idea
 /web/build

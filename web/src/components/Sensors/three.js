@@ -5,158 +5,100 @@ import Play from 'synths/play';
 
 const log = m => console.log('[Three] ', m);
 
-export default class Three extends Component {
+export default function Three(props) {
 
-    constructor(props) {
-        super(props);
-        this.props = props;
-        this.name="three";
-        this.timeout = null;
-        this.synth = null;
+    const name = "three";
+    const settings = props.settings;
 
-        this.time = 0;
-        this.position = 0;
+    var synth,
+        holdSynth,
+        holdSynthReady = false,
+        time = 0,
+        position = 0,
+        timeout = null;
 
-        this.sample = this.props.sample;
-        this.delaySettings = this.props.delay;
-        this.grainSettings = this.props.grain;
-
-        // TODO: make delayOn a button
-        this.state = {
-            delayOn: true
-        };
-        this.bind.call(this);
-    }
-
-    bind() {
-        this.setSettings = this.setSettings.bind(this);
-        this.handleLoadAudio = this.handleLoadAudio.bind(this);
-        this.handleEnter = this.handleEnter.bind(this);
-        this.handleExit = this.handleExit.bind(this);
-        this.handleMove = this.handleMove.bind(this);
-        this.firstPosition = this.firstPosition.bind(this);
-        this.secondPosition = this.secondPosition.bind(this);
-        this.thirdPosition = this.thirdPosition.bind(this);
-        this.stopHold = this.stopHold.bind(this);
-    }
-
-    componentDidMount() {
-        if (!window.globalAudioContext) return;
-        this.setSettings(this.props.settings);
-    }
-
-    shouldComponentUpdate(props) {
-        return this.setSettings(props.settings);
-    }
-
-    setSettings(settings) {
-        if (!settings) return false;
-        this.sample = settings.samples[3];
-        this.delaySettings = settings.delay[3];
-        this.grainSettings = settings.grain;
-
-        this.holdSynth = new Play(`/audio/hold/${this.sample}_slow.mp3`, globalAudioContext);
-        return true;
-    }
-
-    handleLoadAudio(synth) {
+    const handleLoadAudio = (s) => {
         log('audio loaded');
-        console.info('synth: ', synth);
-        this.synth = synth;
-        this.synth.scatter = this.grainSettings[0];
-        this.synth.fade = this.grainSettings[1];
-        this.synth.spread = this.grainSettings[2];
-        this.synth.feedback = this.grainSettings[3];
-        this.holdSynth.loadAudio().then(() => this.holdSynthReady = true);
+        synth = s;
+        synth.scatter = settings.grain[0];
+        synth.fade = settings.grain[1];
+        synth.spread = settings.grain[2];
+        synth.feedback = settings.grain[3];
+
+        holdSynth = new Play(`/audio/hold/${settings.sample}_slow.mp3`, window.globalAudioContext);
+        holdSynth.loadAudio().then(() => holdSynthReady = true);
     }
 
-    handleEnter() {
-        clearTimeout(this.timeout);
-    }
+    const handleEnter = () => clearTimeout(timeout);
 
-    handleExit() {
-        this.timeout = setTimeout(() => {
-            this.synth.stop();
-            this.holdSynth.stop();
-            this.position = 0;
+    const handleExit = () => {
+        timeout = setTimeout(() => {
+            synth.stop();
+            holdSynth.stop();
+            position = 0;
         }, 5000);
     }
 
-    stopHold() {
-        if (this.position === 2) {
-            log('stopHold');
-            this.holdSynth.stop();
-        }
-    }
+    const stopHold = () => (position === 2) && holdSynth.stop();
 
-    firstPosition() {
+    const firstPosition = () => {
         // Position 1
-        if (this.position !== 1) {
-            log('entered 1.  From ' + this.position);
+        if (position !== 1) {
+            log('entered 1.  From ' + position);
 
-            this.time = (this.position === 2) ?
-                this.holdSynth.elapsedTime / 4 :
-                this.time;
-            this.stopHold();
+            time = (position === 2) ?
+                holdSynth.elapsedTime / 4 :
+                time;
+            stopHold();
 
-            this.position = 1;
-            this.synth.changeVolume(1);
-            this.synth.playAll(this.time);
+            position = 1;
+            synth.changeVolume(1);
+            synth.playAll(time);
         }
     }
 
-    secondPosition() {
+    const secondPosition = () => {
         // Position 2
-        if (this.position !== 2) {
-            log('You have entered 2.  From ' + this.position);
-            this.time = (this.position === 1) ?
-                this.synth.elapsedTime * 4 :
-                this.time;
+        if (position !== 2) {
+            log('You have entered 2.  From ' + position);
+            time = (position === 1) ?
+                synth.elapsedTime * 4 :
+                time;
             // TODO: I guess I need this line, but it's breaking
-            if (this.position !== 0) { this.synth.stop(); }
-            this.holdSynth.changeVolume(1);
-            this.holdSynth.startSample(this.time);
-            this.position = 2;
+            if (position !== 0) synth.stop();
+            holdSynth.changeVolume(1);
+            holdSynth.startSample(time);
+            position = 2;
         }
     }
 
-    thirdPosition(value) {
-        if (this.position !== 3) log('entered 3.  From ' + this.position);
-        this.stopHold();
-        this.position = 3;
+    const thirdPosition = (value) => {
+        if (position !== 3) log('entered 3.  From ' + position);
+        stopHold();
+        position = 3;
         // const scaledValue = (0.6 * value) - 0.9;
         const scaledValue = (2 * value) - 1.035;
-        this.synth.changeVolume(1);
-        this.synth.sensor(scaledValue);
+        synth.changeVolume(1);
+        synth.sensor(scaledValue);
     }
 
-    handleMove(value) {
+    const handleMove = (value) => {
         if (value > 0.666666666) {
-            this.thirdPosition(value);
+            thirdPosition(value);
         } else if (value > 0.333333333) {
-            this.secondPosition();
+            secondPosition();
         } else {
-            this.firstPosition();
+            firstPosition();
         }
     }
 
-    render() {
-        return (
-            this.sample ?
-                <Sensor
-                    name={this.name}
-                    settings={{
-                        sample: this.sample,
-                        delay: this.delaySettings,
-                        grain: this.grainSettings
-                    }}
-                    synth={Loop}
-                    onEnter={this.handleEnter}
-                    onMove={this.handleMove}
-                    onExit={this.handleExit}
-                    onLoadAudio={this.handleLoadAudio}
-                /> :
-                null
-        );
-    }
+    return <Sensor
+        name={this.name}
+        synth={Loop}
+        settings={settings}
+        onEnter={handleEnter}
+        onMove={handleMove}
+        onExit={handleExit}
+        onLoadAudio={handleLoadAudio}
+    />;
 }

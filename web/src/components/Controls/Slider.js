@@ -1,32 +1,27 @@
 import { h, Component } from 'preact';
 
-export default class Slider extends Component {
+export default function Slider(props) {
 
-    constructor(props) {
-        super(props);
-        this.min = this.props.min || 0;
-        this.max = this.props.max || 1;
-        this.step = this.props.step || 0.01;
-        [this.width, this.height] = this.props.size;
-    }
+    const min = props.min || 0;
+    const max = props.max || 1;
+    const step = props.step || 0.01;
+    const [width, height] = props.size;
 
-    render() {
-        return (
-            <div
-                className="range-slider"
-                style={`height: ${this.height}px; width: ${this.width}px`}
-            >
-                <input
-                    className="input-range"
-                    orient="vertical"
-                    type="range"
-                    step="0.01"
-                    value={this.props.value}
-                    min={this.min}
-                    max={this.max}
-                    onChange={this.props.onChange}
-                />
-            </div>
-        );
-    }
+    return (
+        <div
+            className="range-slider"
+            style={`height: ${height}px; width: ${width}px`}
+        >
+            <input
+                className="input-range"
+                orient="vertical"
+                type="range"
+                step="0.01"
+                value={props.value}
+                min={min}
+                max={max}
+                onChange={props.onChange}
+            />
+        </div>
+    );
 }

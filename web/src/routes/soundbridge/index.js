@@ -105,28 +105,32 @@ class Soundbridge extends Component {
                 {this.state.settings && (
                     <Fragment>
                         <Zero
-                            settings={this.state.settings}
-                            sample={this.state.settings.samples[0]}   
-                            delay={this.state.settings.delay[0]}
-                            grain={this.state.settings.grain}
+                            settings={{
+                                sample: this.state.settings.samples[0],   
+                                delay: this.state.settings.delay[0],
+                                grain: this.state.settings.grain
+                            }}
                         />
                         <One
-                            settings={this.state.settings}
-                            sample={this.state.settings.samples[1]}   
-                            delay={this.state.settings.delay[1]}
-                            grain={this.state.settings.grain}
+                            settings={{
+                                sample: this.state.settings.samples[1],   
+                                delay: this.state.settings.delay[1],
+                                grain: this.state.settings.grain
+                            }}
                         />
                         <Two
-                            settings={this.state.settings}
-                            sample={this.state.settings.samples[2]}   
-                            delay={this.state.settings.delay[2]}
-                            grain={this.state.settings.grain}
+                            settings={{
+                                sample: this.state.settings.samples[2],   
+                                delay: this.state.settings.delay[2],
+                                grain: this.state.settings.grain
+                            }}
                         />
                         <Three
-                            settings={this.state.settings}
-                            sample={this.state.settings.samples[3]}   
-                            delay={this.state.settings.delay[3]}
-                            grain={this.state.settings.grain}
+                            settings={{
+                                sample: this.state.settings.samples[3],   
+                                delay: this.state.settings.delay[3],
+                                grain: this.state.settings.grain
+                            }}
                         />
                     </Fragment>
                 )}
