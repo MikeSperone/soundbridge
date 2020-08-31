@@ -16,6 +16,10 @@ $light-shadow: grey;
 
     min-width: 300px;
 
+    .audio-error {
+        color: red;
+    }
+
     .sensor {
       display: block;
       position: relative;

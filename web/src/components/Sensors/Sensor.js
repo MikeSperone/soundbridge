@@ -4,8 +4,12 @@ import SettingsBox from 'components/Controls/SettingsBox';
 import SensorControls from 'components/Controls/SensorControls';
 
 const SensorContainer = props => <div className="sensor-container">{props.children}</div>;
-
 const MessageBox = props => <div className="message-box">{props.message}</div>;
+const AudioError = props => <span
+        className="audio-error"
+    >
+        {(props.show ? "Error: Audio not loaded" : "")}
+    </span>;
 
 
 class Sensor extends Component {
@@ -31,6 +35,7 @@ class Sensor extends Component {
             active: false,
             message: '',
             audioLoaded: false,
+            audioError: false,
             showSettings: false,
         };
     }
@@ -49,11 +54,16 @@ class Sensor extends Component {
         this.synth = new this.synth(this.audio, globalAudioContext);
         this.synth.mute = this.handleMute.bind(this);
         this.synth.isMuted = () => this.state.isMuted;
-        this.synth.loadAudio()
-            .then(function() {
-                this.setState(() => ({ audioLoaded: true }));
-                this.onLoadAudio(this.synth);
-            }.bind(this));
+        try {
+            this.synth.loadAudio()
+                .then(function() {
+                    this.setState(() => ({ audioLoaded: true }));
+                    this.onLoadAudio(this.synth);
+                }.bind(this));
+        } catch (e) {
+            console.info(e);
+            this.setState(() => ({ audioError: true }));
+        }
     }
 
     componentWillUnmount() {
@@ -101,6 +111,7 @@ class Sensor extends Component {
                 >
                     <span class="bar" style={{left: this.state.value}}></span>
                     <span class="value">{this.state.value}</span>
+                    <AudioError show={this.state.audioError}/>
                 </div>
                 <SensorControls
                     muted={this.state.isMuted}
