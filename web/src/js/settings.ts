@@ -24,7 +24,7 @@ const settings: Settings = {
         {"0": "glass_breaking", "1": "greyston2NR",     "2": "bridgesound1",    "3":"mosesyoho",      "a":""},
         {"0": "trolley2",       "1": "pinningmachine",  "2": "facwhistle+mock", "3":"masefield1",     "a":""},
         {"0": "montagemachine", "1": "facwhistle1srt",  "2": "buttonholer",     "3":"masefield2",     "a":""},
-        {"0": "bridgesound1",   "1": "water1",          "2": "rhythmicsdrips",  "3":"sharonbarge",    "a":""},
+        {"0": "bridgesound1",   "1": "water1",          "2": "rhythmicdrips",   "3":"sharonbarge",    "a":""},
         {"0": "piano_tuning",   "1": "glass_ice",       "2": "glass_breaking",  "3":"mockingbird",    "a":"ambientcar_factory"},
         {"0": "wavebangbuf",    "1": "bridgesound1",    "2": "metalhinge1",     "3":"piano_tuning2",  "a":"ambientfactory"},
         {"0": "pno_pluck",      "1": "bridgesound3",    "2": "piano_hammer",    "3":"elevator",       "a":"marsh"},
