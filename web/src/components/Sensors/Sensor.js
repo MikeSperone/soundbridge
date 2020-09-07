@@ -1,4 +1,5 @@
 import { h, createRef, Component } from 'preact';
+import debounce from 'lodash.debounce';
 import Button from 'components/Controls/Button';
 import SettingsBox from 'components/Controls/SettingsBox';
 import SensorControls from 'components/Controls/SensorControls';
@@ -23,6 +24,7 @@ class Sensor extends Component {
         this.onLoadAudio = props.onLoadAudio;
 
         this.width = 0;
+        this.resize = this.resize.bind(this);
         this.handleMotion = this.handleMotion.bind(this);
         this.handleMute = this.handleMute.bind(this);
         this.handleEnter = this.handleEnter.bind(this);
@@ -48,7 +50,8 @@ class Sensor extends Component {
             this.setState(() => ({ showSettings: true }));
         }
 
-        this.width = this.ref.current.getBoundingClientRect().width;
+        window.addEventListener('resize', () => debounce(this.resize, 500));
+        this.resize();
 
         // Set Synth
         this.synth = new this.synth(this.audio, globalAudioContext);
@@ -69,6 +72,10 @@ class Sensor extends Component {
     componentWillUnmount() {
         this.synth.destroy();
         // destroy synth
+    }
+
+    resize() {
+        this.width = this.ref.current.getBoundingClientRect().width;
     }
 
     handleEnter(e) {

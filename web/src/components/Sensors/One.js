@@ -14,7 +14,7 @@ export default function One(props) {
     }
 
     // if (this.synth.isMuted()) return;
-    const handleEnter = () => synth.changeVolume(0.7, 0.5);
+    const handleEnter = () => synth.changeVolume(0.7, 1.5);
 
     const handleExit = () => synth.changeVolume(0, 5.0);
 

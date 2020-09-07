@@ -15,7 +15,7 @@ export default function Zero (props) {
 
     const handleEnter = () => {
         if (synth.isMuted()) return;
-        synth.changeVolume(0.7, 0.5);
+        synth.changeVolume(0.7, 1.5);
     }
 
     const handleExit = () => synth.changeVolume(0, 5.0);
