@@ -54,7 +54,7 @@ export default class Play {
     }
 
     loadAudio() {
-        console.info('play loading audio');
+        console.info('Play() loading audio...');
         return new Promise((resolve, reject) => {
 
             const handleAudioData = function(buffer) {
@@ -97,7 +97,6 @@ export default class Play {
      * @param {number} offset - How far into the sample to start playback (s)
      */
     startSample(offset = 0) {
-        console.log("startSample");
 
         offset = (offset < 0) ? 0 : offset;
         // TODO: offset here could be useful in the UI
@@ -113,8 +112,6 @@ export default class Play {
         this.volume.connect(this.context.destination);
         this.startTime = this.context.currentTime - offset;
 
-        console.info('this.src', this.src);
-        console.info('offset: ', offset);
         this.src.start(0, offset);
         this.stopped = false;
     }
@@ -149,7 +146,6 @@ export default class Play {
      * @return time from start of playback until now (ms)
      */
     get elapsedTime(): number {
-        console.log('Elapsed Time | startTime: ', this.startTime);
         return this.context.currentTime - this.startTime;
     }
 
@@ -161,14 +157,10 @@ export default class Play {
     }
 
     set loopLength(x: number) {
-        console.info('set loopLength() - loopStart: ', this.loopStart);
-
         this.loopEnd = Math.min((this.loopStart + x), this.duration);
-        console.info('set loopLength() - loopEnd: ', this.loopEnd);
     }
 
     get loopLength(): number {
-        console.info('loopLength: ', this.loopEnd - this.loopStart);
         return this.loopEnd - this.loopStart;
     }
 
@@ -181,7 +173,6 @@ export default class Play {
      * @param {number} v 0.0 to 1.0
      */
     set vol(v: number) {
-        console.info('setting volume: ', v);
         this.changeVolume(this.maximumVolume * v, 0);
     }
 
@@ -196,7 +187,6 @@ export default class Play {
      * @return {Number} volume
      */
     get vol(): number {
-        console.info('getting volume... ');
         return this.volume.gain.value;
     }
 

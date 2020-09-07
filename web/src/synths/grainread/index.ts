@@ -123,7 +123,6 @@ export default class Grainread {
                         this.volume.connect(this.context.destination);
                         this.forwardInTime();
                         this.phasor();
-                        console.info('loaded and stuff');
                         return resolve({status: "success", message: ""});
                     },
                     e => reject({
@@ -150,7 +149,6 @@ export default class Grainread {
     }
 
     restartAtTime(t: number) {
-        console.log("restarting at time: ", t);
         this.stop();
         this.src = this.context.createBufferSource();
         this.src.buffer = this.buffer;
@@ -164,13 +162,11 @@ export default class Grainread {
     }
 
     play() {
-        console.info('grainread: play')
         this.src.start(0);
         this.stopped = false;
     }
 
     start() {
-        console.info('grainread: start')
         if (this.stopped) {
             this.restartAtTime(0);
             this.stopped = false;  // as a backup in case restartAtTime() fails... necessary?
@@ -212,7 +208,6 @@ export default class Grainread {
     }
 
     set position(x) {
-        //console.log(this.src.loopStart);
         this.src.loopStart = x;
     }
     get position() {
@@ -230,7 +225,6 @@ export default class Grainread {
     }
 
     set read(gr) {
-        console.info('grainread: read ', gr);
         this.g_read = gr;
     }
     get read() {
@@ -274,7 +268,6 @@ export default class Grainread {
     }
 
     forwardInTime() {
-        console.log("forward!");
         // scope, I think?  this inside the callback should be this out here
         const internalCallback = function() {
             //return function(this) {
@@ -287,7 +280,6 @@ export default class Grainread {
     }
 
     phasor() {
-        console.info('phasor');
         let that = this;
 
         var internalCallback = () => {

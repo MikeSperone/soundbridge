@@ -29,11 +29,9 @@ export default class Loop {
     }
 
     sensor(val: number, time: number = 0) {
-        console.info('loop sensor time', time);
         //val 0 - 1
 
         if (val >= .3) {
-            console.info('sensor val', val);
 
             let x = Math.floor(val * 10) / 10;
 
@@ -86,10 +84,8 @@ export default class Loop {
     loop(x: number) {
         // .3 - .9
 
-        console.log('this duration: ', this.play.duration);
         this.position = x * this.duration;
         this.stop();
-        console.log("start: " + this.position);
         this.loopLength = 1.2;
         this.startSample(this.position);
     }
