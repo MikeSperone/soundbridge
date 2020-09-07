@@ -8,8 +8,14 @@ import Grainread from '../grainread';
 
 export default class Playgrain {
 
-    constructor(audio: string, context: AudioContext) {
+    /**
+     * Grain synthesis of an audio file
+     * @param {string} audio - path to audio file
+     * @param {AudioContext} context - Web Audio Context
+     */
+    constructor(audio: string, context: AudioContext, vol: number = 0) {
 
+        this.volume = vol;
         this.maximumVolume = 1.0;
         this.grainArray = [];
         const numberOfGrains = 10;

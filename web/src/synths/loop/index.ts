@@ -16,7 +16,6 @@ export default class Loop {
         this.context = this.play.context;
         this.sensorPos = 0;
         this.startSample = this.play.startSample;
-        this.volume = this.play.volume;
         this.changeVolume = this.play.changeVolume;
         this.loadAudio = this.play.loadAudio;
         this.stop = this.play.stop;
@@ -98,6 +97,19 @@ export default class Loop {
     get elapsedTime() {
         return this.play.elapsedTime;
     }
+
+    set vol(v: number) {
+        this.play.changeVolume(v);
+    }
+
+    get vol() {
+        return this.play.vol;
+    }
+    set volumeScalar(v: number) {
+        this.play.volumeScalar = v;
+        this.play.changeVolume(this.vol);
+    }
+
     //delaySwitch(setting: boolean) {
     //    if (setting) {
     //        //console.log("delay on");

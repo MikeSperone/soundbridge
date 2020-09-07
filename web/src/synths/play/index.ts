@@ -50,6 +50,7 @@ export default class Play {
         this.play = this.play.bind(this);
         this.stop = this.stop.bind(this);
         this.resize = this.resize.bind(this);
+        this.changeVolume = this.changeVolume.bind(this);
     }
 
     loadAudio() {
@@ -180,6 +181,7 @@ export default class Play {
      * @param {number} v 0.0 to 1.0
      */
     set vol(v: number) {
+        console.info('setting volume: ', v);
         this.changeVolume(this.maximumVolume * v, 0);
     }
 
@@ -194,6 +196,7 @@ export default class Play {
      * @return {Number} volume
      */
     get vol(): number {
+        console.info('getting volume... ');
         return this.volume.gain.value;
     }
 

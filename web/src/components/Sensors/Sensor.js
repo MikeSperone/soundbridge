@@ -97,6 +97,7 @@ class Sensor extends Component {
 
     handleMute() {
         const vol = (this.state.isMuted) ? this.synth.vol : 0;
+        console.info("vol: ", vol);
         this.synth.changeVolume(vol, 0.2);
         this.setState(state => ({isMuted: !state.isMuted}));
     }
