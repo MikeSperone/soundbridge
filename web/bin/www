@@ -8,24 +8,20 @@ var io		= require('socket.io')(server);
 /**
 *  Setting Numbers
 */
-this.currentSetting = 0;
-const setCurrentSetting = function() {
-		this.currentSetting = Math.floor(Math.random() * 29);
-	},
-	  getCurrentSetting = function() {
-		return this.currentSetting;
-	};
+const newSetting = function() {
+    return Math.floor(Math.random() * 29);
+};
 
-let currentSetting = setCurrentSetting();
+var currentSetting = newSetting();
 
 io.on('connection', function(socket){
 
 	console.log('user connected');
-	socket.emit('setting', getCurrentSetting());
+	socket.emit('setting', currentSetting);
 
 	setTimeout(function(){
-		currentSetting = setCurrentSetting();
-		socket.emit('setting', getCurrentSetting());
+        currentSetting = newSetting();
+		socket.emit('setting', currentSetting);
 	}, 60 * 1000 * 30);
 
 	socket.on('data', function(d) {
