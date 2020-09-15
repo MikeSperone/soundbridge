@@ -23,8 +23,8 @@ export default function Zero (props) {
     const handleMove = value => {
         // Value is 0.0 - 1.0
         synth.pbRate(value);
-        synth.delTime((value * 0.7) + 0.125);      // range of .125 - .825(s)
-        synth.delFeedback((value * 0.42) + 0.075);  // range of .075 - .495
+        synth.delTime(value);      // range of .125 - .825(s)
+        synth.delFeedback(value);  // range of .075 - .495
     }
 
     return <Sensor

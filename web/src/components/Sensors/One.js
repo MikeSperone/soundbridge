@@ -20,8 +20,8 @@ export default function One(props) {
 
     const handleMove = (value) => {
         synth.pbRate(value);
-        synth.delTime((value * 0.7) + 0.125);      // range of .125 - .825(s)
-        synth.delFeedback((value * 0.42) + 0.075);  // range of .075 - .495
+        synth.delTime(value);
+        synth.delFeedback(value);
     }
 
     return settings.sample && (

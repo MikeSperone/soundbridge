@@ -97,15 +97,21 @@ export default class Playgroove {
     }
 
     delTime(time: number) {
-        this.delay.delayTime.value = clip(time);
+        // range of .125 - .825(s)
+        time = (clip(time) * 0.7) + 0.125;
+        this.delay.delayTime.value = time;
     }
 
     delFeedback(fbk: number) {
-        this.feedback.gain.value = clip(fbk);
+        // range of .075 - .495
+        fbk = (clip(fbk) * 0.42) + 0.075;
+        this.feedback.gain.value = fbk;
     }
 
     pbRate(rate: number) {
-        this.src.playbackRate.value = clip(rate);
+        // should get a range of 0.225 to 1.485
+        rate = (clip(rate) * 1.26) + 0.225;
+        this.src.playbackRate.value = rate;
     }
 
     get vol() {
