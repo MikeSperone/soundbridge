@@ -6,22 +6,26 @@ export default function One(props) {
 
     const name="one";
     const settings = props.settings;
-    var synth;
+    var synth = {};
+    var synthLoaded = false;
 
     const handleLoadAudio = s => {
         synth = s;
         synth.delaySwitch(settings.delay);
+        synthLoaded = true;
     }
 
-    // if (this.synth.isMuted()) return;
-    const handleEnter = () => synth.changeVolume(0.7, 1.5);
+    // if (synth.isMuted()) return;
+    const handleEnter = () => synth.isMuted() || synth.changeVolume(0.7, 1.5);
 
     const handleExit = () => synth.changeVolume(0, 5.0);
 
     const handleMove = (value) => {
-        synth.pbRate(value);
-        synth.delTime(value);
-        synth.delFeedback(value);
+        if (synthLoaded) {
+            synth.pbRate(value);
+            synth.delTime(value);
+            synth.delFeedback(value);
+        }
     }
 
     return settings.sample && (

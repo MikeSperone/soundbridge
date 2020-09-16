@@ -6,11 +6,13 @@ export default function Zero (props) {
 
     const name="zero";
     const settings = props.settings;
-    var synth;
+    var synth = {};
+    var synthLoaded = false;
 
     const handleLoadAudio = s => {
         synth = s;
         synth.delaySwitch(settings.delay);
+        synthLoaded = true;
     }
 
     const handleEnter = () => {
@@ -21,10 +23,12 @@ export default function Zero (props) {
     const handleExit = () => synth.changeVolume(0, 5.0);
 
     const handleMove = value => {
-        // Value is 0.0 - 1.0
-        synth.pbRate(value);
-        synth.delTime(value);      // range of .125 - .825(s)
-        synth.delFeedback(value);  // range of .075 - .495
+        if (synthLoaded) {
+            // Value is 0.0 - 1.0
+            synth.pbRate(value);
+            synth.delTime(value);      // range of .125 - .825(s)
+            synth.delFeedback(value);  // range of .075 - .495
+        }
     }
 
     return <Sensor
