@@ -9,7 +9,7 @@ module.exports = {
     mode: process.env.NODE_ENV,
     entry: {
         main: './src/index.js',
-        // test: './test/test-index.js',
+        test: './test/test-index.js',
     },
     node: {
         fs: 'empty',
@@ -94,12 +94,12 @@ module.exports = {
             './src'
         ]
     },
-    devServer: {
-        contentBase: path.join(__dirname, '../../public'),
-        host: '0.0.0.0',
-        port: 9000,
-        disableHostCheck: process.env.NODE_ENV === 'development'
-    },
+    // devServer: {
+    //     contentBase: path.join(__dirname, '../../public'),
+    //     host: '0.0.0.0',
+    //     port: 9000,
+    //     disableHostCheck: process.env.NODE_ENV === 'development'
+    // },
     output: {
         filename: '[name].js',
         path: path.resolve(__dirname, '../../public')

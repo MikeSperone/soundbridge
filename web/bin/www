@@ -1,9 +1,10 @@
 #!/usr/bin/env node
 
 var app    = require("../app");
-var config = require("../config/config.js");
 var server = require('http').Server(app);
 var io	   = require('socket.io')(server);
+
+const PORT = '9001';
 
 /**
 *  Setting Numbers
@@ -43,7 +44,7 @@ io.on('connection', function(socket){
 });
 
 console.log('connecting...');
-server.listen(Number(config.port), function() {
-    console.log('connected to port ' + config.port);
+server.listen(Number(PORT), function() {
+    console.log('connected to port ' + PORT);
 });
 

@@ -1,5 +1,4 @@
 node_modules/
-tags
 
 /web/.idea
 /web/build
@@ -13,6 +12,9 @@ dist/
 
 config.js
 .env
+
+tags
+tags.lock
 
 .swp
 .swo

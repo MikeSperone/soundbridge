@@ -1,0 +1,208 @@
+nav.main-nav {
+  display: flex;
+  margin: 1rem;
+}
+nav.main-nav h1 {
+  margin: 0;
+  flex: 1;
+}
+
+.settings-box {
+  border: solid 1px green;
+  padding: 0.5rem;
+}
+.settings-box td, .settings-box th {
+  padding: 0.25rem 0.5rem;
+  margin: 0.25rem;
+  border: solid 1px gray;
+}
+
+.sensor-container {
+  display: flex;
+  height: 100px;
+  margin: 2rem 0;
+  min-width: 300px;
+}
+.sensor-container .audio-error {
+  color: red;
+}
+.sensor-container .sensor {
+  display: block;
+  position: relative;
+  flex: 1;
+  min-width: 300px;
+  background: white;
+  height: 2rem;
+  margin: 1rem 0;
+  box-shadow: 0 0 2px 2px grey inset;
+  transition: background-color 0.5s ease, height 0.5s ease, transform 0.5s ease;
+}
+.sensor-container .sensor:hover {
+  height: 4rem;
+  transform: translate(0, -1rem);
+}
+.sensor-container .sensor:hover .bar {
+  height: 4.5rem;
+}
+.sensor-container .sensor .bar {
+  pointer-events: none;
+  position: absolute;
+  background: blue;
+  height: 2.5rem;
+  border-radius: 3px;
+  width: 0.5rem;
+  top: -0.25rem;
+  left: -0.5rem;
+  transition: height 0.5s ease, transform 0.5s ease;
+}
+.sensor-container .sensor .value {
+  pointer-events: none;
+}
+.sensor-container .sensor-controls {
+  display: flex;
+  background-color: ghostwhite;
+  height: 4rem;
+}
+.sensor-container .sensor-controls .sensor-menu {
+  flex: 1;
+  height: 2rem;
+  width: 2rem;
+  min-width: 2rem;
+  text-align: center;
+  line-height: 2rem;
+  margin: 1rem 0.5rem;
+  background-color: gainsboro;
+  border-radius: 2px;
+  cursor: pointer;
+}
+.sensor-container .sensor-controls .mute {
+  flex: 1;
+  height: 2rem;
+  width: 2rem;
+  margin: 1rem 0.5rem;
+}
+.sensor-container .sensor-controls .range-slider {
+  flex: 1;
+  margin: 0 0.5rem;
+  height: 4rem;
+}
+.sensor-container .active {
+  background: mistyrose;
+}
+button {
+  display: block;
+  background: blue;
+  height: 2rem;
+  width: 2rem;
+  border-radius: 3px;
+}
+button.start {
+  width: 8rem;
+  height: 8rem;
+  color: white !important;
+  margin: 0 auto;
+}
+button.solo {
+  background: yellow;
+}
+button.mute {
+  background: lightblue;
+}
+button.muted {
+  background: red;
+}
+
+.range-slider .input-range {
+  -webkit-appearance: none;
+  height: 100%;
+  width: 100%;
+  border-radius: 5px;
+  background: #ccc;
+  outline: none;
+  writing-mode: bt-lr;
+  /* IE */
+  -webkit-appearance: slider-vertical;
+  /* WebKit */
+}
+
+::-moz-range-track {
+  background: #ccc;
+  border: 0;
+}
+
+input::-moz-focus-inner {
+  border: 0;
+}
+
+html, body {
+  margin: 0;
+  background-color: #eee;
+  color: #113;
+}
+
+* {
+  font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+}
+
+a {
+  color: #113;
+  text-decoration: none;
+}
+a:link, a:visited {
+  color: #113;
+}
+a:hover {
+  color: #7aa;
+}
+a:active {
+  color: #eee;
+}
+
+.soundbridge {
+  padding: 1rem;
+}
+
+.notification .hidden {
+  disply: none;
+}
+.notification .warning {
+  background-color: orange;
+}
+.notification .error {
+  background-color: red;
+}
+.notification .info {
+  background-color: blue;
+}
+
+.value {
+  float: right;
+  margin: 2px;
+}
+
+.xy-pad {
+  display: block;
+  position: relative;
+  width: 500px;
+  height: 500px;
+  margin: 60px;
+  border: 1px solid #113;
+}
+.xy-pad .qd {
+  position: absolute;
+  display: block;
+  width: 300px;
+  height: 300px;
+  margin: 0;
+  border: 0;
+}
+.xy-pad #one {
+  left: 200px;
+}
+.xy-pad #two {
+  top: 200px;
+  left: 200px;
+}
+.xy-pad #three {
+  top: 200px;
+}
