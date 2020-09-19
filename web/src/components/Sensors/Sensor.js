@@ -4,6 +4,8 @@ import Button from 'components/Controls/Button';
 import SettingsBox from 'components/Controls/SettingsBox';
 import SensorControls from 'components/Controls/SensorControls';
 
+const audioPath = '/audio';
+
 const SensorContainer = props => <div className="sensor-container">{props.children}</div>;
 const MessageBox = props => <div className="message-box">{props.message}</div>;
 const AudioError = props => <span
@@ -16,20 +18,10 @@ const AudioError = props => <span
 class Sensor extends Component {
     constructor(props) {
         super(props);
-        const audioPath = '/audio';
         this.props = props;
         this.name = props.name;
-        this.audio = `${audioPath}/${props.settings.sample}.mp3`;
-        this.synth = props.synth;
-        this.onLoadAudio = props.onLoadAudio;
 
         this.width = 0;
-        this.resize = this.resize.bind(this);
-        this.handleMotion = this.handleMotion.bind(this);
-        this.handleMute = this.handleMute.bind(this);
-        this.handleEnter = this.handleEnter.bind(this);
-        this.handleExit = this.handleExit.bind(this);
-        this.setVolumeScalar = this.setVolumeScalar.bind(this);
 
         this.state = {
             value: 0,
@@ -40,9 +32,21 @@ class Sensor extends Component {
             audioError: false,
             showSettings: false,
         };
+
+        this._bind();
     }
 
     ref = createRef();
+
+    _bind() {
+        this.resize = this.resize.bind(this);
+        this.loadSynth = this.loadSynth.bind(this);
+        this.handleMotion = this.handleMotion.bind(this);
+        this.handleMute = this.handleMute.bind(this);
+        this.handleEnter = this.handleEnter.bind(this);
+        this.handleExit = this.handleExit.bind(this);
+        this.setVolumeScalar = this.setVolumeScalar.bind(this);
+    }
 
     componentDidMount() {
         if (!window.globalAudioContext) return;
@@ -52,20 +56,13 @@ class Sensor extends Component {
 
         window.addEventListener('resize', () => debounce(this.resize, 500));
         this.resize();
+        this.loadSynth();
+    }
 
-        // Set Synth
-        this.synth = new this.synth(this.audio, globalAudioContext);
-        this.synth.mute = this.handleMute.bind(this);
-        this.synth.isMuted = () => this.state.isMuted;
-        try {
-            this.synth.loadAudio()
-                .then(function() {
-                    this.setState(() => ({ audioLoaded: true }));
-                    this.onLoadAudio(this.synth);
-                }.bind(this));
-        } catch (e) {
-            console.info(e);
-            this.setState(() => ({ audioError: true }));
+    componentDidUpdate(prevProps) {
+        // Check if it's a new sample
+        if (this.props.settings.index !== prevProps.settings.index) {
+            this.loadSynth();
         }
     }
 
@@ -76,6 +73,26 @@ class Sensor extends Component {
 
     resize() {
         this.width = this.ref.current.getBoundingClientRect().width;
+    }
+
+    loadSynth() {
+        const audio = `${audioPath}/${this.props.settings.sample}.mp3`;
+
+        // Set Synth
+        this.synth = new this.props.synth(audio, globalAudioContext);
+        this.synth.mute = this.handleMute;
+        this.synth.isMuted = () => this.state.isMuted;
+
+        try {
+            this.synth.loadAudio()
+                .then(() => {
+                    this.setState(() => ({ audioLoaded: true }));
+                    this.props.onLoadAudio(this.synth);
+                });
+        } catch (e) {
+            console.info(e);
+            this.setState(() => ({ audioError: true }));
+        }
     }
 
     handleEnter(e) {

@@ -22,6 +22,10 @@ class Soundbridge extends Component {
         super();
         this.openConnection = false;
 
+        this.ws = {
+            on: (a,b) => {}
+        };
+
         this.state = {
             audio: false,
             ioReady: false,
@@ -35,54 +39,61 @@ class Soundbridge extends Component {
         };
 
         this.changeSettings = this.changeSettings.bind(this);
-        this.startWithSettings = this.startWithSettings.bind(this);
         this.soloStart = this.soloStart.bind(this);
+        this.startWebsocket = this.startWebsocket.bind(this);
+        this.loadSocketIO = this.loadSocketIO.bind(this);
     }
 
-    startWithSettings(ws, i) {
+    changeSettings(i) {
+        console.info('changing settings to ', i);
         const settings = getSettings(i);
         this.setState({settings, settingNumber: i});
-        // soundbridge(settings, ws, this.openConnection);
     }
 
     soloStart() {
         const i = Math.floor(Math.random() * 29);
-        const ws = {};
-        ws.on = (a,b) => {};
-        this.startWithSettings(ws, i);
+        this.changeSettings(i);
     }
 
-    changeSettings(n) {
-        if (!this.state.started) return;
-        this.setState(() => ({ settings: getSettings(n), settingNumber: n }));
+    startWebsocket() {
+        this.setState(() => ({ ioReady: true }));
+        if (typeof io !== "function") return this.setState(() => ({solo: true}));
+        this.ws = io();
+        this.ws.on('setting', n => {
+            console.info('new setting: ', n);
+            this.openConnection = true;
+            this.changeSettings(n);
+        });
+    }
+
+    loadSocketIO() {
+        return new Promise((resolve, reject) => {
+            const ioScript = document.createElement('script');
+            ioScript.type = 'text/javascript';
+            ioScript.src = '/socket.io/socket.io.js';
+            ioScript.onload = resolve;
+            ioScript.onerror = reject;
+
+            document.getElementsByTagName('head')[0].appendChild(ioScript);
+        })
+
     }
 
     componentDidMount() {
         window.globalAudioContext = new window.AudioContext();
-        const ioScript = document.createElement('script');
-        ioScript.type = 'text/javascript';
-        ioScript.src = '/socket.io/socket.io.js';
-        ioScript.onload = () => {
-            this.setState(() => ({ ioReady: true }));
-            if (typeof io !== "function") return this.setState(() => ({solo: true}));
-            const ws = io();
-            ws.on('setting', function(n) {
-                this.openConnection = true;
-                this.startWithSettings(ws, n);
+        this.loadSocketIO()
+            .then(() => this.setState(() => ({ioReady: true})))
+            .catch(e => {
+                this.soloStart();
+                this.setState(() => ({ioReady: true, solo: true}));
             });
-        };
-        ioScript.onerror = () => {
-            this.setState(() => ({ioReady: true, solo: true}));
-        }
-
-        document.getElementsByTagName('head')[0].appendChild(ioScript);
     }
 
     handleAudioOn() {
         if (this.state.solo) {
             this.soloStart();
         } else {
-            //TODO: not solo start
+            this.startWebsocket();
         }
         this.setState(() => ({started: true}));
     }
@@ -90,10 +101,12 @@ class Soundbridge extends Component {
     render() {
         return (
             <div class="soundbridge">
-                <SelectSetting
-                    value={this.state.settingNumber}
-                    handleChange={this.changeSettings}
-                />
+                {this.state.solo &&
+                    <SelectSetting
+                        value={this.state.settingNumber}
+                        handleChange={this.changeSettings}
+                    />
+                }
 
                 <SoloBox solo={this.state.solo} />
                 { !this.state.started && (
@@ -106,6 +119,7 @@ class Soundbridge extends Component {
                     <Fragment>
                         <Zero
                             settings={{
+                                index: this.state.settingNumber,
                                 sample: this.state.settings.samples[0],   
                                 delay: this.state.settings.delay[0],
                                 grain: this.state.settings.grain
@@ -113,6 +127,7 @@ class Soundbridge extends Component {
                         />
                         <One
                             settings={{
+                                index: this.state.settingNumber,
                                 sample: this.state.settings.samples[1],   
                                 delay: this.state.settings.delay[1],
                                 grain: this.state.settings.grain
@@ -120,6 +135,7 @@ class Soundbridge extends Component {
                         />
                         <Two
                             settings={{
+                                index: this.state.settingNumber,
                                 sample: this.state.settings.samples[2],   
                                 delay: this.state.settings.delay[2],
                                 grain: this.state.settings.grain
@@ -127,6 +143,7 @@ class Soundbridge extends Component {
                         />
                         <Three
                             settings={{
+                                index: this.state.settingNumber,
                                 sample: this.state.settings.samples[3],   
                                 delay: this.state.settings.delay[3],
                                 grain: this.state.settings.grain

@@ -5,18 +5,20 @@ import Playgroove from 'synths/playgroove';
 export default function One(props) {
 
     const name="one";
-    const settings = props.settings;
     var synth = {};
     var synthLoaded = false;
 
     const handleLoadAudio = s => {
         synth = s;
-        synth.delaySwitch(settings.delay);
+        synth.delaySwitch(props.settings.delay);
         synthLoaded = true;
     }
 
     // if (synth.isMuted()) return;
-    const handleEnter = () => synth.isMuted() || synth.changeVolume(0.7, 1.5);
+    const handleEnter = () => {
+        synthLoaded &&
+            (synth.isMuted() || synth.changeVolume(0.7, 1.5));
+    }
 
     const handleExit = () => synth.changeVolume(0, 5.0);
 
@@ -28,11 +30,11 @@ export default function One(props) {
         }
     }
 
-    return settings.sample && (
+    return (
         <Sensor
             name={name}
             synth={Playgroove}
-            settings={settings}
+            settings={props.settings}
             onEnter={handleEnter}
             onMove={handleMove}
             onExit={handleExit}

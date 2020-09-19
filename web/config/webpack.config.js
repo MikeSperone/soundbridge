@@ -9,7 +9,7 @@ module.exports = {
     mode: process.env.NODE_ENV,
     entry: {
         main: './src/index.js',
-        test: './test/test-index.js',
+        // test: './test/test-index.js',
     },
     node: {
         fs: 'empty',
