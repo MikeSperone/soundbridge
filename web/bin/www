@@ -40,17 +40,19 @@ io.on('connection', function(socket){
     socket.on('data', function(d) {
         socket.broadcast.emit('data', d);
     });
-    socket.on('over', function(d) {
-        socket.broadcast.emit('over', d);
+    socket.on('enter', function(d) {
+        socket.broadcast.emit('enter', d);
     });
-    socket.on('out', function(d) {
-        socket.broadcast.emit('out', d);
+    socket.on('exit', function(d) {
+        socket.broadcast.emit('exit', d);
     });
     socket.on('login', function(d) {
         console.log('login', d);
+        socket.broadcast.emit('user.joined', d);
     });
     socket.on('logout', function(d) {
         console.log('logout', d);
+        socket.broadcast.emit('user.left', d);
     });
 
 });

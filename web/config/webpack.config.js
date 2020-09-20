@@ -15,10 +15,7 @@ module.exports = {
         fs: 'empty',
     },
     plugins: [
-        new HtmlWebpackPlugin({
-            title: "Soundbridge",
-            // filename: "../views/index.html"
-        }),
+        new HtmlWebpackPlugin({ title: "Soundbridge" }),
         new MiniCssExtractPlugin(),
             // {
             // Options similar to the same options in webpackOptions.output
@@ -82,9 +79,11 @@ module.exports = {
     },
     resolve: {
         alias: {
-            synths: path.resolve(__dirname, '../src/synths'),
-            routes: path.resolve(__dirname, '../src/routes'),
+            context: path.resolve(__dirname, '../src/context'),
             components: path.resolve(__dirname, '../src/components'),
+            routes: path.resolve(__dirname, '../src/routes'),
+            synths: path.resolve(__dirname, '../src/synths'),
+            styles: path.resolve(__dirname, '../src/styles'),
             react: 'preact/compat',
             "react-dom": 'preact/compat',
         },

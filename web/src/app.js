@@ -1,12 +1,13 @@
-import { h, Component  } from 'preact';
+import { h, Component } from 'preact';
 import { Router, Link } from 'preact-router';
+import Socket from 'context/Socket';
 
 // import Header from './header';
 
 import Soundbridge from './routes/soundbridge';
 import Test from './routes/test';
 
-export default class App extends Component {
+class App extends Component {
     handleRoute = e => this.currentUrl = e.url;
     render() {
         return (
@@ -26,3 +27,4 @@ export default class App extends Component {
     }
 }
 
+export default App;

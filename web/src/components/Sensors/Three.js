@@ -93,7 +93,7 @@ export default function Three(props) {
     }
 
     return <Sensor
-        name={this.name}
+        name={name}
         synth={Loop}
         settings={settings}
         onEnter={handleEnter}

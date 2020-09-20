@@ -2,8 +2,9 @@ import { h, render  } from 'preact';
 import App from './app';
 
 let root;
+const appRootElement = document.getElementById('root');
 function init() {
-    root = render(<App />, document.body, root);
+    root = render(<App />, appRootElement, root);
 }
 init();
 
