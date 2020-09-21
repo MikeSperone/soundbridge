@@ -7,6 +7,9 @@ var io	   = require('socket.io')(server);
 const PORT = '9001';
 const DEBUG = process.env.NODE_ENV === "development";
 
+var connectedUsers = 0;
+var availableSlots = 4;
+
 /**
 *  Setting Numbers
 */
@@ -20,13 +23,17 @@ var currentSetting = newSetting();
 
 io.on('connection', function(socket){
 
+    console.log('user connected');
+    socket.emit('setting', currentSetting);
+
+    if (availableSlots === 0) return;
+    availableSlots -= 1;
+
     function emit(name, data) {
         DEBUG && console.info(name + ": ", data);
         socket.emit(name, data);
     }
 
-    console.log('user connected');
-    socket.emit('setting', currentSetting);
 
     //TODO: I guess eventually, this should go outside of this function.
     // BUT, also it should go per "room", not overall - right?
