@@ -34,6 +34,7 @@ export default function One(props) {
         <Sensor
             name={name}
             synth={Playgroove}
+            active={props.active}
             settings={props.settings}
             onEnter={handleEnter}
             onMove={handleMove}

@@ -8,13 +8,20 @@ import SelectSetting from 'components/Controls/SelectSetting';
 import getSettings from './settings';
 import styles from 'styles/bridge.scss';
 
-//TODO: implement the Socket context
+const Status = (props, children) => (
+    <span id={props.type + '-status'} className='status'>
+        {props.display || props.children}
+    </span>
+);
 
-const SoloBox = props => {
-    let hidden = (props.solo) ? ' hidden' : '';
+const StatusBox = props => {
+    const { solo, isPerformer, performers, audienceMembers } = props;
     return (
-        <div id='solo' className={'notification' + hidden}>
-            SOLO
+        <div id='status-box'>
+            { solo && <Status type='solo' display="SOLO" /> }
+            <Status type='userType' display={isPerformer ? 'performer' : 'audience'} />
+            <Status type='performers' display={performers} />
+            <Status type='audience' display={audienceMembers} />
         </div>
     );
 }
@@ -30,6 +37,7 @@ class Soundbridge extends Component {
             messages: {
                 debug: '',
             },
+            isPerformer: false,
             started: false,
             settings: false,
             settingNumber: 0,
@@ -53,10 +61,33 @@ class Soundbridge extends Component {
     }
 
     startWebsocket() {
-        this.ws.on('setting', n => {
-            console.info('new setting: ', n);
-            this.changeSettings(n);
+        this.ws.on('join', n => {
+            console.info('joined: ', n);
+            const { currentSetting, userType } = n;
+            this.changeSettings(currentSetting);
+            this.setState(() => ({ isPerformer: userType === 'performer' }));
         });
+
+        this.ws.on('setting', n => {
+            console.info('new setting: ', n.currentSetting);
+            this.changeSettings(n.currentSetting);
+        });
+
+        this.ws.on('newUser', n => {
+            this.setState(state => {
+                if (n.userType === 'performer') state.performers.push(n.name);
+                else state.audienceMembers.push(n.name);
+                return state;
+            });
+        });
+        // this.ws.on('userLeaving', n => {
+            // this.setState(state => {
+            //     if (n.userType === 'performer')
+            //         // state.performers.push(n.name);
+            //     else
+            //         // state.audienceMembers.push(n.name);
+            // });
+        // });
         // this.ws.on('login', this.handleLogin);
         // this.ws.on('logout', this.handleLogout);
     }
@@ -85,7 +116,13 @@ class Soundbridge extends Component {
                     />
                 }
 
-                <SoloBox solo={this.state.solo} />
+                <StatusBox
+                    solo={this.state.solo}
+                    isPerformer={this.state.isPerformer}
+                    performers={this.state.performers}
+                    audienceMembers={this.state.audienceMembers}
+                />
+
                 { !this.state.started && (
                     <button className='start' onClick={this.handleAudioOn.bind(this)}>
                         <h2>{this.state.ioReady ? 'Start' : 'Not Ready'}</h2>
@@ -95,6 +132,7 @@ class Soundbridge extends Component {
                 {this.state.settings && (
                     <Fragment>
                         <Zero
+                            active={this.state.isPerformer}
                             settings={{
                                 index: this.state.settingNumber,
                                 sample: this.state.settings.samples[0],
@@ -103,6 +141,7 @@ class Soundbridge extends Component {
                             }}
                         />
                         <One
+                            active={this.state.isPerformer}
                             settings={{
                                 index: this.state.settingNumber,
                                 sample: this.state.settings.samples[1],
@@ -111,6 +150,7 @@ class Soundbridge extends Component {
                             }}
                         />
                         <Two
+                            active={this.state.isPerformer}
                             settings={{
                                 index: this.state.settingNumber,
                                 sample: this.state.settings.samples[2],
@@ -119,6 +159,7 @@ class Soundbridge extends Component {
                             }}
                         />
                         <Three
+                            active={this.state.isPerformer}
                             settings={{
                                 index: this.state.settingNumber,
                                 sample: this.state.settings.samples[3],

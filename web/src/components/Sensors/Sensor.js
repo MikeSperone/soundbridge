@@ -19,6 +19,7 @@ class Sensor extends Component {
         super(props);
         this.props = props;
         this.name = props.name;
+        this.active = props.active;
         this.ws = props.socket;
 
         this.width = 0;
@@ -109,6 +110,7 @@ class Sensor extends Component {
     }
 
     handleMouseEnter(e) {
+        if (!this.active) return;
         this.handleEnter();
         this.ws.emit('enter', this.sensorData);
     }
@@ -121,6 +123,7 @@ class Sensor extends Component {
     }
 
     handleMouseMove(e) {
+        if (!this.active) return;
         const value = e.offsetX + 1;
         const position = value / this.width;
         // dividing to get 0. - 1. position value, so that the 
@@ -135,6 +138,7 @@ class Sensor extends Component {
     }
 
     handleMouseLeave() {
+        if (!this.active) return;
         this.handleExit();
         this.ws.emit('exit', this.sensorData);
     }

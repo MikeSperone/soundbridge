@@ -24,16 +24,27 @@ var currentSetting = newSetting();
 io.on('connection', function(socket){
 
     console.log('user connected');
-    socket.emit('setting', currentSetting);
 
-    if (availableSlots === 0) return;
+    function newUser(userType, name) {
+        socket.emit('join', { userType, currentSetting });
+        socket.broadcast.emit('newUser', {userType, name});
+    }
+
+    var userType = 'audience;'
+    if (availableSlots === 0) {
+        newUser(userType, 'anonymous');
+        return;
+    }
+    userType = 'performer';
     availableSlots -= 1;
+    //TODO: add disconnection thing, and increment available slots
+
+    newUser(userType, 'anonymous');
 
     function emit(name, data) {
         DEBUG && console.info(name + ": ", data);
         socket.emit(name, data);
     }
-
 
     //TODO: I guess eventually, this should go outside of this function.
     // BUT, also it should go per "room", not overall - right?
@@ -41,7 +52,7 @@ io.on('connection', function(socket){
         currentSetting = newSetting();
         // this socket is the part I'll need to consider.  It doesn't exist
         // above, so :/
-        socket.emit('setting', currentSetting);
+        socket.emit('setting', { currentSetting });
     }, 60 * 1000 * 30);
 
     socket.on('data', function(d) {

@@ -95,6 +95,7 @@ export default function Three(props) {
     return <Sensor
         name={name}
         synth={Loop}
+        active={props.active}
         settings={settings}
         onEnter={handleEnter}
         onMove={handleMove}
