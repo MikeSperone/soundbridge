@@ -134,6 +134,15 @@ input::-moz-focus-inner {
   border: 0;
 }
 
+#status-box {
+  display: block;
+  border: solid black 1px;
+}
+
+.status {
+  display: block;
+}
+
 html, body {
   margin: 0;
   background-color: #eee;

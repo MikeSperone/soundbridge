@@ -7,9 +7,12 @@ var io	   = require('socket.io')(server);
 const PORT = '9001';
 const DEBUG = process.env.NODE_ENV === "development";
 
-var connectedUsers = 0;
-var availableSlots = 4;
-
+const User = require('./userEvents');
+const users = {
+    all: {},
+    performer: {},
+    audience: {}
+};
 /**
 *  Setting Numbers
 */
@@ -23,23 +26,33 @@ var currentSetting = newSetting();
 
 io.on('connection', function(socket){
 
-    console.log('user connected');
+    const user = new User(socket);
+    user.connected();
+    users.all[user.uuid] = user;
 
-    function newUser(userType, name) {
-        socket.emit('join', { userType, currentSetting });
-        socket.broadcast.emit('newUser', {userType, name});
+    const numberOfUsers = io.engine.clientsCount;
+    console.info('users connected: ', numberOfUsers);
+
+    socket.on('user-exit', user.exit);
+    socket.on('disconnect', () => {
+        delete(users['all'][user.uuid]);
+        if (user.type && user.uuid && users[user.type][user.uuid]) {
+            console.info('disconnecting user ', user);
+            delete(users[user.type][user.uuid]);
+        }
+        user.disconnected();
+    })
+
+    var userType = 'performer';
+
+    console.info(Object.keys(users.performer).length, ' performers');
+    if (Object.keys(users.performer).length >= 4) {
+        userType = 'audience';
     }
 
-    var userType = 'audience;'
-    if (availableSlots === 0) {
-        newUser(userType, 'anonymous');
-        return;
-    }
-    userType = 'performer';
-    availableSlots -= 1;
-    //TODO: add disconnection thing, and increment available slots
-
-    newUser(userType, 'anonymous');
+    user.join(userType, currentSetting);
+    users.audience[user.uuid] = user;
+    if (userType === 'audience') return;
 
     function emit(name, data) {
         DEBUG && console.info(name + ": ", data);

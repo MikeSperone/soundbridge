@@ -4,27 +4,11 @@ import { Zero, One, Two, Three } from 'components/Sensors';
 import XYPad from 'components/XYPad';
 import Button from 'components/Controls/Button';
 import SelectSetting from 'components/Controls/SelectSetting';
+import StatusBox from 'components/Messages/StatusBox';
 
 import getSettings from './settings';
 import styles from 'styles/bridge.scss';
 
-const Status = (props, children) => (
-    <span id={props.type + '-status'} className='status'>
-        {props.display || props.children}
-    </span>
-);
-
-const StatusBox = props => {
-    const { solo, isPerformer, performers, audienceMembers } = props;
-    return (
-        <div id='status-box'>
-            { solo && <Status type='solo' display="SOLO" /> }
-            <Status type='userType' display={isPerformer ? 'performer' : 'audience'} />
-            <Status type='performers' display={performers} />
-            <Status type='audience' display={audienceMembers} />
-        </div>
-    );
-}
 
 class Soundbridge extends Component {
 
@@ -37,6 +21,8 @@ class Soundbridge extends Component {
             messages: {
                 debug: '',
             },
+            performers: [],
+            audienceMembers: [],
             isPerformer: false,
             started: false,
             settings: false,
@@ -65,7 +51,10 @@ class Soundbridge extends Component {
             console.info('joined: ', n);
             const { currentSetting, userType } = n;
             this.changeSettings(currentSetting);
-            this.setState(() => ({ isPerformer: userType === 'performer' }));
+            this.setState(() => ({
+                userType,
+                isPerformer: userType === 'performer',
+            }));
         });
 
         this.ws.on('setting', n => {
@@ -80,14 +69,18 @@ class Soundbridge extends Component {
                 return state;
             });
         });
-        // this.ws.on('userLeaving', n => {
+        this.ws.on('user-exit', n => {
+            console.info('user gone');
             // this.setState(state => {
             //     if (n.userType === 'performer')
             //         // state.performers.push(n.name);
             //     else
             //         // state.audienceMembers.push(n.name);
             // });
-        // });
+        });
+        this.ws.on('disconnect', () => {
+            this.ws.emit('user-left', { userType: this.state.userType, name: 'anonymous' })
+        });
         // this.ws.on('login', this.handleLogin);
         // this.ws.on('logout', this.handleLogout);
     }
