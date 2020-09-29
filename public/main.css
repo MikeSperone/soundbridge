@@ -17,11 +17,29 @@ nav.main-nav h1 {
   border: solid 1px gray;
 }
 
+#zero.sensor {
+  border-color: darkorchid;
+}
+
+#one.sensor {
+  border-color: darkorange;
+}
+
+#two.sensor {
+  border-color: green;
+}
+
+#three.sensor {
+  border-color: green;
+}
+
 .sensor-container {
   display: flex;
   height: 100px;
   margin: 2rem 0;
+  padding: 1rem;
   min-width: 300px;
+  background: grey;
 }
 .sensor-container .audio-error {
   color: red;
@@ -30,10 +48,13 @@ nav.main-nav h1 {
   display: block;
   position: relative;
   flex: 1;
+  align-self: center;
   min-width: 300px;
   background: white;
   height: 2rem;
   margin: 1rem 0;
+  border: 1px solid;
+  border-radius: 0.5rem;
   box-shadow: 0 0 2px 2px grey inset;
   transition: background-color 0.5s ease, height 0.5s ease, transform 0.5s ease;
 }

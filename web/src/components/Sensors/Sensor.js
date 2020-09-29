@@ -164,7 +164,7 @@ class Sensor extends Component {
                     onMouseMove={this.handleMouseMove}
                     onMouseLeave={this.handleMouseLeave}
                 >
-                    <span class="bar" style={{left: this.state.value}}></span>
+                    <span class="bar" style={{left: this.state.value - 4}}></span>
                     <span class="value">{this.state.value}</span>
                     <AudioError show={this.state.audioError}/>
                 </div>

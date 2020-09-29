@@ -1,4 +1,13 @@
 $light-shadow: grey;
+$error-color: red;
+$sensor-bar: blue;
+
+$container-background: grey;
+
+$sensor1-highlight: darkorchid;
+$sensor2-highlight: darkorange;
+$sensor3-highlight: darkturquoise;
+$sensor3-highlight: green;
 
 .settings-box {
     border: solid 1px green;
@@ -9,28 +18,47 @@ $light-shadow: grey;
         border: solid 1px gray;
     }
 }
+#zero.sensor {
+    border-color: $sensor1-highlight;
+}
+#one.sensor {
+    border-color: $sensor2-highlight;
+}
+#two.sensor {
+    border-color: $sensor3-highlight;
+}
+#three.sensor {
+    border-color: $sensor3-highlight;
+}
+
 .sensor-container {
     display:flex;
     height: 100px;
     margin: 2rem 0;
+    padding: 1rem;
 
     min-width: 300px;
+    background: $container-background;
 
     .audio-error {
-        color: red;
+        color: $error-color;
     }
 
     .sensor {
-      display: block;
-      position: relative;
-      flex: 1;
-      min-width: 300px;
-      background: white;
-      height: 2rem;
-      margin: 1rem 0;
-      box-shadow: 0 0 2px 2px $light-shadow inset;
+        display: block;
+        position: relative;
+        flex: 1;
+        align-self: center;
 
-      transition: background-color 0.5s ease, height 0.5s ease, transform 0.5s ease;
+        min-width: 300px;
+        background: white;
+        height: 2rem;
+        margin: 1rem 0;
+
+        border: 1px solid;
+        border-radius: 0.5rem;
+        box-shadow: 0 0 2px 2px $light-shadow inset;
+        transition: background-color 0.5s ease, height 0.5s ease, transform 0.5s ease;
 
         &:hover {
             height: 4rem;
@@ -44,7 +72,7 @@ $light-shadow: grey;
         .bar {
             pointer-events: none;
             position: absolute;
-            background: blue;
+            background: $sensor-bar;
             height: 2.5rem;
             border-radius: 3px;
             width: 0.5rem;
