@@ -8,9 +8,9 @@ import SensorControls from 'components/Controls/SensorControls';
 const audioPath = '/audio';
 
 const SensorContainer = props => <div className="sensor-container">{props.children}</div>;
-const MessageBox = props => <div className="message-box">{props.message}</div>;
+const MessageBox = props => <div id="message-box">{props.message}</div>;
 const AudioError = props => <span className="audio-error" >
-        {(props.show ? "Error: Audio not loaded" : "")}
+        {props.show ? "Error: Audio not loaded" : ""}
     </span>;
 
 

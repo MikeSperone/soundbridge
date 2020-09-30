@@ -1,14 +1,19 @@
 import { h, Component, Fragment } from 'preact';
 import Socket from 'context/Socket';
-import { Zero, One, Two, Three } from 'components/Sensors';
 import XYPad from 'components/XYPad';
 import Button from 'components/Controls/Button';
 import SelectSetting from 'components/Controls/SelectSetting';
 import StatusBox from 'components/Messages/StatusBox';
+import Sensors from 'components/Sensors/Sensors';
 
 import getSettings from './settings';
 import styles from 'styles/bridge.scss';
 
+const StartButton = props => (
+    <button className='start' onClick={props.handleAudioOn}>
+        <h2>{props.ioReady ? 'Start' : 'Not Ready'}</h2>
+    </button>
+);
 
 class Soundbridge extends Component {
 
@@ -109,60 +114,20 @@ class Soundbridge extends Component {
                     />
                 }
 
+                {this.state.settings && (
+                    <Sensors
+                        isPerformer={this.state.isPerformer}
+                        settingNumber={this.state.settingNumber}
+                        settings={this.state.settings}
+                    />
+                )}
+
                 <StatusBox
                     solo={this.state.solo}
                     isPerformer={this.state.isPerformer}
                     performers={this.state.performers}
                     audienceMembers={this.state.audienceMembers}
                 />
-
-                { !this.state.started && (
-                    <button className='start' onClick={this.handleAudioOn.bind(this)}>
-                        <h2>{this.state.ioReady ? 'Start' : 'Not Ready'}</h2>
-                    </button>
-                )}
-
-                {this.state.settings && (
-                    <Fragment>
-                        <Zero
-                            active={this.state.isPerformer}
-                            settings={{
-                                index: this.state.settingNumber,
-                                sample: this.state.settings.samples[0],
-                                delay: this.state.settings.delay[0],
-                                grain: this.state.settings.grain
-                            }}
-                        />
-                        <One
-                            active={this.state.isPerformer}
-                            settings={{
-                                index: this.state.settingNumber,
-                                sample: this.state.settings.samples[1],
-                                delay: this.state.settings.delay[1],
-                                grain: this.state.settings.grain
-                            }}
-                        />
-                        <Two
-                            active={this.state.isPerformer}
-                            settings={{
-                                index: this.state.settingNumber,
-                                sample: this.state.settings.samples[2],
-                                delay: this.state.settings.delay[2],
-                                grain: this.state.settings.grain
-                            }}
-                        />
-                        <Three
-                            active={this.state.isPerformer}
-                            settings={{
-                                index: this.state.settingNumber,
-                                sample: this.state.settings.samples[3],
-                                delay: this.state.settings.delay[3],
-                                grain: this.state.settings.grain
-                            }}
-                        />
-                    </Fragment>
-                )}
-
             </div>
         );
     }

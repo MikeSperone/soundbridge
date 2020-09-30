@@ -1,5 +1,6 @@
-.message-box {
-    width: 120px;
+#message-box {
+    flex: 1;
+    min-width: 120px;
     height: 100%;
 
 }

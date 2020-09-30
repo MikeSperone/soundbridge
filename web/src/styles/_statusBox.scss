@@ -1,8 +1,18 @@
 #status-box {
     display: block;
+    flex: 1;
     border: solid black 1px;
+    margin: 2rem;
 }
 
 .status {
-    display: block;
+    display: flex;
+}
+
+.status-name {
+    flex: 1;
+}
+
+.status-value {
+    flex: 2;
 }

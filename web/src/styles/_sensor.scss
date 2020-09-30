@@ -31,6 +31,10 @@ $sensor3-highlight: green;
     border-color: $sensor3-highlight;
 }
 
+#sensors {
+    flex: 2;
+}
+
 .sensor-container {
     display:flex;
     height: 100px;
@@ -86,8 +90,9 @@ $sensor3-highlight: green;
     }
 
     .sensor-controls {
-        display: flex;
+        // display: flex;
         background-color: ghostwhite;
+        margin-left: 1rem;
         height: 4rem;
 
         .sensor-menu {
@@ -97,7 +102,6 @@ $sensor3-highlight: green;
             min-width: 2rem;
             text-align: center;
             line-height: 2rem;
-            margin: 1rem 0.5rem;
             background-color: gainsboro;
             border-radius: 2px;
             cursor: pointer;
@@ -106,7 +110,7 @@ $sensor3-highlight: green;
             flex: 1;
             height: 2rem;
             width: 2rem;
-            margin: 1rem 0.5rem;
+            // margin: 1rem 0.5rem;
         }
         .range-slider {
             flex: 1;
