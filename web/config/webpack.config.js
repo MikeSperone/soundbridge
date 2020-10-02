@@ -8,14 +8,23 @@ const devMode = process.env.NODE_ENV !== 'production';
 module.exports = {
     mode: process.env.NODE_ENV,
     entry: {
-        main: './src/index.js',
-        // test: './test/test-index.js',
+        soundbridge: './src/views/soundbridge.js',
+        test: './src/views/test.js',
     },
     node: {
         fs: 'empty',
     },
     plugins: [
-        new HtmlWebpackPlugin({ title: "Soundbridge" }),
+        new HtmlWebpackPlugin({
+            title: "Soundbridge",
+            filename: 'soundbridge.html',
+            chunks: ['soundbridge']
+        }),
+        new HtmlWebpackPlugin({
+            title: "Soundbridge Test Suite",
+            filename: 'test.html',
+            chunks: ['test']
+        }),
         new MiniCssExtractPlugin(),
             // {
             // Options similar to the same options in webpackOptions.output
@@ -79,9 +88,10 @@ module.exports = {
     },
     resolve: {
         alias: {
+            init: path.resolve(__dirname, '../src/init'),
             context: path.resolve(__dirname, '../src/context'),
             components: path.resolve(__dirname, '../src/components'),
-            routes: path.resolve(__dirname, '../src/routes'),
+            containers: path.resolve(__dirname, '../src/containers'),
             synths: path.resolve(__dirname, '../src/synths'),
             styles: path.resolve(__dirname, '../src/styles'),
             react: 'preact/compat',

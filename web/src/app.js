@@ -4,8 +4,9 @@ import Socket from 'context/Socket';
 
 // import Header from './header';
 
-import Soundbridge from './routes/soundbridge';
-import Test from './routes/test';
+import Soundbridge from './containers/soundbridge';
+// import Login from './containers/login';
+// import Lobby from './containers/lobby';
 
 class App extends Component {
     handleRoute = e => this.currentUrl = e.url;
@@ -18,10 +19,7 @@ class App extends Component {
                     </h1>
                     <Link activeClassName="active" href="/test">Test</Link>
                 </nav>
-                <Router onChange={this.handleRoute}>
-                    <Soundbridge path="/" />
-                    <Test path="/test" />
-                </Router>
+                <Soundbridge path="/" />
             </div>
         );
     }

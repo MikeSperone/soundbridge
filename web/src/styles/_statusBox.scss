@@ -7,10 +7,13 @@
 
 .status {
     display: flex;
+    padding: 1rem;
+    border-bottom: 1px solid blue;
 }
 
 .status-name {
     flex: 1;
+    font-weight: bold;
 }
 
 .status-value {
