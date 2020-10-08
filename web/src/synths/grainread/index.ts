@@ -121,8 +121,8 @@ export default class Grainread {
                         //this.envelope.connect(this.panner);
                         this._connectIfPanner([this.panner,this.volume], [this.merge, this.volume]);
                         this.volume.connect(this.context.destination);
-                        this.forwardInTime();
-                        this.phasor();
+                        // this.forwardInTime();
+                        // this.phasor();
                         return resolve({status: "success", message: ""});
                     },
                     e => reject({
@@ -168,6 +168,7 @@ export default class Grainread {
 
     start() {
         if (this.stopped) {
+            this.phasor();
             this.restartAtTime(0);
             this.stopped = false;  // as a backup in case restartAtTime() fails... necessary?
         }
@@ -268,49 +269,44 @@ export default class Grainread {
     }
 
     forwardInTime() {
-        // scope, I think?  this inside the callback should be this out here
         const internalCallback = function() {
-            //return function(this) {
-                this.position = this.position + 0.1;
-                //console.log("moving forward.  pos: ", that.position);
-                window.setTimeout(internalCallback, 100);
-            //}
+            if (this.stopped) return;
+            this.position = this.position + 0.1;
+            window.setTimeout(() => window.requestAnimationFrame(internalCallback), 100);
         }.bind(this);
-        window.setTimeout(internalCallback, 100);
+        window.setTimeout(() => window.requestAnimationFrame(internalCallback), 100);
     }
 
     phasor() {
         let that = this;
 
-        var internalCallback = () => {
+        this.forwardInTime();
+        var internalCallback = () => window.requestAnimationFrame(() => {
+
+            if (this.stopped) return;
 
             let time = ((Math.random() * this.g_read)*2 + 0.1);
             window.setTimeout(internalCallback.bind(this), time * 1000);
 
-            if (this.stopped === false) {
-                // Setting
-                //console.log("grain start position: ", that.position);
-                const position = (this.g_read + this.randomScatter()) * this.duration;
-                this.position = clip(position, { max: this.duration });
+            // Setting
+            const position = (this.g_read + this.randomScatter()) * this.duration;
+            this.position = clip(position, { max: this.duration });
 
-                this.loopLength = ((this.g_read * 29) + 6) * 50;  // based on each sample
-                //console.log("grain length: ", that.loopLength);
-                const pannerValue = (this.spread * 0.4 * Math.random()) - 1;
-                this.panner.pan.setValueAtTime(pannerValue, this.context.currentTime);
+            this.loopLength = ((this.g_read * 29) + 6) * 50;  // based on each sample
+            const pannerValue = (this.spread * 0.4 * Math.random()) - 1;
+            this.panner.pan.setValueAtTime(pannerValue, this.context.currentTime);
 
-                let now = this.context.currentTime;
-                let e = this.envelope.gain;
-                e.cancelScheduledValues(now);
-                e.setValueAtTime(0.0001, now);
+            let now = this.context.currentTime;
+            let e = this.envelope.gain;
+            e.cancelScheduledValues(now);
+            e.setValueAtTime(0.0001, now);
 
-                this.restartAtTime(this.position);
+            this.restartAtTime(this.position);
 
-                e.exponentialRampToValueAtTime(1, now + (time / 2));
-                e.exponentialRampToValueAtTime(0.0001, now + time);
+            e.exponentialRampToValueAtTime(1, now + (time / 2));
+            e.exponentialRampToValueAtTime(0.0001, now + time);
 
-            }
-
-        };
+        });
         //TODO: use AnimationFrame instead
         window.setTimeout(internalCallback.bind(this), 500);
     }
