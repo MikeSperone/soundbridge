@@ -4,13 +4,13 @@ import XYPad from 'components/XYPad';
 import Button from 'components/Controls/Button';
 import SelectSetting from 'components/Controls/SelectSetting';
 import StatusBox from 'components/Messages/StatusBox';
-import Sensors from 'components/Sensors/Sensors';
+import Sensors from 'components/Sensors';
 
 import getSettings from './settings';
 import styles from 'styles/bridge.scss';
 
 const StartButton = props => (
-    <button className='start' onClick={props.handleAudioOn}>
+    <button className='start' onClick={props.begin}>
         <h2>{props.ioReady ? 'Start' : 'Not Ready'}</h2>
     </button>
 );
@@ -35,9 +35,14 @@ class Soundbridge extends Component {
             solo: false,
         };
 
+        this.begin = this.begin.bind(this);
         this.changeSettings = this.changeSettings.bind(this);
         this.soloStart = this.soloStart.bind(this);
         this.startWebsocket = this.startWebsocket.bind(this);
+    }
+
+    begin() {
+        this.setState(() => ({started: true}));
     }
 
     changeSettings(i) {
@@ -100,13 +105,13 @@ class Soundbridge extends Component {
         }
     }
 
-    handleAudioOn() {
-        this.setState(() => ({started: true}));
-    }
-
     render() {
         return (
             <div class="soundbridge">
+                {!this.state.started && (
+                    <StartButton begin={this.begin} />
+                )}
+
                 {this.state.solo &&
                     <SelectSetting
                         value={this.state.settingNumber}
@@ -114,7 +119,7 @@ class Soundbridge extends Component {
                     />
                 }
 
-                {this.state.settings && (
+                {this.state.settings && this.state.started && (
                     <Sensors
                         isPerformer={this.state.isPerformer}
                         settingNumber={this.state.settingNumber}

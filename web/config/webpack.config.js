@@ -10,6 +10,7 @@ module.exports = {
     entry: {
         soundbridge: './src/views/soundbridge.js',
         test: './src/views/test.js',
+        playgrain: './src/synths/playgrain/index.ts'
     },
     node: {
         fs: 'empty',
@@ -18,7 +19,7 @@ module.exports = {
         new HtmlWebpackPlugin({
             title: "Soundbridge",
             filename: 'soundbridge.html',
-            chunks: ['soundbridge']
+            chunks: ['soundbridge', 'playgrain']
         }),
         new HtmlWebpackPlugin({
             title: "Soundbridge Test Suite",
@@ -33,15 +34,9 @@ module.exports = {
             // chunkFilename: devMode ? '[id].css' : '[id].[hash].css',
         // }
         // ),
-        new CopyPlugin([
+        // new CopyPlugin([
             // { from: 'src/js/AudioContextMonkeyPatch.js', to: 'public/js/' },
-            // { from: path.resolve(__dirname, '../views/index.html'), to: path.resolve(__dirname, 'public/index.html') },
-            // { from: 'test/index.html', to: 'public/test.html' },
-            // { from: path.resolve(__dirname, '../views/sensor-zero.html'),  to: path.resolve(__dirname, 'public/sensor-zero.html') },
-            // { from: path.resolve(__dirname, '../views/sensor-one.html'),   to: path.resolve(__dirname, 'public/sensor-one.html') },
-            // { from: path.resolve(__dirname, '../views/sensor-two.html'),   to: path.resolve(__dirname, 'public/sensor-two.html') },
-            // { from: path.resolve(__dirname, '../views/sensor-three.html'), to: path.resolve(__dirname, 'public/sensor-three.html') },
-        ]),
+        // ]),
     ],
     module: {
         rules: [
