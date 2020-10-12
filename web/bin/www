@@ -4,8 +4,12 @@ var app    = require("../app");
 var server = require('http').Server(app);
 var io	   = require('socket.io')(server);
 
-const PORT = '9001';
+var onError = require('./errorLog');
+
+const constants = require('../config/server-config');
+
 const DEBUG = process.env.NODE_ENV === "development";
+const PORT = constants.PORT;
 
 const User = require('./userEvents');
 const users = {
@@ -13,6 +17,7 @@ const users = {
     performer: {},
     audience: {}
 };
+
 /**
 *  Setting Numbers
 */
@@ -89,6 +94,8 @@ io.on('connection', function(socket){
 });
 
 console.log('connecting...');
+server.on('error', onError);
+
 server.listen(Number(PORT), function() {
     console.log('connected to port ' + PORT);
 });

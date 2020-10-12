@@ -9,6 +9,7 @@ module.exports = {
     mode: process.env.NODE_ENV,
     entry: {
         soundbridge: './src/views/soundbridge.js',
+        login: './src/views/login.js',
         test: './src/views/test.js',
         playgrain: './src/synths/playgrain/index.ts'
     },
@@ -20,6 +21,11 @@ module.exports = {
             title: "Soundbridge",
             filename: 'soundbridge.html',
             chunks: ['soundbridge', 'playgrain']
+        }),
+        new HtmlWebpackPlugin({
+            title: "Soundbridge Login",
+            filename: 'login.html',
+            chunks: ['login']
         }),
         new HtmlWebpackPlugin({
             title: "Soundbridge Test Suite",
@@ -61,7 +67,7 @@ module.exports = {
                 }
             },
             {
-                test: /\.scss$/,
+                test: /\.s?css$/,
                 use: [
                     {
                         loader: MiniCssExtractPlugin.loader,

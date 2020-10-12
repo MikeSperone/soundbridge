@@ -129,6 +129,7 @@ class Soundbridge extends Component {
 
                 <StatusBox
                     solo={this.state.solo}
+                    loggedIn={this.state.isLoggedIn}
                     isPerformer={this.state.isPerformer}
                     performers={this.state.performers}
                     audienceMembers={this.state.audienceMembers}

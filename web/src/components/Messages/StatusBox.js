@@ -10,11 +10,16 @@ const Status = (props, children) => (
 );
 
 const StatusBox = props => {
-    const { solo, isPerformer, performers, audienceMembers } = props;
+    const { solo, isLoggedIn, isPerformer, performers, audienceMembers } = props;
+    var statusMessage = `${(isLoggedIn || "not")} logged in`;
+    const roleMessage = ` as a${isPerformer ? " performer" : "n audience member"}.`;
+    if (isLoggedIn) statusMessage += roleMessage;
+            // <Status type='login' display={isLoggedIn ? 'logged in' : 'not logged in'} />
+            // <Status type='role' display={isPerformer ? 'performer' : 'audience'} />
     return (
         <div id='status-box'>
             { solo && <Status type='solo' display="SOLO" /> }
-            <Status type='role' display={isPerformer ? 'performer' : 'audience'} />
+            <Status type='role' display={statusMessage} />
             <Status type='performers' display={performers.join(', ')} />
             <Status type='audience' display={audienceMembers} />
         </div>
