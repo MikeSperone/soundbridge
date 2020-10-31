@@ -14,7 +14,6 @@ module.exports = class User {
     _bind() {
         this.public_info = this.public_info.bind(this);
         this.join = this.join.bind(this)
-        this.exit = this.exit.bind(this)
         this.disconnected = this.disconnected.bind(this);
     }
 
@@ -23,20 +22,13 @@ module.exports = class User {
         log(this.public_info());
     }
 
-    join(userType, currentSetting) {
+    join(userName, userType) {
+        this.name = userName;
         this.type = userType;
-        this.socket.emit('join', { userType: this.type, currentSetting });
-        this.socket.broadcast.emit('newUser', this.public_info());
-    }
-
-    exit() {
-        this.socket.broadcast.emit('user-exit', this.public_info());
-        log('user exited', this.public_info());
     }
 
     disconnected() {
         log('user disconnected', this.public_info());
-        this.exit();
     }
 
     destroy() {
@@ -45,7 +37,7 @@ module.exports = class User {
 
     public_info() {
         return {
-            userType: this.type,
+            type: this.type,
             name: this.name
         };
     }

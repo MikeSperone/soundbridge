@@ -10,8 +10,8 @@ const DEBUG = process.env.NODE_ENV === "development";
 const User = require('./userEvents');
 const users = {
     all: {},
-    performer: {},
-    audience: {}
+    performers: [],
+    audience: []
 };
 /**
 *  Setting Numbers
@@ -27,32 +27,24 @@ var currentSetting = newSetting();
 io.on('connection', function(socket){
 
     const user = new User(socket);
-    user.connected();
-    users.all[user.uuid] = user;
 
     const numberOfUsers = io.engine.clientsCount;
     console.info('users connected: ', numberOfUsers);
 
-    socket.on('user-exit', user.exit);
     socket.on('disconnect', () => {
-        delete(users['all'][user.uuid]);
-        if (user.type && user.uuid && users[user.type][user.uuid]) {
-            console.info('disconnecting user ', user);
-            delete(users[user.type][user.uuid]);
+        if (user.type && user.uuid && users.all[user.uuid]) {
+            console.info('disconnecting user ', user.public_info());
+            delete(users['all'][user.uuid]);
+            // get index of user in array;
+            const index = users[user.type].indexOf(user.uuid);
+            delete(users[user.type][index]);
+            user.disconnected();
+            delete user;
+        } else {
+            console.info('unable to disconnet user', user.public_info());
         }
-        user.disconnected();
     })
 
-    var userType = 'performer';
-
-    console.info(Object.keys(users.performer).length, ' performers');
-    if (Object.keys(users.performer).length >= 4) {
-        userType = 'audience';
-    }
-
-    user.join(userType, currentSetting);
-    users.audience[user.uuid] = user;
-    if (userType === 'audience') return;
 
     function emit(name, data) {
         DEBUG && console.info(name + ": ", data);
@@ -65,25 +57,65 @@ io.on('connection', function(socket){
         currentSetting = newSetting();
         // this socket is the part I'll need to consider.  It doesn't exist
         // above, so :/
-        socket.emit('setting', { currentSetting });
+        emit('setting', { currentSetting });
     }, 60 * 1000 * 30);
 
-    socket.on('data', function(d) {
-        socket.broadcast.emit('data', d);
-    });
-    socket.on('enter', function(d) {
-        socket.broadcast.emit('enter', d);
-    });
-    socket.on('exit', function(d) {
-        socket.broadcast.emit('exit', d);
-    });
+    function setupPerformer() {
+
+        users.performers.push(user.uuid);
+
+        socket.on('data', function(d) {
+            socket.broadcast.emit('data', d);
+        });
+        socket.on('enter', function(d) {
+            socket.broadcast.emit('enter', d);
+        });
+        socket.on('exit', function(d) {
+            socket.broadcast.emit('exit', d);
+        });
+    }
+
     socket.on('login', function(d) {
-        console.log('login', d);
-        socket.broadcast.emit('user.joined', d);
+        console.info('user logging in, ', d);
+        const error = [];
+        const { username, requestsPerformer } = d;
+
+        // Validate user data
+        if (!username || typeof username !== 'string') {
+            console.info('invalid username', username);
+            socket.emit('loggedin', { success: false, error: 'Invalid or missing username.' });
+            return;
+        }
+
+        var userType = (requestsPerformer && Object.keys(users.performers.length < 4)) ?
+            'performer' :
+            'audience';
+
+        user.join(username, userType);
+
+        const public_user_info = user.public_info();
+        user.connected();
+        users.audience[user.uuid] = user;
+        users.all[user.uuid] = public_user_info;
+
+        if (userType === 'performer') setupPerformer();
+        else users.audience.push(user.uuid);
+
+        console.info('User logged in: ', public_user_info);
+        socket.broadcast.emit('user.login', { users });
+
+        socket.emit('loggedin', {
+            success: true,
+            user: public_user_info,
+            users,
+            currentSetting
+        });
+
     });
+
     socket.on('logout', function(d) {
         console.log('logout', d);
-        socket.broadcast.emit('user.left', d);
+        socket.broadcast.emit('user.exited', { users });
     });
 
 });

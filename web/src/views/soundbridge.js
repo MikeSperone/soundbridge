@@ -1,4 +1,4 @@
 import init from 'init';
-import Soundbridge from 'containers/soundbridge';
+import App from '../app';
 
-init(Soundbridge);
+init(App);
