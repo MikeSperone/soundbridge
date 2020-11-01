@@ -2,10 +2,12 @@ import { h, Fragment, Component } from 'preact';
 import { useState } from 'preact/compat';
 import { Router, Link } from 'preact-router';
 import Socket from 'context/Socket';
-
-// import Header from './header';
+import Container from 'react-bootstrap/Container';
+import Col from 'react-bootstrap/Col';
+import Row from 'react-bootstrap/Row';
 
 import StatusBox from 'components/Messages/StatusBox';
+import ChatBox from 'components/Messages/ChatBox';
 import Soundbridge from 'containers/soundbridge';
 import Login from 'containers/login';
 // import Lobby from './containers/lobby';
@@ -18,6 +20,7 @@ class App extends Component {
         this.ws = props.socket;
         this.state = {
             user: {
+                id: 0,
                 isPerformer: false,
                 type: 'audience',
             },
@@ -43,9 +46,10 @@ class App extends Component {
     }
 
     refreshUserList(users) {
-        const performers = users.performer.map(p => users.all[p].name);
-        const audience = users.audience.map(a => users.all[a].name);
+        const performers = users.performer.map(p => decodeURIComponent(users.all[p].name));
+        const audience = users.audience.map(a => decodeURIComponent(users.all[a].name));
         this.setState(() => ({
+            users,
             performers,
             audience
         }));
@@ -56,6 +60,7 @@ class App extends Component {
             this.setState(() => ({ settingNumber: d.currentSetting }));
             this.refreshUserList(d.users);
         });
+
         this.ws.on('loggedin', n => {
             const { currentSetting, user, users } = n;
             if (n.success) {
@@ -64,6 +69,7 @@ class App extends Component {
                     settingNumber: currentSetting,
                     solo: false,
                     user: {
+                        id: user.id,
                         name: user.name,
                         type: user.type,
                         isPerformer: user.type === 'performer',
@@ -111,30 +117,40 @@ class App extends Component {
                     <Link activeClassName="active" href="/login">Login</Link>
                     <Link activeClassName="active" href="/test">Test</Link>
                 </nav>
-                <StatusBox
-                    solo={this.state.solo}
-                    isPerformer={this.state.user.isPerformer}
-                    performers={this.state.performers}
-                    audienceMembers={this.state.audience}
-                />
-                <Router>
-                    {
-                        this.state.loggedIn ?
-                            (<Soundbridge
-                                    path="/"
-                                    settingNumber={this.state.settingNumber}
-                                    socket={this.props.socket}
-                                    solo={this.state.solo} 
-                                    isPerformer={this.state.user.isPerformer}
-                            />) :
-                            <Login
-                                path="/"
-                                onLogin={this.handleLogin}
-                                availablePerformerSlots={this.state.performers.length <= 4}
-                                socket={this.props.socket}
+                <Container>
+                    <Row>
+                        <Col>
+                            <StatusBox
+                                solo={this.state.solo}
+                                isPerformer={this.state.user.isPerformer}
+                                performers={this.state.performers}
                             />
-                    }
-                </Router>
+                        </Col>
+                        {!this.state.solo && this.state.loggedIn && (
+                            <Col>
+                                <ChatBox users={this.state.users} user={this.state.user} />
+                            </Col>
+                        )}
+                    </Row>
+                    <Router>
+                        {
+                            this.state.loggedIn ?
+                                (<Soundbridge
+                                        path="/"
+                                        settingNumber={this.state.settingNumber}
+                                        socket={this.props.socket}
+                                        solo={this.state.solo} 
+                                        isPerformer={this.state.user.isPerformer}
+                                />) :
+                                <Login
+                                    path="/"
+                                    onLogin={this.handleLogin}
+                                    availablePerformerSlots={this.state.performers.length <= 4}
+                                    socket={this.props.socket}
+                                />
+                        }
+                    </Router>
+                </Container>
             </div>
         );
     }

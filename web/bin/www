@@ -97,6 +97,8 @@ io.on('connection', function(socket){
             currentSetting
         });
 
+        socket.on('chat', d => io.emit('chat.inbox', d));
+
     });
 
     socket.on('logout', function(d) {

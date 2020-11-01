@@ -37,6 +37,7 @@ module.exports = class User {
 
     public_info() {
         return {
+            id: this.uuid,
             type: this.type,
             name: this.name
         };
