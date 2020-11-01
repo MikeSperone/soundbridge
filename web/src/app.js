@@ -7,7 +7,6 @@ import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 
 import StatusBox from 'components/Messages/StatusBox';
-import ChatBox from 'components/Messages/ChatBox';
 import Soundbridge from 'containers/soundbridge';
 import Login from 'containers/login';
 // import Lobby from './containers/lobby';
@@ -19,6 +18,7 @@ class App extends Component {
         this.props = props;
         this.ws = props.socket;
         this.state = {
+            users: {},
             user: {
                 id: 0,
                 isPerformer: false,
@@ -119,18 +119,14 @@ class App extends Component {
                 </nav>
                 <Container>
                     <Row>
-                        <Col>
                             <StatusBox
                                 solo={this.state.solo}
+                                loggedIn={this.state.loggedIn}
+                                users={this.state.users}
+                                user={this.state.user}
                                 isPerformer={this.state.user.isPerformer}
                                 performers={this.state.performers}
                             />
-                        </Col>
-                        {!this.state.solo && this.state.loggedIn && (
-                            <Col>
-                                <ChatBox users={this.state.users} user={this.state.user} />
-                            </Col>
-                        )}
                     </Row>
                     <Router>
                         {

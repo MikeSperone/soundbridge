@@ -2,17 +2,17 @@ import { h, Component } from 'preact';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 
-const Hint = (props, children) => (
+const Hint = (props) => (
     <OverlayTrigger
         key={props.id}
-        placement={props.placement}
+        placement={props.placement || "bottom"}
         overlay={
-            <Tooltip id={`tooltip-${id}`}>
+            <Tooltip id={`tooltip-${props.id}`}>
                 {props.hint}
             </Tooltip>
         }
     >
-        {children}
+        {props.children}
     </OverlayTrigger>
 );
 

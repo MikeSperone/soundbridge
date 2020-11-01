@@ -61,22 +61,13 @@ class ChatBox extends Component{
     }
 
     render() {
-        return <Accordion id='chat-box'>
-            <Card>
-                <Accordion.Toggle as={Card.Header} eventKey="chat">
-                    Chat Box
-                </Accordion.Toggle>
-                <Accordion.Collapse eventKey="chat">
-                    <Form onSubmit={this.handleMessageSend}>
+        return <Form onSubmit={this.handleMessageSend}>
                         <ChatText allUsers={this.props.users.all} conversation={this.state.conversation} />
                         <Form.Row controlId="exampleForm.ControlTextarea1">
                             <Form.Control value={this.state.textbox} name="message" type="text" placeholder="send a message"/>
                             <Button variant="primary" type="submit">Send</Button>
                         </Form.Row>
                     </Form>
-                </Accordion.Collapse>
-            </Card>
-        </Accordion>;
     }
 }
 
