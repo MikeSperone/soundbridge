@@ -38,13 +38,11 @@ class App extends Component {
 
     handleRoute(e) { this.currentUrl = e.url; }
     handleLogin({username, requestsPerformer}) {
-        console.info('hello username: ', username);
+        window.globalAudioContext = new window.AudioContext();
         this.ws.emit('login', { username, requestsPerformer });
     }
 
     refreshUserList(users) {
-        console.info('users: ', users);
-        console.info('users.all', users.all);
         const performers = users.performer.map(p => users.all[p].name);
         const audience = users.audience.map(a => users.all[a].name);
         this.setState(() => ({
@@ -59,7 +57,6 @@ class App extends Component {
             this.refreshUserList(d.users);
         });
         this.ws.on('loggedin', n => {
-            console.info('joined: ', n);
             const { currentSetting, user, users } = n;
             if (n.success) {
                 this.setState(() => ({
@@ -83,7 +80,6 @@ class App extends Component {
         });
 
         this.ws.on('user.exited', n => {
-            console.info('user gone');
             this.refreshUserList(n.users)
         });
 

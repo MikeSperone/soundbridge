@@ -42,9 +42,6 @@ class Soundbridge extends Component {
 
 
     componentDidMount() {
-        console.info('globalAudioContext');
-        window.globalAudioContext = new window.AudioContext();
-        console.info('g', window.globalAudioContext);
     }
 
     render() {
