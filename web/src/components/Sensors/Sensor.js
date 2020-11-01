@@ -63,6 +63,7 @@ class Sensor extends Component {
             this.setState(() => ({ showSettings: true }));
         }
 
+        console.info('Sensor component mounted');
         window.addEventListener('resize', () => debounce(this.resize, 500));
         this.resize();
         this.loadSynth();
@@ -86,6 +87,7 @@ class Sensor extends Component {
 
     loadSynth() {
         const audio = `${audioPath}/${this.props.settings.sample}.mp3`;
+        console.info('audio: ', audio);
 
         // Set Synth
         this.synth = new this.props.synth(audio, globalAudioContext);
@@ -95,6 +97,7 @@ class Sensor extends Component {
         try {
             this.synth.loadAudio()
                 .then(() => {
+                    console.info('audio loaded');
                     this.setState(() => ({ audioLoaded: true }));
                     this.props.onLoadAudio(this.synth);
                 });

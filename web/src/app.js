@@ -43,7 +43,9 @@ class App extends Component {
     }
 
     refreshUserList(users) {
-        const performers = users.performers.map(p => users.all[p].name);
+        console.info('users: ', users);
+        console.info('users.all', users.all);
+        const performers = users.performer.map(p => users.all[p].name);
         const audience = users.audience.map(a => users.all[a].name);
         this.setState(() => ({
             performers,
@@ -52,11 +54,16 @@ class App extends Component {
     }
 
     startWebsocket() {
+        this.ws.on('connection', d => {
+            this.setState(() => ({ settingNumber: d.currentSetting }));
+            this.refreshUserList(d.users);
+        });
         this.ws.on('loggedin', n => {
             console.info('joined: ', n);
             const { currentSetting, user, users } = n;
             if (n.success) {
                 this.setState(() => ({
+                    loggedIn: true,
                     settingNumber: currentSetting,
                     solo: false,
                     user: {
@@ -73,11 +80,6 @@ class App extends Component {
 
         this.ws.on('user.login', n => {
             this.refreshUserList(n.users);
-            // this.setState(state => {
-            //     if (n.type === 'performer') state.performers.push(n.name);
-            //     else state.audience.push(n.name);
-            //     return state;
-            // });
         });
 
         this.ws.on('user.exited', n => {
@@ -85,8 +87,17 @@ class App extends Component {
             this.refreshUserList(n.users)
         });
 
+        if (!this.state.solo) {
+            this.ws.on('setting', n => {
+                this.setState({ settingNumber: n.currentSetting});
+            });
+        }
+
         this.ws.on('disconnect', () => {
-            this.ws.emit('user-left', { userType: this.state.user.type, name: 'anonymous' })
+            this.ws.emit('user-left', {
+                userType: this.state.user.type,
+                name: 'anonymous'
+            });
         });
     }
 
@@ -108,21 +119,24 @@ class App extends Component {
                     solo={this.state.solo}
                     isPerformer={this.state.user.isPerformer}
                     performers={this.state.performers}
-                    audienceMembers={this.state.audienceMembers}
+                    audienceMembers={this.state.audience}
                 />
                 <Router>
                     {
                         this.state.loggedIn ?
-                            (<>
-                                <Soundbridge
+                            (<Soundbridge
                                     path="/"
+                                    settingNumber={this.state.settingNumber}
                                     socket={this.props.socket}
                                     solo={this.state.solo} 
                                     isPerformer={this.state.user.isPerformer}
-                                />
-                                <Login path="/login" />
-                            </>) :
-                            <Login path="/" onLogin={this.handleLogin} socket={this.props.socket} />
+                            />) :
+                            <Login
+                                path="/"
+                                onLogin={this.handleLogin}
+                                availablePerformerSlots={this.state.performers.length <= 4}
+                                socket={this.props.socket}
+                            />
                     }
                 </Router>
             </div>

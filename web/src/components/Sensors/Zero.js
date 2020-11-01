@@ -2,14 +2,16 @@ import { h, Component } from 'preact';
 import Sensor from './Sensor';
 import Playgroove from 'synths/playgroove';
 
-export default function Zero (props) {
+export default function Zero(props) {
 
     const name="zero";
     const settings = props.settings;
+    console.info('Zero settings: ', settings);
     var synth = {};
     var synthLoaded = false;
 
     const handleLoadAudio = s => {
+        console.info('audio loaded');
         synth = s;
         synth.delaySwitch(settings.delay);
         synthLoaded = true;

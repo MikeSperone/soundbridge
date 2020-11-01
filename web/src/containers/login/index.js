@@ -15,10 +15,18 @@ export default function Login(props) {
         });
     }
 
+    const availablePerformerSlots = props.availablePerformerSlots;
+
     return <Form onSubmit={handleLogin}>
         <h1>Login</h1>
         <Form.Control name="username" type="text" placeholder="username" />
-        <Form.Check name="performer" type="checkbox" label="performer (if available)" />
+        <Form.Check
+            active={availablePerformerSlots}
+            checked={availablePerformerSlots}
+            name="performer"
+            type="checkbox"
+            label={"performer (" + ( availablePerformerSlots ? "if" : "not") + " available)"}
+        />
         <Button type="submit">Login</Button>
     </Form>
 }

@@ -20,62 +20,55 @@ class Soundbridge extends Component {
         super(props);
         this.ws = props.socket;
 
+        this.begin = this.begin.bind(this);
+
         this.state = {
             audio: false,
             messages: {
                 debug: '',
             },
-            started: false,
-            settings: false,
-            settingNumber: 0,
-            solo: false,
+            started: true,
         };
 
-        this.begin = this.begin.bind(this);
-        this.changeSettings = this.changeSettings.bind(this);
-        this.soloStart = this.soloStart.bind(this);
-        this.listenForSettings = this.listenForSettings.bind(this);
+        console.info('changing settings to ', props.settingNumber);
+        this.settings = getSettings(this.props.settingNumber);
+        console.info('settings: ', this.settings);
+
     }
 
     begin() {
         this.setState(() => ({started: true}));
     }
 
-    changeSettings(i) {
-        console.info('changing settings to ', i);
-        const settings = getSettings(i);
-        this.setState({settings, settingNumber: i});
-    }
 
     componentDidMount() {
+        console.info('globalAudioContext');
         window.globalAudioContext = new window.AudioContext();
-        if (!this.props.solo) {
-            this.ws.on('setting', n => {
-                console.info('new setting: ', n.currentSetting);
-                this.changeSettings(n.currentSetting);
-            });
-        }
+        console.info('g', window.globalAudioContext);
     }
 
     render() {
         return (
             <div class="soundbridge">
                 {!this.state.started && (
-                    <StartButton begin={this.begin} />
+                    <StartButton
+                        begin={this.begin}
+                        ioReady={true}
+                    />
                 )}
 
-                {this.state.solo &&
+                {this.props.solo &&
                     <SelectSetting
-                        value={this.state.settingNumber}
+                        value={this.props.settingNumber}
                         handleChange={this.changeSettings}
                     />
                 }
 
-                {this.state.settings && this.state.started && (
+                {this.settings && this.state.started && (
                     <Sensors
                         isPerformer={this.props.isPerformer}
-                        settingNumber={this.state.settingNumber}
-                        settings={this.state.settings}
+                        settingNumber={this.props.settingNumber}
+                        settings={this.settings}
                     />
                 )}
 
@@ -85,8 +78,3 @@ class Soundbridge extends Component {
 }
 
 export default Soundbridge;
-// export default function SocketedSoundbridge(props) {
-//     return <Socket.Consumer>
-//         {socket => <Soundbridge {...props} socket={socket} /> }
-//     </Socket.Consumer>;
-// };

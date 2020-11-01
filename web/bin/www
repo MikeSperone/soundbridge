@@ -10,7 +10,7 @@ const DEBUG = process.env.NODE_ENV === "development";
 const User = require('./userEvents');
 const users = {
     all: {},
-    performers: [],
+    performer: [],
     audience: []
 };
 /**
@@ -31,21 +31,7 @@ io.on('connection', function(socket){
     const numberOfUsers = io.engine.clientsCount;
     console.info('users connected: ', numberOfUsers);
 
-    socket.on('disconnect', () => {
-        if (user.type && user.uuid && users.all[user.uuid]) {
-            console.info('disconnecting user ', user.public_info());
-            delete(users['all'][user.uuid]);
-            // get index of user in array;
-            const index = users[user.type].indexOf(user.uuid);
-            delete(users[user.type][index]);
-            user.disconnected();
-            delete user;
-        } else {
-            console.info('unable to disconnet user', user.public_info());
-        }
-    })
-
-
+    socket.emit('connection', { users, currentSetting })
     function emit(name, data) {
         DEBUG && console.info(name + ": ", data);
         socket.emit(name, data);
@@ -62,7 +48,7 @@ io.on('connection', function(socket){
 
     function setupPerformer() {
 
-        users.performers.push(user.uuid);
+        users.performer.push(user.uuid);
 
         socket.on('data', function(d) {
             socket.broadcast.emit('data', d);
@@ -87,7 +73,7 @@ io.on('connection', function(socket){
             return;
         }
 
-        var userType = (requestsPerformer && Object.keys(users.performers.length < 4)) ?
+        var userType = (requestsPerformer && Object.keys(users.performer).length < 4) ?
             'performer' :
             'audience';
 
@@ -95,7 +81,7 @@ io.on('connection', function(socket){
 
         const public_user_info = user.public_info();
         user.connected();
-        users.audience[user.uuid] = user;
+        // users.audience[user.uuid] = user;
         users.all[user.uuid] = public_user_info;
 
         if (userType === 'performer') setupPerformer();
@@ -117,6 +103,27 @@ io.on('connection', function(socket){
         console.log('logout', d);
         socket.broadcast.emit('user.exited', { users });
     });
+
+    socket.on('disconnect', () => {
+        console.info('user.type: ', user.type);
+        console.info('user.uuid: ', user.uuid);
+        console.info('users.all', users.all);
+        if (user.type && user.uuid && users.all[user.uuid]) {
+            console.info('disconnecting user ', user.public_info());
+            delete users['all'][user.uuid];
+            // get index of user in array;
+            const index = users[user.type] && users[user.type].indexOf(user.uuid);
+            if (index !== -1) {
+                users[user.type].splice(index, 1);
+                user.disconnected();
+                delete user;
+            }
+            console.info('users, after deleting', users);
+            socket.broadcast.emit('user.exited', { users });
+        } else {
+            console.info('unable to disconnet user', user.public_info());
+        }
+    })
 
 });
 
