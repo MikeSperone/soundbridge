@@ -3,6 +3,7 @@ import { forwardRef  } from 'preact/compat';
 import ChatBox from './ChatBox';
 import Accordion from 'react-bootstrap/Accordion';
 import Card from 'react-bootstrap/Card';
+import Col from 'react-bootstrap/Col';
 import Hint from 'components/Messages/Hint';
 
 const Status = forwardRef((props, ref) => (

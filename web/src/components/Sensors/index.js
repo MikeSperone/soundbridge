@@ -1,4 +1,5 @@
 import { h, Component } from 'preact';
+import Ambient from './Ambient';
 import Zero from './Zero';
 import One from './One';
 import Two from './Two';
@@ -6,6 +7,7 @@ import Three from './Three';
 
 const Sensors = props => (
     <div id="sensors">
+        <Ambient sample={props.settings.samples["a"]} />
         <Zero
             active={props.isPerformer}
             settings={{

@@ -2,7 +2,7 @@
 /**
  * Created by Mike on 8/25/16.
  */
-import Play from './play';
+import Play from 'synths/play';
 
 export default class Ambient extends Play {
 
