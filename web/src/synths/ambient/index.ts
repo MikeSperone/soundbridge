@@ -7,8 +7,8 @@ import Play from 'synths/play';
 export default class Ambient extends Play {
 
     constructor(audio: string, context: AudioContext) {
-        super(audio, context);
-        this.play();
+        super(audio, context, 1.0);
+        this.loadAudio().then(() => this.startSample());
     }
 
 }

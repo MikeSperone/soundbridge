@@ -20,7 +20,7 @@ export default function Login(props) {
     return <Form onSubmit={handleLogin}>
         <h1>Login</h1>
         <Form.Row>
-            <Form.Control name="username" type="text" placeholder="username" />
+            <Form.Control autoFocus name="username" type="text" placeholder="username" />
 
             <Button variant="outline-primary" type="submit" block>Login</Button>
         </Form.Row>

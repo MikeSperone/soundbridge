@@ -1,23 +1,17 @@
 import { h, Component } from 'preact';
-import Ambient from 'synths/ambient';
+import Play from 'synths/play';
 
-export default class AmbientSound extends Component {
-    constructor(props) {
-        super(props);
-    }
-    componentDidMount() {
-        console.info('Ambient Sound loading');
-        console.info('Ambient sound: ', props.sample);
-        if (!window.globalAudioContext) return;
-        if (props.sample !== "") {
-            const ambient = new Ambient(props.sample, globalAudioContext);
-        }
+const audioPath = '/audio';
 
-    }
-
-    render() {
-        return <div>hi</div>;
-    }
+const Ambient = props => {
+    console.info('Ambient Sound loading');
+    const audio = `${audioPath}/${props.sample}.mp3`;
+    console.info('Ambient sound: ', audio);
+    if (!window.globalAudioContext || !props.sample) return;
+    const p = new Play(audio, globalAudioContext, 1.0);
+    console.info('newPlay', p);
+    p.loadAudio().then(() => p.startSample());
+    return true;
 }
 
-export default AmbientSound;
+export default Ambient;
