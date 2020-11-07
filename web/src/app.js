@@ -6,7 +6,7 @@ import Container from 'react-bootstrap/Container';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 
-import StatusBox from 'components/Messages/StatusBox';
+import MessageBox from 'components/Messages';
 import Soundbridge from 'containers/soundbridge';
 import Login from 'containers/login';
 // import Lobby from './containers/lobby';
@@ -119,13 +119,13 @@ class App extends Component {
                 </nav>
                 <Container>
                     <Row>
-                            <StatusBox
-                                solo={this.state.solo}
-                                loggedIn={this.state.loggedIn}
-                                users={this.state.users}
-                                user={this.state.user}
-                                isPerformer={this.state.user.isPerformer}
-                                performers={this.state.performers}
+                        <MessageBox
+                            solo={this.state.solo}
+                            loggedIn={this.state.loggedIn}
+                            users={this.state.users}
+                            user={this.state.user}
+                            isPerformer={this.state.user.isPerformer}
+                            performers={this.state.performers}
                             />
                     </Row>
                     <Router>

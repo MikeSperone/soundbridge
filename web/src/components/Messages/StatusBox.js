@@ -26,19 +26,12 @@ const StatusBox = props => {
                 </Accordion.Toggle>
                 <Accordion.Collapse eventKey="0">
                     <Card.Body>
-                        <Col>
-                            { solo && <Status type='solo' display="SOLO" /> }
-                            <Hint id="role" hint={roleHint}>
-                                <Status type='role' display={isPerformer ? 'performer' : 'audience'} />
-                            </Hint>
-                            <Status type='performers' display={performers.join(', ')} />
-                            <Status type='audience' display={audienceMembers} />
-                        </Col>
-                        <Col>
-                        {!solo && props.loggedIn && (
-                            <ChatBox users={props.users} user={props.user} />
-                        )}
-                        </Col>
+                        { solo && <Status type='solo' display="SOLO" /> }
+                        <Hint id="role" hint={roleHint}>
+                            <Status type='role' display={isPerformer ? 'performer' : 'audience'} />
+                        </Hint>
+                        <Status type='performers' display={performers.join(', ')} />
+                        <Status type='audience' display={audienceMembers} />
                     </Card.Body>
                 </Accordion.Collapse>
             </Card>
