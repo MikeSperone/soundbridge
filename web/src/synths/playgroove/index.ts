@@ -65,10 +65,19 @@ export default class Playgroove {
                         that.src.start(0);
                         resolve("Audio loaded");
                     },
-                    (e: any) => console.log("Error decoding audio data " + e.err)
+                    (e: any) => console.info("Error decoding audio data " + e.err, {
+                        audioFile: that.audio,
+                        audioData
+                    })
                 );
             };
 
+            req.onerror = function() {
+                console.info('Error loading audio data.', {
+                    audioFile: that.audio,
+                    audioData
+                });
+            }
             req.send();
         });
     }
