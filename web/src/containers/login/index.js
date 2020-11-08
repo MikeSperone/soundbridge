@@ -11,7 +11,7 @@ export default function Login(props) {
         const { username, performer } = e.target;
         props.onLogin({
             username: encodeURIComponent(username.value),
-            requestsPerformer: performer.value === 'on'
+            requestsPerformer: performer.checked
         });
     }
 

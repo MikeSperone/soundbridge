@@ -10,7 +10,8 @@ const DEBUG = process.env.NODE_ENV === "development";
 const User = require('./userEvents');
 const users = {
     all: {},
-    performer: [],
+    availablePerformerSlots: 4,
+    performers: [],
     audience: []
 };
 /**
@@ -48,7 +49,8 @@ io.on('connection', function(socket){
 
     function setupPerformer() {
 
-        users.performer.push(user.uuid);
+        users.availablePerformerSlots = users.availablePerformerSlots - 1;
+        users.performers.push(user.uuid);
 
         socket.on('data', function(d) {
             socket.broadcast.emit('data', d);
@@ -73,7 +75,8 @@ io.on('connection', function(socket){
             return;
         }
 
-        var userType = (requestsPerformer && Object.keys(users.performer).length < 4) ?
+        console.info('availablePerformerSlots', users.availablePerformerSlots);
+        var userType = (requestsPerformer && users.availablePerformerSlots > 0) ?
             'performer' :
             'audience';
 

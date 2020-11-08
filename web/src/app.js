@@ -18,7 +18,12 @@ class App extends Component {
         this.props = props;
         this.ws = props.socket;
         this.state = {
-            users: {},
+            availablePerformerSlots: 4,
+            users: {
+                all: [],
+                performers: [],
+                audience: [],
+            },
             user: {
                 id: 0,
                 isPerformer: false,
@@ -26,8 +31,6 @@ class App extends Component {
             },
             settingNumber: Math.floor(Math.random() * 29),
             loggedIn: false,
-            performers: [],
-            audience: [],
         }
         this._bind();
     }
@@ -46,17 +49,15 @@ class App extends Component {
     }
 
     refreshUserList(users) {
-        const performers = users.performer.map(p => decodeURIComponent(users.all[p].name));
-        const audience = users.audience.map(a => decodeURIComponent(users.all[a].name));
-        this.setState(() => ({
-            users,
-            performers,
-            audience
-        }));
+        // const performers = users.performer.map(p => decodeURIComponent(users.all[p].name));
+        // const audience = users.audience.map(a => decodeURIComponent(users.all[a].name));
+        const { availablePerformerSlots, ...restUsersData } = users;
+        this.setState(() => ({ availablePerformerSlots, users: restUsersData }));
     }
 
     startWebsocket() {
         this.ws.on('connection', d => {
+            console.info('connection: ', d);
             this.setState(() => ({ settingNumber: d.currentSetting }));
             this.refreshUserList(d.users);
         });
@@ -119,14 +120,16 @@ class App extends Component {
                 </nav>
                 <Container>
                     <Row>
+                        <Container>
                         <MessageBox
                             solo={this.state.solo}
                             loggedIn={this.state.loggedIn}
                             users={this.state.users}
                             user={this.state.user}
                             isPerformer={this.state.user.isPerformer}
-                            performers={this.state.performers}
-                            />
+                            performers={this.state.users.performers}
+                        />
+                        </Container>
                     </Row>
                     <Router>
                         {
@@ -141,7 +144,7 @@ class App extends Component {
                                 <Login
                                     path="/"
                                     onLogin={this.handleLogin}
-                                    availablePerformerSlots={this.state.performers.length <= 4}
+                                    availablePerformerSlots={this.state.availablePerformerSlots > 0}
                                     socket={this.props.socket}
                                 />
                         }

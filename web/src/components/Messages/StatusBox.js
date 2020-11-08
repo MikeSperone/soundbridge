@@ -1,9 +1,5 @@
-import { h, Component } from 'preact';
+import { h, Component, Fragment } from 'preact';
 import { forwardRef  } from 'preact/compat';
-import ChatBox from './ChatBox';
-import Accordion from 'react-bootstrap/Accordion';
-import Card from 'react-bootstrap/Card';
-import Col from 'react-bootstrap/Col';
 import Hint from 'components/Messages/Hint';
 
 const Status = forwardRef((props, ref) => (
@@ -16,27 +12,17 @@ const Status = forwardRef((props, ref) => (
 ));
 
 const StatusBox = props => {
-    const { solo, isPerformer, performers, audienceMembers } = props;
+    const { solo, isPerformer } = props;
     const roleHint = "You are either a performer or audience member.  Performers have control of the instrument and can start and change the sounds.  Audience members can only listen and enjoy the music.";
-    return (
-        <Accordion id='status-box'>
-            <Card>
-                <Accordion.Toggle as={Card.Header} eventKey="0">
-                    Status Box
-                </Accordion.Toggle>
-                <Accordion.Collapse eventKey="0">
-                    <Card.Body>
-                        { solo && <Status type='solo' display="SOLO" /> }
-                        <Hint id="role" hint={roleHint}>
-                            <Status type='role' display={isPerformer ? 'performer' : 'audience'} />
-                        </Hint>
-                        <Status type='performers' display={performers.join(', ')} />
-                        <Status type='audience' display={audienceMembers} />
-                    </Card.Body>
-                </Accordion.Collapse>
-            </Card>
-        </Accordion>
-    );
+    return <Fragment>
+        { solo && <Status type='solo' display="SOLO" /> }
+        <Hint id="role" hint={roleHint}>
+            <Status
+                type='role'
+                display={isPerformer ? 'performer' : 'audience'}
+            />
+        </Hint>
+    </Fragment>;
 }
 
 export default StatusBox;

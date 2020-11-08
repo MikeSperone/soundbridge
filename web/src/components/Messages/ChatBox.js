@@ -4,15 +4,17 @@ import Accordion from 'react-bootstrap/Accordion';
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import Form from 'react-bootstrap/Form';
+import ListGroup from 'react-bootstrap/ListGroup';
 import Socket from 'context/Socket';
 
 
-const ChatText = props =>  props.conversation.map(line => (
-    <li>
-        <span>{props.allUsers[line.userId].name + ": "}</span>
-        <span id="chat-message">{decodeURIComponent(line.msg)}</span>
-    </li>
-));
+const ChatText = props =>  <ListGroup style={{height:'300px', "max-height":'300px', "overflow-y": 'scroll'}} className="flex-column-reverse">
+    {props.conversation.map(line => <ListGroup.Item>
+            <div className="w-25">{props.allUsers[line.userId].name + ": "}</div>
+            <div id="chat-message" className="w-75">{decodeURIComponent(line.msg)}</div>
+        </ListGroup.Item>
+    ).reverse()}
+</ListGroup>;
 
 class ChatBox extends Component{
 
@@ -41,8 +43,8 @@ class ChatBox extends Component{
 
     componentShouldUpdate() {
         return true;
-
     }
+
     handleMessageSend(e) {
         e.preventDefault();
         const msg = encodeURIComponent(e.target.message.value);
@@ -62,12 +64,12 @@ class ChatBox extends Component{
 
     render() {
         return <Form onSubmit={this.handleMessageSend}>
-                        <ChatText allUsers={this.props.users.all} conversation={this.state.conversation} />
-                        <Form.Row controlId="exampleForm.ControlTextarea1">
-                            <Form.Control value={this.state.textbox} name="message" type="text" placeholder="send a message"/>
-                            <Button variant="primary" type="submit">Send</Button>
-                        </Form.Row>
-                    </Form>
+            <ChatText allUsers={this.props.users.all} conversation={this.state.conversation} />
+            <Form.Row controlId="exampleForm.ControlTextarea1">
+                <Form.Control className="flex-1" value={this.state.textbox} name="message" type="text" placeholder="send a message"/>
+                <Button variant="primary" type="submit">Send</Button>
+            </Form.Row>
+        </Form>;
     }
 }
 
