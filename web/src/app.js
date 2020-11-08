@@ -109,49 +109,47 @@ class App extends Component {
     }
 
     render() {
-        return (
-            <div id="app">
-                <nav className="main-nav">
-                    <h1>
-                        <Link activeClassName="active" href="/">Soundbridge</Link>
-                    </h1>
-                    <Link activeClassName="active" href="/login">Login</Link>
-                    <Link activeClassName="active" href="/test">Test</Link>
-                </nav>
-                <Container>
-                    <Row>
-                        <Container>
-                        <MessageBox
-                            solo={this.state.solo}
-                            loggedIn={this.state.loggedIn}
-                            users={this.state.users}
-                            user={this.state.user}
-                            isPerformer={this.state.user.isPerformer}
-                            performer={this.state.users.performer}
-                        />
-                        </Container>
-                    </Row>
-                    <Router>
-                        {
-                            this.state.loggedIn ?
-                                (<Soundbridge
-                                        path="/"
-                                        settingNumber={this.state.settingNumber}
-                                        socket={this.props.socket}
-                                        solo={this.state.solo} 
-                                        isPerformer={this.state.user.isPerformer}
-                                />) :
-                                <Login
+        return <div id="app">
+            <nav className="main-nav">
+                <h1>
+                    <Link activeClassName="active" href="/">Soundbridge</Link>
+                </h1>
+                <Link activeClassName="active" href="/login">Login</Link>
+                <Link activeClassName="active" href="/test">Test</Link>
+            </nav>
+            <Container fluid>
+                <Row>
+                    <Container>
+                    <MessageBox
+                        solo={this.state.solo}
+                        loggedIn={this.state.loggedIn}
+                        users={this.state.users}
+                        user={this.state.user}
+                        isPerformer={this.state.user.isPerformer}
+                        performer={this.state.users.performer}
+                    />
+                    </Container>
+                </Row>
+                <Router>
+                    {
+                        this.state.loggedIn ?
+                            (<Soundbridge
                                     path="/"
-                                    onLogin={this.handleLogin}
-                                    availablePerformerSlots={this.state.availablePerformerSlots > 0}
+                                    settingNumber={this.state.settingNumber}
                                     socket={this.props.socket}
-                                />
-                        }
-                    </Router>
-                </Container>
-            </div>
-        );
+                                    solo={this.state.solo} 
+                                    isPerformer={this.state.user.isPerformer}
+                            />) :
+                            <Login
+                                path="/"
+                                onLogin={this.handleLogin}
+                                availablePerformerSlots={this.state.availablePerformerSlots > 0}
+                                socket={this.props.socket}
+                            />
+                    }
+                </Router>
+            </Container>
+        </div>;
     }
 }
 

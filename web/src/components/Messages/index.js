@@ -6,8 +6,10 @@ import Row from 'react-bootstrap/Container';
 import ChatBox from './ChatBox';
 import PeopleBox from './PeopleBox';
 
+
 const Messages = props => {
     const { solo, isPerformer, audienceMembers, users, user } = props;
+    const style={"height":'300px', "max-height":'300px', "overflow-y": 'scroll'};
     return <Accordion id='status-box'>
         <Card>
             <Accordion.Toggle as={Card.Header} eventKey="0">
@@ -15,10 +17,10 @@ const Messages = props => {
             </Accordion.Toggle>
             <Accordion.Collapse eventKey="0">
                 <Card.Body className="row">
-                    <Col md><PeopleBox users={props.users} {...props} /></Col>
-                    <Col md>
+                    <Col md={4}><PeopleBox style={style} users={props.users} {...props} /></Col>
+                    <Col md={8}>
                         {!solo && props.loggedIn && (
-                            <ChatBox users={props.users} user={props.user} />
+                            <ChatBox style={style} users={props.users} user={props.user} />
                         )}
                     </Col>
                 </Card.Body>

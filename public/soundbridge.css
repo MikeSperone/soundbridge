@@ -176,7 +176,7 @@ input::-moz-focus-inner {
   flex: 2;
 }
 
-html, body {
+html, html > body {
   margin: 0;
   background-color: #eee;
   color: #113;

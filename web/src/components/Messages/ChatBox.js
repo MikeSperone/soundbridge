@@ -3,17 +3,22 @@ import { useState } from 'preact/compat';
 import Accordion from 'react-bootstrap/Accordion';
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
+import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import ListGroup from 'react-bootstrap/ListGroup';
+import Row from 'react-bootstrap/Row';
 import Socket from 'context/Socket';
 
 
-const ChatText = props =>  <ListGroup style={{height:'300px', "max-height":'300px', "overflow-y": 'scroll'}} className="flex-column-reverse">
-    {props.conversation.map(line => <ListGroup.Item>
-            <div className="w-25">{props.allUsers[line.userId].name + ": "}</div>
-            <div id="chat-message" className="w-75">{decodeURIComponent(line.msg)}</div>
-        </ListGroup.Item>
-    ).reverse()}
+const ChatText = props =>  <ListGroup style={props.style} variant="flush" className="flex-column-reverse">
+    {props.conversation.map(line => {
+
+        const name = props.allUsers[line.userId].name;
+        return <Row key={name + "chat"}>
+            <Col xs={3} className="pr-1 border-right">{name + ": "}</Col>
+            <Col xs={9} id="chat-message">{decodeURIComponent(line.msg)}</Col>
+        </Row>
+    }).reverse()}
 </ListGroup>;
 
 class ChatBox extends Component{
@@ -64,9 +69,19 @@ class ChatBox extends Component{
 
     render() {
         return <Form onSubmit={this.handleMessageSend}>
-            <ChatText allUsers={this.props.users.all} conversation={this.state.conversation} />
+            <ChatText
+                style={this.props.style}
+                allUsers={this.props.users.all}
+                conversation={this.state.conversation}
+            />
             <Form.Row controlId="exampleForm.ControlTextarea1">
-                <Form.Control className="flex-1" value={this.state.textbox} name="message" type="text" placeholder="send a message"/>
+                <Form.Control
+                    type="text"
+                    className="flex-1"
+                    name="message"
+                    value={this.state.textbox}
+                    placeholder="send a message"
+                />
                 <Button variant="primary" type="submit">Send</Button>
             </Form.Row>
         </Form>;

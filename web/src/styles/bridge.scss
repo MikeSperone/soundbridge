@@ -9,7 +9,7 @@ $primary-color: #113;
 $secondary-color: #7aa;
 $background-color: #eee;
 
-html, body {
+html, html > body {
   margin: 0;
   background-color: $background-color;
   color: $primary-color;

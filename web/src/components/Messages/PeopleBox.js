@@ -9,7 +9,7 @@ import ListGroup from 'react-bootstrap/ListGroup';
 const People = forwardRef((props, ref) => {
 
     const { users } = props;
-    const User = props => <ListGroup.Item variant={props.variant}>
+    const User = props => <ListGroup.Item key={props.user.name + "people"} variant={props.variant}>
         {props.user.name}
     </ListGroup.Item>;
 
@@ -17,7 +17,7 @@ const People = forwardRef((props, ref) => {
     const Audience = users.audience.map(u => <User variant="" user={users.all[u]} />);
 
     return (
-        <ListGroup ref={ref}>
+        <ListGroup ref={ref} variant="flush">
             <ListGroup.Item className={'status-name'}>{props.type}</ListGroup.Item>
             {Performers}
             {Audience}
@@ -28,13 +28,13 @@ const People = forwardRef((props, ref) => {
 const PeopleBox = props => {
     const { solo, isPerformer, users } = props;
     const roleHint = "You are either a performer or audience member.  Performers have control of the instrument and can start and change the sounds.  Audience members can only listen and enjoy the music.";
-    return <Fragment>
+    return <div style={props.style}>
         { solo && <People type='solo' display="SOLO" /> }
         <Hint id="role" hint={roleHint}>
             <span>{isPerformer ? 'performer' : 'audience'}</span>
         </Hint>
         {!!props.users && <People type='people' users={users} /> }
-    </Fragment>;
+    </div>;
 }
         // <People type='performer' display={performer.join(', ')} />
         // <People type='audience' display={audienceMembers} />
