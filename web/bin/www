@@ -11,7 +11,7 @@ const User = require('./userEvents');
 const users = {
     all: {},
     availablePerformerSlots: 4,
-    performers: [],
+    performer: [],
     audience: []
 };
 /**
@@ -50,7 +50,7 @@ io.on('connection', function(socket){
     function setupPerformer() {
 
         users.availablePerformerSlots = users.availablePerformerSlots - 1;
-        users.performers.push(user.uuid);
+        users.performer.push(user.uuid);
 
         socket.on('data', function(d) {
             socket.broadcast.emit('data', d);
@@ -75,7 +75,6 @@ io.on('connection', function(socket){
             return;
         }
 
-        console.info('availablePerformerSlots', users.availablePerformerSlots);
         var userType = (requestsPerformer && users.availablePerformerSlots > 0) ?
             'performer' :
             'audience';
@@ -90,7 +89,7 @@ io.on('connection', function(socket){
         if (userType === 'performer') setupPerformer();
         else users.audience.push(user.uuid);
 
-        console.info('User logged in: ', public_user_info);
+        console.info('successful login');
         socket.broadcast.emit('user.login', { users });
 
         socket.emit('loggedin', {
@@ -102,6 +101,7 @@ io.on('connection', function(socket){
 
         socket.on('chat', d => io.emit('chat.inbox', d));
 
+        console.info('users: ', users);
     });
 
     socket.on('logout', function(d) {
@@ -110,9 +110,7 @@ io.on('connection', function(socket){
     });
 
     socket.on('disconnect', () => {
-        console.info('user.type: ', user.type);
-        console.info('user.uuid: ', user.uuid);
-        console.info('users.all', users.all);
+        console.info('user left');
         if (user.type && user.uuid && users.all[user.uuid]) {
             console.info('disconnecting user ', user.public_info());
             delete users['all'][user.uuid];
@@ -123,6 +121,7 @@ io.on('connection', function(socket){
                 user.disconnected();
                 delete user;
             }
+            users.availablePerformerSlots += 1;
             console.info('users, after deleting', users);
             socket.broadcast.emit('user.exited', { users });
         } else {

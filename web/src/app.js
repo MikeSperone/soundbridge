@@ -21,7 +21,7 @@ class App extends Component {
             availablePerformerSlots: 4,
             users: {
                 all: [],
-                performers: [],
+                performer: [],
                 audience: [],
             },
             user: {
@@ -49,7 +49,7 @@ class App extends Component {
     }
 
     refreshUserList(users) {
-        // const performers = users.performer.map(p => decodeURIComponent(users.all[p].name));
+        // const performer = users.performer.map(p => decodeURIComponent(users.all[p].name));
         // const audience = users.audience.map(a => decodeURIComponent(users.all[a].name));
         const { availablePerformerSlots, ...restUsersData } = users;
         this.setState(() => ({ availablePerformerSlots, users: restUsersData }));
@@ -127,7 +127,7 @@ class App extends Component {
                             users={this.state.users}
                             user={this.state.user}
                             isPerformer={this.state.user.isPerformer}
-                            performers={this.state.users.performers}
+                            performer={this.state.users.performer}
                         />
                         </Container>
                     </Row>

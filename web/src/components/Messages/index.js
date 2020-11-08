@@ -7,7 +7,7 @@ import ChatBox from './ChatBox';
 import PeopleBox from './PeopleBox';
 
 const Messages = props => {
-    const { solo, isPerformer, performers, audienceMembers, users, user } = props;
+    const { solo, isPerformer, audienceMembers, users, user } = props;
     return <Accordion id='status-box'>
         <Card>
             <Accordion.Toggle as={Card.Header} eventKey="0">

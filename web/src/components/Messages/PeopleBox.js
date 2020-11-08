@@ -13,7 +13,7 @@ const People = forwardRef((props, ref) => {
         {props.user.name}
     </ListGroup.Item>;
 
-    const Performers = users.performers.map(u => <User variant="success" user={users.all[u]} />);
+    const Performers = users.performer.map(u => <User variant="success" user={users.all[u]} />);
     const Audience = users.audience.map(u => <User variant="" user={users.all[u]} />);
 
     return (
@@ -36,7 +36,7 @@ const PeopleBox = props => {
         {!!props.users && <People type='people' users={users} /> }
     </Fragment>;
 }
-        // <People type='performers' display={performers.join(', ')} />
+        // <People type='performer' display={performer.join(', ')} />
         // <People type='audience' display={audienceMembers} />
 
 export default PeopleBox;
