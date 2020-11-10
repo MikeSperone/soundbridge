@@ -28,7 +28,7 @@ class ChatBox extends Component{
         this.props = props;
 
         this.users = props.users;
-        this.user = props.user;
+        this.user = props.users.self;
         console.info('user: ', this.user);
         this.state = {
             conversation: [],

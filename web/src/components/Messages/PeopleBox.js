@@ -26,12 +26,12 @@ const People = forwardRef((props, ref) => {
 });
 
 const PeopleBox = props => {
-    const { solo, isPerformer, users } = props;
+    const { solo, users } = props;
     const roleHint = "You are either a performer or audience member.  Performers have control of the instrument and can start and change the sounds.  Audience members can only listen and enjoy the music.";
     return <div style={props.style}>
         { solo && <People type='solo' display="SOLO" /> }
         <Hint id="role" hint={roleHint}>
-            <span>{isPerformer ? 'performer' : 'audience'}</span>
+            <span>{users.self.isPerformer ? 'performer' : 'audience'}</span>
         </Hint>
         {!!props.users && <People type='people' users={users} /> }
     </div>;

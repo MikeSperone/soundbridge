@@ -9,7 +9,6 @@ import Row from 'react-bootstrap/Row';
 import MessageBox from 'components/Messages';
 import Soundbridge from 'containers/soundbridge';
 import Login from 'containers/login';
-// import Lobby from './containers/lobby';
 
 class App extends Component {
 
@@ -18,16 +17,16 @@ class App extends Component {
         this.props = props;
         this.ws = props.socket;
         this.state = {
-            availablePerformerSlots: 4,
             users: {
+                availablePerformerSlots: 4,
                 all: [],
                 performer: [],
                 audience: [],
-            },
-            user: {
-                id: 0,
-                isPerformer: false,
-                type: 'audience',
+                self: {
+                    id: 0,
+                    isPerformer: false,
+                    type: 'audience',
+                },
             },
             settingNumber: Math.floor(Math.random() * 29),
             loggedIn: false,
@@ -39,7 +38,7 @@ class App extends Component {
         this.handleRoute = this.handleRoute.bind(this);
         this.handleLogin = this.handleLogin.bind(this);
         this.startWebsocket = this.startWebsocket.bind(this);
-        this.refreshUserList = this.refreshUserList.bind(this);
+        this.refreshUsers = this.refreshUsers.bind(this);
     }
 
     handleRoute(e) { this.currentUrl = e.url; }
@@ -48,18 +47,18 @@ class App extends Component {
         this.ws.emit('login', { username, requestsPerformer });
     }
 
-    refreshUserList(users) {
-        // const performer = users.performer.map(p => decodeURIComponent(users.all[p].name));
-        // const audience = users.audience.map(a => decodeURIComponent(users.all[a].name));
-        const { availablePerformerSlots, ...restUsersData } = users;
-        this.setState(() => ({ availablePerformerSlots, users: restUsersData }));
+    refreshUsers({ users }) {
+        this.setState(() => ({ users }));
     }
+
 
     startWebsocket() {
         this.ws.on('connection', d => {
             console.info('connection: ', d);
-            this.setState(() => ({ settingNumber: d.currentSetting }));
-            this.refreshUserList(d.users);
+            this.setState(s => ({
+                settingNumber: d.currentSetting,
+                users: {...s.users, ...d.users }
+            }));
         });
 
         this.ws.on('loggedin', n => {
@@ -69,26 +68,23 @@ class App extends Component {
                     loggedIn: true,
                     settingNumber: currentSetting,
                     solo: false,
-                    user: {
-                        id: user.id,
-                        name: user.name,
-                        type: user.type,
-                        isPerformer: user.type === 'performer',
-                    },
+                    users: {
+                        ...users,
+                        self: {
+                            id: user.id,
+                            name: user.name,
+                            type: user.type,
+                            isPerformer: user.type === 'performer',
+                        },
+                    }
                 }));
-                this.refreshUserList(users);
             } else {
                 this.setState(() => ({solo: true, error: n.error}))
             }
         });
 
-        this.ws.on('user.login', n => {
-            this.refreshUserList(n.users);
-        });
-
-        this.ws.on('user.exited', n => {
-            this.refreshUserList(n.users)
-        });
+        this.ws.on('user.login', this.refreshUsers);
+        this.ws.on('user.exited', this.refreshUsers);
 
         if (!this.state.solo) {
             this.ws.on('setting', n => {
@@ -98,7 +94,7 @@ class App extends Component {
 
         this.ws.on('disconnect', () => {
             this.ws.emit('user-left', {
-                userType: this.state.user.type,
+                userType: this.state.users.self.type,
                 name: 'anonymous'
             });
         });
@@ -114,40 +110,33 @@ class App extends Component {
                 <h1>
                     <Link activeClassName="active" href="/">Soundbridge</Link>
                 </h1>
-                <Link activeClassName="active" href="/login">Login</Link>
-                <Link activeClassName="active" href="/test">Test</Link>
+                <div>{this.state.users.self.isPerformer ?
+                    'Performer' :
+                    'Audience Member'
+                }</div>
             </nav>
             <Container fluid>
-                <Row>
-                    <Container>
-                    <MessageBox
-                        solo={this.state.solo}
-                        loggedIn={this.state.loggedIn}
-                        users={this.state.users}
-                        user={this.state.user}
-                        isPerformer={this.state.user.isPerformer}
-                        performer={this.state.users.performer}
-                    />
-                    </Container>
-                </Row>
-                <Router>
-                    {
-                        this.state.loggedIn ?
-                            (<Soundbridge
-                                    path="/"
-                                    settingNumber={this.state.settingNumber}
-                                    socket={this.props.socket}
-                                    solo={this.state.solo} 
-                                    isPerformer={this.state.user.isPerformer}
-                            />) :
-                            <Login
+                <MessageBox
+                    solo={this.state.solo}
+                    loggedIn={this.state.loggedIn}
+                    users={this.state.users}
+                />
+                {
+                    this.state.loggedIn ?
+                        (<Soundbridge
                                 path="/"
-                                onLogin={this.handleLogin}
-                                availablePerformerSlots={this.state.availablePerformerSlots > 0}
+                                settingNumber={this.state.settingNumber}
                                 socket={this.props.socket}
-                            />
-                    }
-                </Router>
+                                solo={this.state.solo} 
+                                isPerformer={this.state.users.self.isPerformer}
+                        />) :
+                        <Login
+                            path="/"
+                            onLogin={this.handleLogin}
+                            availablePerformerSlots={this.state.users.availablePerformerSlots > 0}
+                            socket={this.props.socket}
+                        />
+                }
             </Container>
         </div>;
     }
