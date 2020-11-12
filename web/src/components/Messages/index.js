@@ -21,7 +21,7 @@ const Messages = props => {
                     <Col md={4}><PeopleBox style={style} users={props.users} {...props} /></Col>
                     <Col md={8}>
                         {!solo && props.loggedIn && (
-                            <ChatBox style={style} users={props.users} />
+                            <ChatBox style={style} users={props.users} self={props.self} />
                         )}
                     </Col>
                 </Card.Body>

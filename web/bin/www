@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+!/usr/bin/env node
 
 var app    = require("../app");
 var server = require('http').Server(app);
@@ -24,6 +24,11 @@ const newSetting = function() {
 };
 
 var currentSetting = newSetting();
+setInterval(function(){
+    currentSetting = newSetting();
+    // TODO: is io.emit correct?
+    io.emit('setting', { currentSetting });
+}, 60 * 1000 * 30);
 
 io.on('connection', function(socket){
 
@@ -32,20 +37,11 @@ io.on('connection', function(socket){
     const numberOfUsers = io.engine.clientsCount;
     console.info('users connected: ', numberOfUsers);
 
-    socket.emit('connection', { users, currentSetting })
     function emit(name, data) {
         DEBUG && console.info(name + ": ", data);
         socket.emit(name, data);
     }
 
-    //TODO: I guess eventually, this should go outside of this function.
-    // BUT, also it should go per "room", not overall - right?
-    setInterval(function(){
-        currentSetting = newSetting();
-        // this socket is the part I'll need to consider.  It doesn't exist
-        // above, so :/
-        emit('setting', { currentSetting });
-    }, 60 * 1000 * 30);
 
     function setupPerformer() {
 
@@ -63,10 +59,11 @@ io.on('connection', function(socket){
         });
     }
 
+    socket.emit('connected', { users, currentSetting })
     socket.on('login', function(d) {
         console.info('user logging in, ', d);
         const error = [];
-        const { username, requestsPerformer } = d;
+        const { username, requestsPerformer, solo } = d;
 
         // Validate user data
         if (!username || typeof username !== 'string') {
@@ -75,18 +72,20 @@ io.on('connection', function(socket){
             return;
         }
 
-        var userType = (requestsPerformer && users.availablePerformerSlots > 0) ?
+        var userType = (solo || (requestsPerformer && users.availablePerformerSlots > 0)) ?
             'performer' :
             'audience';
 
-        user.join(username, userType);
+        user.join(username, userType, solo);
+
+        user.connected();
 
         const public_user_info = user.public_info();
-        user.connected();
         // users.audience[user.uuid] = user;
         users.all[user.uuid] = public_user_info;
 
-        if (userType === 'performer') setupPerformer();
+
+        if (userType === 'performer' && !solo) setupPerformer();
         else users.audience.push(user.uuid);
 
         console.info('successful login');
@@ -94,6 +93,7 @@ io.on('connection', function(socket){
 
         socket.emit('loggedin', {
             success: true,
+            solo,
             user: public_user_info,
             users,
             currentSetting

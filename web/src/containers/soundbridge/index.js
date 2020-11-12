@@ -9,7 +9,7 @@ class Soundbridge extends Component {
 
     constructor(props) {
         super(props);
-        this.ws = props.socket;
+        this.props = props;
 
         this.settings = getSettings(this.props.settingNumber);
     }
@@ -27,7 +27,7 @@ class Soundbridge extends Component {
 
                 {this.settings && (
                     <Sensors
-                        isPerformer={this.props.isPerformer}
+                        isPerformer={this.props.isPerformer || this.props.solo}
                         settingNumber={this.props.settingNumber}
                         settings={this.settings}
                     />

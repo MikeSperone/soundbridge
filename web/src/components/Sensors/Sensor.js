@@ -21,6 +21,7 @@ class Sensor extends Component {
         this.name = props.name;
         this.active = props.active;
         this.ws = props.socket;
+        console.info('active: ', this.active);
 
         this.width = 0;
 
@@ -181,6 +182,6 @@ class Sensor extends Component {
 
 export default function SocketedSensor(props) {
     return <Socket.Consumer>
-        {socket => <Sensor {...props } socket={socket} />}
+        {({socket}) => <Sensor {...props } socket={socket} />}
     </Socket.Consumer>;
 };

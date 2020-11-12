@@ -1,8 +1,12 @@
 import { createContext } from 'preact';
 
-const ws = (typeof io === "function") ?
-    io() :
-    { solo: true, on: (a,b) => {} };
-const Socket = createContext(ws);
+// const soloSocket = { solo: true, on: () => {}, emit: () => {} };
+
+// const toggleSocket = (x) => x ?
+//     io() :
+//     soloSocket;
+// const initialSocket = toggleSocket(typeof io === "function");
+
+const Socket = createContext(null);
 
 export default Socket;

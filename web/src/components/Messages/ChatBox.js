@@ -28,7 +28,7 @@ class ChatBox extends Component{
         this.props = props;
 
         this.users = props.users;
-        this.user = props.users.self;
+        this.user = props.self;
         console.info('user: ', this.user);
         this.state = {
             conversation: [],
@@ -90,7 +90,7 @@ class ChatBox extends Component{
 
 export default function SocketedChatBox(props) {
     return <Socket.Consumer>
-        {socket => <ChatBox {...props } socket={socket} />}
+        {({socket}) => <ChatBox {...props } socket={socket} />}
     </Socket.Consumer>;
 };
 
