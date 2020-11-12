@@ -2,6 +2,7 @@ import { h, Fragment, Component } from 'preact';
 import { useState } from 'preact/compat';
 import { Router, Link } from 'preact-router';
 import Socket from 'context/Socket';
+import Solo from 'context/Solo';
 import Container from 'react-bootstrap/Container';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
@@ -16,9 +17,9 @@ class App extends Component {
         super(props);
         this.props = props;
         console.info('socket: ', props.socket);
-        this.ws = props.socket.socket;
+        this.ws = props.socket;
+        this.solo = props.solo.solo;
         this.state = {
-            solo: false,
             users: {
                 availablePerformerSlots: 4,
                 all: [],
@@ -40,7 +41,6 @@ class App extends Component {
         this.handleRoute = this.handleRoute.bind(this);
         this.handleLogin = this.handleLogin.bind(this);
         this.refreshUsers = this.refreshUsers.bind(this);
-        this.solo = this.solo.bind(this);
         this.startWebsocket = this.startWebsocket.bind(this);
         this.updateSetting = this.updateSetting.bind(this);
     }
@@ -48,18 +48,12 @@ class App extends Component {
     handleRoute(e) { this.currentUrl = e.url; }
     handleLogin({username, requestsPerformer, solo}) {
         window.globalAudioContext = new window.AudioContext();
-        if (solo) this.solo();
-        else this.ws.emit('login', { username, requestsPerformer, solo });
+        this.props.solo.changeSolo(solo);
+        this.ws.emit('login', { username, requestsPerformer, solo });
     }
 
     refreshUsers({ users }) {
         this.setState(() => ({ users }), () => console.info('refreshUsers, users: ', this.state.users));
-    }
-
-    solo() {
-        // console.info('App calling solo()');
-        this.props.socket.setSolo(true);
-        this.setState(() => ({ solo: true }), () => console.info('solo, users: ', this.state.users));
     }
 
     startWebsocket() {
@@ -73,7 +67,6 @@ class App extends Component {
 
         this.ws.on('loggedin', n => {
             const { currentSetting, user, users, solo } = n;
-            // console.info('loggedIn: ', n);
             if (n.success) {
                 this.setState(() => ({
                     loggedIn: true,
@@ -149,27 +142,24 @@ class App extends Component {
     }
 }
 
-export default function SocketedApp(props) {
-    const soloSocket = { solo: true, on: () => {}, emit: () => {} };
-    const realSocket = () => typeof io === 'function' && io();
+//TODO: this is ugly, I know there must be a nicer way to write this
+export default function SoloedApp(props) {
 
-    const [ socket, setSocket ] = useState(realSocket || soloSocket);
+    const [ solo, setSolo ] = useState(false);
 
-    function setSolo(isSolo) {
-        console.info('setting socket to solo', isSolo);
-        if (isSolo) {
-            setSocket(soloSocket);
-        } else {
-            setSocket(realSocket || soloSocket);
-        }
+    const changeSolo = (isSolo) => {
+        setSolo(isSolo);
+        console.info('isSolo: ', isSolo);
     }
 
-    return <Socket.Provider value={{ socket, setSolo }}>
-        <SocketConsumerApp {...props} />
-    </Socket.Provider>;
+    return <Solo.Provider value={{ solo, changeSolo }}>
+        <SocketedApp {...props} />
+    </Solo.Provider>;
 };
-function SocketConsumerApp(props) {
+function SocketedApp(props) {
     return <Socket.Consumer>
-        {socket => <App {...props} socket={socket} />}
+        {socket => <Solo.Consumer>
+            {solo => <App {...props} socket={socket} solo={solo} />}
+        </Solo.Consumer>}
     </Socket.Consumer>;
 };

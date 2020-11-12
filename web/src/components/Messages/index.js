@@ -9,7 +9,7 @@ import PeopleBox from './PeopleBox';
 
 
 const Messages = props => {
-    const { solo, audienceMembers, users } = props;
+    const { audienceMembers, users } = props;
     const style={"height":'300px', "max-height":'300px', "overflow-y": 'scroll'};
     return <Accordion as={Container} id='status-box'>
         <Card>
@@ -20,7 +20,7 @@ const Messages = props => {
                 <Card.Body className="row">
                     <Col md={4}><PeopleBox style={style} users={props.users} {...props} /></Col>
                     <Col md={8}>
-                        {!solo && props.loggedIn && (
+                        {props.loggedIn && (
                             <ChatBox style={style} users={props.users} self={props.self} />
                         )}
                     </Col>

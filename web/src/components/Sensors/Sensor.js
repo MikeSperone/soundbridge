@@ -1,6 +1,7 @@
 import { h, createRef, Component } from 'preact';
 import debounce from 'lodash.debounce';
 import Socket from 'context/Socket';
+import Solo from 'context/Solo';
 import Button from 'components/Controls/Button';
 import SettingsBox from 'components/Controls/SettingsBox';
 import SensorControls from 'components/Controls/SensorControls';
@@ -21,6 +22,7 @@ class Sensor extends Component {
         this.name = props.name;
         this.active = props.active;
         this.ws = props.socket;
+        this.solo = props.solo;
         console.info('active: ', this.active);
 
         this.width = 0;
@@ -38,9 +40,9 @@ class Sensor extends Component {
         };
 
         this._bind();
-        this.ws.on('data', d =>  (d.name === this.name) && this.handleMotion(d.position));
-        this.ws.on('enter', d => (d.name === this.name) && this.handleEnter());
-        this.ws.on('exit', d =>  (d.name === this.name) && this.handleExit());
+        this.on('data', d =>  (d.name === this.name) && this.handleMotion(d.position));
+        this.on('enter', d => (d.name === this.name) && this.handleEnter());
+        this.on('exit', d =>  (d.name === this.name) && this.handleExit());
     }
 
     ref = createRef();
@@ -56,6 +58,8 @@ class Sensor extends Component {
         this.handleExit = this.handleExit.bind(this);
         this.handleMouseLeave = this.handleMouseLeave.bind(this);
         this.setVolumeScalar = this.setVolumeScalar.bind(this);
+        this.emit = this.emit.bind(this);
+        this.on = this.on.bind(this);
     }
 
     componentDidMount() {
@@ -112,9 +116,10 @@ class Sensor extends Component {
 
     handleMouseEnter(e) {
         console.info('mouseEnter, ws: ', this.ws);
+        console.info('mouseEnter, solo: ', this.solo);
         if (!this.active) return;
         this.handleEnter();
-        this.ws.emit('enter', this.sensorData);
+        this.emit('enter', this.sensorData);
     }
 
     handleMotion(position) {
@@ -131,7 +136,15 @@ class Sensor extends Component {
         // dividing to get 0. - 1. position value, so that the 
         // remote user can scale that to the width of their sensors.
         this.handleMotion(position);
-        this.ws.emit('data', { ...this.sensorData, position });
+        this.emit('data', { ...this.sensorData, position });
+    }
+    on(name, func) {
+        if (this.solo) return;
+        this.ws.on(name, func);
+    }
+    emit(name, data) {
+        if (this.solo) return;
+        this.ws.emit(name, data);
     }
 
     handleExit() {
@@ -142,7 +155,7 @@ class Sensor extends Component {
     handleMouseLeave() {
         if (!this.active) return;
         this.handleExit();
-        this.ws.emit('exit', this.sensorData);
+        this.emit('exit', this.sensorData);
     }
 
     handleMute() {
@@ -183,6 +196,11 @@ class Sensor extends Component {
 
 export default function SocketedSensor(props) {
     return <Socket.Consumer>
-        {({socket}) => <Sensor {...props } socket={socket} />}
+        {socket => <SoloableSensor {...props } socket={socket} />}
     </Socket.Consumer>;
 };
+const SoloableSensor = props => (
+    <Solo.Consumer>
+        {({solo}) => <Sensor { ...props } solo={solo} />}
+    </Solo.Consumer>
+);

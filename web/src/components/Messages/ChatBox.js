@@ -90,7 +90,7 @@ class ChatBox extends Component{
 
 export default function SocketedChatBox(props) {
     return <Socket.Consumer>
-        {({socket}) => <ChatBox {...props } socket={socket} />}
+        {(socket) => <ChatBox {...props } socket={socket} />}
     </Socket.Consumer>;
 };
 
