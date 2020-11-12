@@ -111,6 +111,7 @@ class Sensor extends Component {
     }
 
     handleMouseEnter(e) {
+        console.info('mouseEnter, ws: ', this.ws);
         if (!this.active) return;
         this.handleEnter();
         this.ws.emit('enter', this.sensorData);
