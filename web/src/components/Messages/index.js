@@ -17,9 +17,9 @@ const Messages = props => {
                Messages 
             </Accordion.Toggle>
             <Accordion.Collapse eventKey="0">
-                <Card.Body className="row">
+                <Card.Body className="row mr-1">
                     <Col md={4}><PeopleBox style={style} users={props.users} {...props} /></Col>
-                    <Col md={8}>
+                    <Col className="border" md={8}>
                         {props.loggedIn && (
                             <ChatBox style={style} users={props.users} self={props.self} />
                         )}

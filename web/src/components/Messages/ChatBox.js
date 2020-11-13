@@ -10,9 +10,8 @@ import Row from 'react-bootstrap/Row';
 import Socket from 'context/Socket';
 
 
-const ChatText = props =>  <ListGroup style={props.style} variant="flush" className="flex-column-reverse">
+const ChatText = props =>  <ListGroup className="border" style={props.style} variant="flush" className="flex-column-reverse">
     {props.conversation.map(line => {
-
         const name = props.allUsers[line.userId].name;
         return <Row key={name + "chat"}>
             <Col xs={3} className="pr-1 border-right">{name + ": "}</Col>
@@ -29,7 +28,6 @@ class ChatBox extends Component{
 
         this.users = props.users;
         this.user = props.self;
-        console.info('user: ', this.user);
         this.state = {
             conversation: [],
             textbox: ''
@@ -74,15 +72,15 @@ class ChatBox extends Component{
                 allUsers={this.props.users.all}
                 conversation={this.state.conversation}
             />
-            <Form.Row controlId="exampleForm.ControlTextarea1">
+            <Form.Row className="row" controlId="exampleForm.ControlTextarea1">
                 <Form.Control
                     type="text"
-                    className="flex-1"
+                    className="flex-1 col-10"
                     name="message"
                     value={this.state.textbox}
                     placeholder="send a message"
                 />
-                <Button variant="primary" type="submit">Send</Button>
+                <Button style={{height: 'auto'}} className="col-2" variant="primary" type="submit">Send</Button>
             </Form.Row>
         </Form>;
     }
