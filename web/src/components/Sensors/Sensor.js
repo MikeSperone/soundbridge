@@ -81,7 +81,7 @@ class Sensor extends Component {
     }
 
     componentWillUnmount() {
-        this.synth.destroy();
+        // this.synth.destroy();
         // destroy synth
     }
 

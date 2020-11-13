@@ -1,41 +1,38 @@
 import { h, Component } from 'preact';
+import { useState } from 'preact/hooks';
 import SelectSetting from 'components/Controls/SelectSetting';
 import Sensors from 'components/Sensors';
 
-import getSettings from './settings';
 import styles from 'styles/bridge.scss';
 
-class Soundbridge extends Component {
+const Soundbridge = props => {
 
-    constructor(props) {
-        super(props);
-        this.props = props;
+    const [ settingNumber, setSettingNumber ] = useState(props.settingNumber);
 
-        this.settings = getSettings(this.props.settingNumber);
+    function changeSettings(e) {
+        e.preventDefault();
+        setSettingNumber(Math.floor(Math.random() * 29));
     }
 
-    render() {
-        return (
-            <div class="soundbridge">
+    return (
+        <div class="soundbridge">
 
-                {this.props.solo &&
-                    <SelectSetting
-                        value={this.props.settingNumber}
-                        handleChange={this.changeSettings}
-                    />
-                }
+            {props.solo &&
+                <SelectSetting
+                    value={settingNumber}
+                    handleChange={changeSettings}
+                />
+            }
 
-                {this.settings && (
-                    <Sensors
-                        isPerformer={this.props.isPerformer || this.props.solo}
-                        settingNumber={this.props.settingNumber}
-                        settings={this.settings}
-                    />
-                )}
+            {settingNumber && (
+                <Sensors
+                    isPerformer={props.isPerformer || props.solo}
+                    settingNumber={settingNumber}
+                />
+            )}
 
-            </div>
-        );
-    }
+        </div>
+    );
 }
 
 export default Soundbridge;
