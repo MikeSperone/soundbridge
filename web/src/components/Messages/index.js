@@ -8,6 +8,9 @@ import ChatBox from './ChatBox';
 import PeopleBox from './PeopleBox';
 
 
+/* * * * 
+ * chat box disabled!!!
+ * * * */
 const Messages = props => {
     const { audienceMembers, users } = props;
     const style={"height":'300px', "max-height":'300px', "overflow-y": 'scroll'};
@@ -20,7 +23,7 @@ const Messages = props => {
                 <Card.Body className="row mr-1">
                     <Col md={4}><PeopleBox style={style} users={props.users} {...props} /></Col>
                     <Col className="border" md={8}>
-                        {props.loggedIn && (
+                        {props.loggedIn && false && (
                             <ChatBox style={style} users={props.users} self={props.self} />
                         )}
                     </Col>

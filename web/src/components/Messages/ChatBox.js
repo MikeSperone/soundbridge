@@ -9,6 +9,9 @@ import ListGroup from 'react-bootstrap/ListGroup';
 import Row from 'react-bootstrap/Row';
 import Socket from 'context/Socket';
 
+/* * * * 
+ * chat box disabled in Messages/index.js !!!
+ * * * */
 
 const ChatText = props =>  <ListGroup className="border" style={props.style} variant="flush" className="flex-column-reverse">
     {props.conversation.map(line => {
