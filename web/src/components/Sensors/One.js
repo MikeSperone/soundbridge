@@ -14,7 +14,6 @@ export default function One(props) {
         synthLoaded = true;
     }
 
-    // if (synth.isMuted()) return;
     const handleEnter = () => {
         synthLoaded &&
             (synth.isMuted() || synth.changeVolume(0.7, 1.5));
@@ -30,8 +29,7 @@ export default function One(props) {
         }
     }
 
-    return (
-        <Sensor
+    return <Sensor
             name={name}
             synth={Playgroove}
             active={props.active}
@@ -40,6 +38,5 @@ export default function One(props) {
             onMove={handleMove}
             onExit={handleExit}
             onLoadAudio={handleLoadAudio}
-        />
-    );
+        />;
 }

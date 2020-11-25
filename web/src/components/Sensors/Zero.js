@@ -5,21 +5,18 @@ import Playgroove from 'synths/playgroove';
 export default function Zero(props) {
 
     const name="zero";
-    const settings = props.settings;
-    console.info('Zero settings: ', settings);
     var synth = {};
     var synthLoaded = false;
 
     const handleLoadAudio = s => {
-        console.info('audio loaded');
         synth = s;
-        synth.delaySwitch(settings.delay);
+        synth.delaySwitch(props.settings.delay);
         synthLoaded = true;
     }
 
     const handleEnter = () => {
-        if (synth.isMuted()) return;
-        synth.changeVolume(0.7, 1.5);
+        synthLoaded &&
+            (synth.isMuted() || synth.changeVolume(0.7, 1.5));
     }
 
     const handleExit = () => synth.changeVolume(0, 5.0);
@@ -37,7 +34,7 @@ export default function Zero(props) {
         name={name}
         synth={Playgroove}
         active={props.active}
-        settings={settings}
+        settings={props.settings}
         onEnter={handleEnter}
         onMove={handleMove}
         onExit={handleExit}
