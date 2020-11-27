@@ -1,3 +1,4 @@
+import "preact/debug";
 import { h, Fragment, Component } from 'preact';
 import { useState } from 'preact/compat';
 import { Router, Link } from 'preact-router';
@@ -16,7 +17,6 @@ class App extends Component {
     constructor(props) {
         super(props);
         this.props = props;
-        console.info('socket: ', props.socket);
         this.ws = props.socket;
         this.solo = props.solo.solo;
         this.state = {
@@ -33,13 +33,14 @@ class App extends Component {
             },
             settingNumber: Math.floor(Math.random() * 29),
             loggedIn: false,
-        }
+        };
         this._bind();
     }
 
     _bind() {
         this.handleRoute = this.handleRoute.bind(this);
         this.handleLogin = this.handleLogin.bind(this);
+        this.noConnectionLogin = this.noConnectionLogin.bind(this);
         this.refreshUsers = this.refreshUsers.bind(this);
         this.startWebsocket = this.startWebsocket.bind(this);
         this.updateSetting = this.updateSetting.bind(this);
@@ -49,7 +50,11 @@ class App extends Component {
     handleLogin({username, requestsPerformer, solo}) {
         window.globalAudioContext = new window.AudioContext();
         this.props.solo.changeSolo(solo);
-        this.ws.emit('login', { username, requestsPerformer, solo });
+        if (this.ws.disconnected) {
+            this.noConnectionLogin();
+        } else {
+            this.ws.emit('login', { username, requestsPerformer, solo });
+        }
     }
 
     refreshUsers({ users }) {
@@ -57,15 +62,9 @@ class App extends Component {
     }
 
     startWebsocket() {
-        this.ws.on('connected', d => {
-            console.info('connected');
-            this.setState(s => ({
-                settingNumber: d.currentSetting,
-                users: {...s.users, ...d.users }
-            }), () => console.info('users', this.state.users));
-        });
 
         this.ws.on('loggedin', n => {
+            console.info('loggedin');
             const { currentSetting, user, users, solo } = n;
             if (n.success) {
                 this.setState(() => ({
@@ -90,7 +89,7 @@ class App extends Component {
         this.ws.on('setting', this.updateSetting);
 
         this.ws.on('disconnect', () => {
-            console.info('disconnect');
+            // TODO: I don't think this is necessary
             this.ws.emit('user-left', {
                 userType: this.state.self.type,
                 name: this.state.self.name,
@@ -101,8 +100,28 @@ class App extends Component {
     updateSetting(n) {
         this.setState({ settingNumber: n.currentSetting});
     }
+
+    noConnectionLogin() {
+        this.setState(() => ({
+            loggedIn: true,
+            solo: true,
+            self: {
+                id: 1,
+                name: '--',
+                type: 'performer',
+                isPerformer: true,
+            },
+        }), () => console.info('not logged in, solo'));
+    }
+
     componentDidMount() {
-        this.startWebsocket();
+        this.ws.on('connected', d => {
+            this.startWebsocket();
+            this.setState(s => ({
+                settingNumber: d.currentSetting,
+                users: {...s.users, ...d.users }
+            }), () => console.info('users', this.state.users));
+        });
     }
 
     render() {
@@ -156,6 +175,7 @@ export default function SoloedApp(props) {
         <SocketedApp {...props} />
     </Solo.Provider>;
 };
+
 function SocketedApp(props) {
     return <Socket.Consumer>
         {socket => <Solo.Consumer>

@@ -10,7 +10,7 @@ module.exports = {
     entry: {
         soundbridge: './src/views/soundbridge.js',
         test: './src/views/test.js',
-        playgrain: './src/synths/playgrain/index.ts'
+        // playgrain: './src/synths/playgrain/index.ts'
     },
     node: {
         fs: 'empty',

@@ -25,11 +25,12 @@ export default function Login(props) {
 
     return <Col md={{ span: 6, offset: 3  }}>
         <Form onSubmit={handleLogin}>
-            <h1>Login</h1>
+            <span>Enter your name before joining in:</span>
             <Form.Row>
-                <Form.Control className="m-2" autoFocus name="username" type="text" placeholder="username" />
-
-                <Button className="m-2" variant="outline-primary" type="submit" block>Login</Button>
+                <Form.Control className="m-2" autoFocus name="username" type="text" placeholder="your name" />
+                <Button className="m-2" variant="outline-primary" type="submit" block>
+                    sign in
+                </Button>
             </Form.Row>
             <Form.Check
                 active={props.connection}
@@ -41,7 +42,7 @@ export default function Login(props) {
             />
             <Form.Check
                 disabled={solo}
-                checked={availablePerformerSlots || solo}
+                checked={availablePerformerSlots && !solo}
                 name="performer"
                 type="checkbox"
                 label={"performer (" + ( availablePerformerSlots ? "if" : "not") + " available)"}
