@@ -1,47 +1,41 @@
-import { h, createRef, Component, Fragment } from 'preact';
+import { h, createRef, Fragment } from 'preact';
+import { useState } from 'preact/compat';
 import Slider from 'components/Controls/Slider';
 
-export default class SensorControls extends Component {
+// export default class SensorControls extends Component {
+export default function SensorControls (props) {
 
-    constructor(props) {
-        super(props);
-        this.props = props;
-        this.handleToggle = this.handleToggle.bind(this);
-        this.state = {
-            open: false,
-        };
-    }
+    const [open, setOpen] = useState(false);
+    const [sliderValue, setSliderValue] = useState(1.0);
 
-    handleToggle() {
-        this.setState((s) => {
-            return { open: !s.open }
-        });
-    }
+    const handleToggle = () => setOpen(!open);
+    const handleSliderChange = e => {
+        setSliderValue(e.target.value);
+        props.handleVolume(e.target.value);
+    };
 
-    render() {
-        return (
-            <div className="sensor-controls">
-                <div onClick={this.handleToggle} className="sensor-menu">&#8942;</div>
-                {
-                    this.state.open ? (
-                        <Fragment>
-                            <Slider
-                                mode="absolute"
-                                min={0}
-                                max={1.0}
-                                value={1.0}
-                                onChange={this.props.handleVolume}
-                            />
-                            <button
-                                className={this.props.muted ? "muted" : "mute"}
-                                onClick={this.props.handleMute}
-                            >M</button>
-                        </Fragment>
-                    ) : null
-                }
-            </div>
-        );
+    return (
+        <div className="sensor-controls">
+            <div onClick={handleToggle} className="sensor-menu">&#8942;</div>
+            {
+                open ? (
+                    <Fragment>
+                        <Slider
+                            mode="absolute"
+                            min={0}
+                            max={1.0}
+                            value={sliderValue}
+                            onChange={handleSliderChange}
+                        />
+                        <button
+                            className={props.muted ? "muted" : "mute"}
+                            onClick={props.handleMute}
+                        >M</button>
+                    </Fragment>
+                ) : null
+            }
+        </div>
+    );
 
-    }
 }
 
