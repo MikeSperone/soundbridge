@@ -11,7 +11,14 @@ const Soundbridge = props => {
 
     function changeSettings(e) {
         e.preventDefault();
-        setSettingNumber(Math.floor(Math.random() * 29));
+        // 2, 8, 11 13 use bridgesound1.mp3 which is currently unavailable
+        const settingsToAvoid = [-1, 2, 8, 11, 13];
+        var s = -1;
+        while (settingsToAvoid.includes(s)) {
+            console.info(s, ' - getting new setting');
+            s = Math.floor(Math.random() * 29);
+        }
+        setSettingNumber(s);
     }
 
     return (

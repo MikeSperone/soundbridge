@@ -17,8 +17,14 @@ const users = {
 /**
 *  Setting Numbers
 */
+
 const newSetting = function() {
-    const i = Math.floor(Math.random() * 29);
+    // 2, 8, 11 13 use bridgesound1.mp3 which is currently unavailable
+    const settingsToAvoid = [-1, 2, 8, 11, 13];
+    var i = -1;
+    while (settingsToAvoid.includes(i)) {
+        i = Math.floor(Math.random() * 29);
+    }
     console.info("Setting changed to " + i);
     return i;
 };
