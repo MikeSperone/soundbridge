@@ -3,12 +3,13 @@ const CopyPlugin = require('copy-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const path = require('path');
-const devMode = process.env.NODE_ENV !== 'production';
+const mode = process.env.NODE_ENV;
+const devMode = mode !== 'production';
 
 module.exports = {
-    mode: process.env.NODE_ENV,
+    mode,
     entry: {
-        soundbridge: './src/views/soundbridge.js',
+        index: './src/views/soundbridge.js',
         test: './src/views/test.js',
         // playgrain: './src/synths/playgrain/index.ts'
     },
