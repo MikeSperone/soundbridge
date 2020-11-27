@@ -136,12 +136,14 @@ class App extends Component {
                 }</div>
             </nav>
             <Container fluid>
-                <MessageBox
-                    solo={this.state.solo}
-                    loggedIn={this.state.loggedIn}
-                    users={this.state.users}
-                    self={this.state.self}
-                />
+                {this.ws.connected &&
+                    <MessageBox
+                        solo={this.state.solo}
+                        loggedIn={this.state.loggedIn}
+                        users={this.state.users}
+                        self={this.state.self}
+                    />
+                }
                 {
                     (this.state.loggedIn || this.state.solo) ?
                         (<Soundbridge
