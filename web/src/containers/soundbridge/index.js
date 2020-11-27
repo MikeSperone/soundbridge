@@ -1,6 +1,6 @@
 import { h, Component } from 'preact';
 import { useState } from 'preact/hooks';
-import SelectSetting from 'components/Controls/SelectSetting';
+import SelectSetting from './SelectSetting';
 import Sensors from 'components/Sensors';
 
 import styles from 'styles/bridge.scss';
@@ -18,14 +18,17 @@ const Soundbridge = props => {
         <div class="soundbridge">
 
             {props.solo &&
-                <SelectSetting
-                    value={settingNumber}
-                    handleChange={changeSettings}
-                />
+                <div class="setting-number col-2">
+                    <SelectSetting
+                        value={settingNumber}
+                        handleChange={changeSettings}
+                    />
+                </div>
             }
 
             {settingNumber && (
                 <Sensors
+                    className={props.solo && "col-8"}
                     isPerformer={props.isPerformer || props.solo}
                     settingNumber={settingNumber}
                 />

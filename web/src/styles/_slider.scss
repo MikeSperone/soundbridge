@@ -3,8 +3,10 @@
     // Slider
     .input-range {
         -webkit-appearance: none;
+        display: block;
         height: 100%;
-        width: 100%;
+        width: 1.5rem;
+        margin: 0 auto;
         border-radius: 5px;
         background: #ccc;
         outline: none;

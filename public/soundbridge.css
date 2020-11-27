@@ -44,6 +44,7 @@ nav.main-nav h1 {
   padding: 1rem;
   min-width: 300px;
   background: grey;
+  border-radius: 0.25rem;
 }
 .sensor-container .audio-error {
   color: red;
@@ -84,9 +85,8 @@ nav.main-nav h1 {
   pointer-events: none;
 }
 .sensor-container .sensor-controls {
-  background-color: ghostwhite;
   margin-left: 1rem;
-  height: 4rem;
+  height: 2rem;
 }
 .sensor-container .sensor-controls .sensor-menu {
   flex: 1;
@@ -106,8 +106,8 @@ nav.main-nav h1 {
 }
 .sensor-container .sensor-controls .range-slider {
   flex: 1;
-  margin: 0 0.5rem;
   height: 4rem;
+  background-color: gainsboro;
 }
 .sensor-container .active {
   background: mistyrose;
@@ -137,8 +137,10 @@ button.muted {
 
 .range-slider .input-range {
   -webkit-appearance: none;
+  display: block;
   height: 100%;
-  width: 100%;
+  width: 1.5rem;
+  margin: 0 auto;
   border-radius: 5px;
   background: #ccc;
   outline: none;
@@ -216,6 +218,21 @@ a:active {
 }
 .notification .info {
   background-color: blue;
+}
+
+.setting-number input {
+  cursor: pointer;
+  width: 100%;
+  height: 80px;
+  background-color: #e7e7e7;
+  color: #333333;
+  font-family: arial;
+  font-weight: 500;
+  font-size: 40px;
+  border: none;
+  outline: none;
+  box-sizing: border-box;
+  text-align: center;
 }
 
 .value {

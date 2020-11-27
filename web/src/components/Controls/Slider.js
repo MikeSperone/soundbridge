@@ -5,13 +5,9 @@ export default function Slider(props) {
     const min = props.min || 0;
     const max = props.max || 1;
     const step = props.step || 0.01;
-    const [width, height] = props.size;
 
     return (
-        <div
-            className="range-slider"
-            style={`height: ${height}px; width: ${width}px`}
-        >
+        <div className="range-slider">
             <input
                 className="input-range"
                 orient="vertical"

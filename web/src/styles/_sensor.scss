@@ -43,6 +43,7 @@ $sensor3-highlight: green;
 
     min-width: 300px;
     background: $container-background;
+    border-radius: 0.25rem;
 
     .audio-error {
         color: $error-color;
@@ -90,10 +91,8 @@ $sensor3-highlight: green;
     }
 
     .sensor-controls {
-        // display: flex;
-        background-color: ghostwhite;
         margin-left: 1rem;
-        height: 4rem;
+        height: 2rem;
 
         .sensor-menu {
             flex: 1;
@@ -114,8 +113,8 @@ $sensor3-highlight: green;
         }
         .range-slider {
             flex: 1;
-            margin: 0 0.5rem;
             height: 4rem;
+            background-color: gainsboro;
         }
 
     }

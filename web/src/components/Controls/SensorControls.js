@@ -25,18 +25,17 @@ export default class SensorControls extends Component {
                 {
                     this.state.open ? (
                         <Fragment>
-                            <button
-                                className={this.props.muted ? "muted" : "mute"}
-                                onClick={this.props.handleMute}
-                            >M</button>
                             <Slider
-                                size={[18,64]}
                                 mode="absolute"
                                 min={0}
                                 max={1.0}
                                 value={1.0}
                                 onChange={this.props.handleVolume}
                             />
+                            <button
+                                className={this.props.muted ? "muted" : "mute"}
+                                onClick={this.props.handleMute}
+                            >M</button>
                         </Fragment>
                     ) : null
                 }

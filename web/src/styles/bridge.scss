@@ -59,7 +59,20 @@ a {
 }
 
 .setting-number {
-
+    input {
+        cursor: pointer;
+        width: 100%;
+        height: 80px;
+        background-color: rgb(231, 231, 231);
+        color: rgb(51, 51, 51);
+        font-family: arial;
+        font-weight: 500;
+        font-size: 40px;
+        border: none;
+        outline: none;
+        box-sizing: border-box;
+        text-align: center;
+    }
 }
 
 .value {
