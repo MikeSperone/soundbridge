@@ -5,8 +5,7 @@ import Solo from 'context/Solo';
 import Button from 'components/Controls/Button';
 import SettingsBox from 'components/Controls/SettingsBox';
 import SensorControls from 'components/Controls/SensorControls';
-
-const audioPath = '/audio';
+import audioPath from './audioPath';
 
 const SensorContainer = props => <div className="sensor-container">{props.children}</div>;
 const MessageBox = props => <div id="message-box">{props.message}</div>;

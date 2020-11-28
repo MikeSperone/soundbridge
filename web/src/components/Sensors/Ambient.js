@@ -1,7 +1,6 @@
 import { h, Component } from 'preact';
 import Play from 'synths/play';
-
-const audioPath = '/audio';
+import audioPath from './audioPath';
 
 const Ambient = props => {
     console.info('Ambient Sound loading');

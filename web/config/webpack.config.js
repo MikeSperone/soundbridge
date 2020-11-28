@@ -9,7 +9,7 @@ const devMode = mode !== 'production';
 module.exports = {
     mode,
     entry: {
-        index: './src/views/soundbridge.js',
+        soundbridge: './src/views/soundbridge.js',
         test: './src/views/test.js',
         // playgrain: './src/synths/playgrain/index.ts'
     },
@@ -19,8 +19,8 @@ module.exports = {
     plugins: [
         new HtmlWebpackPlugin({
             title: "Soundbridge",
-            filename: 'soundbridge.html',
-            chunks: ['soundbridge', 'playgrain']
+            filename: 'index.html',
+            chunks: ['soundbridge']
         }),
         new HtmlWebpackPlugin({
             title: "Soundbridge Test Suite",

@@ -2,6 +2,7 @@ import { h, Component } from 'preact';
 import Sensor from './Sensor';
 import Loop from 'synths/loop';
 import Play from 'synths/play';
+import audioPath from './audioPath';
 
 const log = m => console.log('[Three] ', m);
 
@@ -25,7 +26,7 @@ export default function Three(props) {
         synth.spread = settings.grain[2];
         synth.feedback = settings.grain[3];
 
-        holdSynth = new Play(`/audio/hold/${settings.sample}_slow.mp3`, window.globalAudioContext);
+        holdSynth = new Play(`${audioPath}/hold/${settings.sample}_slow.mp3`, window.globalAudioContext);
         holdSynth.loadAudio().then(() => holdSynthReady = true);
     }
 
