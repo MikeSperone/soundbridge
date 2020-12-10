@@ -4,7 +4,7 @@ import Card from 'react-bootstrap/Card';
 import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Container';
-import ChatBox from './ChatBox';
+// import ChatBox from './ChatBox';
 import PeopleBox from './PeopleBox';
 
 
@@ -21,16 +21,22 @@ const Messages = props => {
             </Accordion.Toggle>
             <Accordion.Collapse eventKey="0">
                 <Card.Body className="row mr-1">
-                    <Col md={4}><PeopleBox style={style} users={props.users} {...props} /></Col>
-                    <Col className="border" md={8}>
-                        {props.loggedIn && false && (
-                            <ChatBox style={style} users={props.users} self={props.self} />
-                        )}
+                    <Col md={4}>
+                        <PeopleBox
+                            style={style}
+                            users={props.users}
+                            {...props}
+                        />
                     </Col>
                 </Card.Body>
             </Accordion.Collapse>
         </Card>
     </Accordion>;
 }
+                    // <Col className="border" md={8}>
+                    //     {props.loggedIn && false && (
+                    //         <ChatBox style={style} users={props.users} self={props.self} />
+                    //     )}
+                    // </Col>
 
 export default Messages;

@@ -1,4 +1,5 @@
 import "preact/debug";
+import "./AudioContextMonkeyPatch.js";
 import { h, Fragment, Component } from 'preact';
 import { useState } from 'preact/compat';
 import { Router, Link } from 'preact-router';
@@ -11,6 +12,7 @@ import Row from 'react-bootstrap/Row';
 import MessageBox from 'components/Messages';
 import Soundbridge from 'containers/soundbridge';
 import Login from 'containers/login';
+import About from 'containers/About';
 
 class App extends Component {
 
@@ -18,8 +20,10 @@ class App extends Component {
         super(props);
         this.props = props;
         this.ws = props.socket;
+        this.getSocket = props.connectToSocket;
         this.solo = props.solo.solo;
         this.state = {
+            connected: false,
             users: {
                 availablePerformerSlots: 4,
                 all: [],
@@ -50,11 +54,11 @@ class App extends Component {
     handleLogin({username, requestsPerformer, solo}) {
         window.globalAudioContext = new window.AudioContext();
         this.props.solo.changeSolo(solo);
-        if (this.ws.disconnected) {
-            this.noConnectionLogin();
-        } else {
-            this.ws.emit('login', { username, requestsPerformer, solo });
-        }
+        this.setState(() => ({connected: this.ws.connected}),
+            () => this.ws.emit(
+                'login',
+                { username, requestsPerformer, solo }
+            ));
     }
 
     refreshUsers({ users }) {
@@ -103,7 +107,7 @@ class App extends Component {
 
     noConnectionLogin() {
         this.setState(() => ({
-            loggedIn: true,
+            // loggedIn: true,
             solo: true,
             self: {
                 id: 1,
@@ -115,7 +119,8 @@ class App extends Component {
     }
 
     componentDidMount() {
-        this.ws.on('connected', d => {
+        this.ws.on('connection', d => {
+            console.info('connected');
             this.startWebsocket();
             this.setState(s => ({
                 settingNumber: d.currentSetting,
@@ -136,7 +141,7 @@ class App extends Component {
                 }</div>
             </nav>
             <Container fluid>
-                {this.ws.connected &&
+                {this.state.connected &&
                     <MessageBox
                         solo={this.state.solo}
                         loggedIn={this.state.loggedIn}
@@ -145,18 +150,21 @@ class App extends Component {
                     />
                 }
                 {
-                    (this.state.loggedIn || this.state.solo) ?
+                    (this.state.connected || this.state.solo) ?
                         (<Soundbridge
                                 path="/"
                                 settingNumber={this.state.settingNumber}
                                 solo={this.state.solo} 
                                 isPerformer={this.state.self.isPerformer}
                         />) :
-                        <Login
-                            path="/"
-                            onLogin={this.handleLogin}
-                            availablePerformerSlots={this.state.users.availablePerformerSlots > 0}
-                        />
+                        <Fragment>
+                            <Login
+                                path="/"
+                                onLogin={this.handleLogin}
+                                availablePerformerSlots={this.state.users.availablePerformerSlots > 0}
+                            />
+                            <About />
+                        </Fragment>
                 }
             </Container>
         </div>;
@@ -167,11 +175,7 @@ class App extends Component {
 export default function SoloedApp(props) {
 
     const [ solo, setSolo ] = useState(false);
-
-    const changeSolo = (isSolo) => {
-        setSolo(isSolo);
-        console.info('isSolo: ', isSolo);
-    }
+    const changeSolo = (isSolo) => setSolo(isSolo);
 
     return <Solo.Provider value={{ solo, changeSolo }}>
         <SocketedApp {...props} />
