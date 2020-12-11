@@ -4,7 +4,7 @@
     "description": "John Morton's Soundbridge",
     "scripts": {
         "server": "pm2 start ecosystem.config.js",
-        "build": "NODE_ENV=production webpack --display-error-details --config config/webpack.config.js",
+        "build": "webpack --env.NODE_ENV=production --display-error-details --config config/webpack.config.js",
         "dev": "concurrently \"\"",
         "dev:frontend": "NODE_ENV='development' webpack --watch --display-error-details --config config/webpack.config.js",
         "dev:server": "nodemon ./bin/www",

@@ -2,6 +2,7 @@ import { h, createRef, Component } from 'preact';
 import debounce from 'lodash.debounce';
 import Socket from 'context/Socket';
 import Solo from 'context/Solo';
+// import PerformingState from 'context/PerformingState';
 import Button from 'components/Controls/Button';
 import SettingsBox from 'components/Controls/SettingsBox';
 import SensorControls from 'components/Controls/SensorControls';
@@ -19,12 +20,10 @@ class Sensor extends Component {
         super(props);
         this.props = props;
         this.name = props.name;
-        this.active = props.active;
         this.ws = props.socket;
         this.solo = props.solo;
-        console.info('active: ', this.active);
 
-        this.width = 0;
+        this.width = 1;
 
         const userName = 'user';
         this.sensorData = { name: this.name, source: userName };
@@ -114,9 +113,7 @@ class Sensor extends Component {
     }
 
     handleMouseEnter(e) {
-        console.info('mouseEnter, ws: ', this.ws);
-        console.info('mouseEnter, solo: ', this.solo);
-        if (!this.active) return;
+        if (!this.props.isPerformer) return;
         this.handleEnter();
         this.emit('enter', this.sensorData);
     }
@@ -129,14 +126,15 @@ class Sensor extends Component {
     }
 
     handleMouseMove(e) {
-        if (!this.active) return;
+        if (!this.props.isPerformer) return;
         const value = e.offsetX + 1;
         const position = value / this.width;
-        // dividing to get 0. - 1. position value, so that the 
+        // dividing to get 0. - 1. position value, so that the
         // remote user can scale that to the width of their sensors.
         this.handleMotion(position);
         this.emit('data', { ...this.sensorData, position });
     }
+
     on(name, func) {
         if (this.solo) return;
         this.ws.on(name, func);
@@ -152,7 +150,7 @@ class Sensor extends Component {
     }
 
     handleMouseLeave() {
-        if (!this.active) return;
+        if (!this.props.isPerformer) return;
         this.handleExit();
         this.emit('exit', this.sensorData);
     }
@@ -200,6 +198,12 @@ export default function SocketedSensor(props) {
 };
 const SoloableSensor = props => (
     <Solo.Consumer>
-        {({solo}) => <Sensor { ...props } solo={solo} />}
+        {({solo, isPerformer}) => (
+            <Sensor
+                { ...props }
+                solo={solo}
+                isPerformer={isPerformer}
+            />
+        )}
     </Solo.Consumer>
 );

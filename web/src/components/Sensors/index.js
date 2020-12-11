@@ -14,7 +14,6 @@ const Sensors = props => {
     return (<div id="sensors">
         <Ambient sample={settings.samples["a"]} />
         <Zero
-            active={props.isPerformer}
             settings={{
                 index: props.settingNumber,
                 sample: settings.samples[0],
@@ -23,7 +22,6 @@ const Sensors = props => {
             }}
         />
         <One
-            active={props.isPerformer}
             settings={{
                 index: props.settingNumber,
                 sample: settings.samples[1],
@@ -32,7 +30,6 @@ const Sensors = props => {
             }}
         />
         <Two
-            active={props.isPerformer}
             settings={{
                 index: props.settingNumber,
                 sample: settings.samples[2],
@@ -41,7 +38,6 @@ const Sensors = props => {
             }}
         />
         <Three
-            active={props.isPerformer}
             settings={{
                 index: props.settingNumber,
                 sample: settings.samples[3],

@@ -66,10 +66,16 @@ class App extends Component {
     }
 
     startWebsocket() {
+        this.ws.on('connected', d => {
+            this.setState(s => ({
+                settingNumber: d.currentSetting,
+                users: {...s.users, ...d.users }
+            }), () => console.info('users', this.state.users));
+        });
 
         this.ws.on('loggedin', n => {
-            console.info('loggedin');
             const { currentSetting, user, users, solo } = n;
+            this.props.solo.changePerformerStatus(user.type === 'performer');
             if (n.success) {
                 this.setState(() => ({
                     loggedIn: true,
@@ -119,14 +125,7 @@ class App extends Component {
     }
 
     componentDidMount() {
-        this.ws.on('connection', d => {
-            console.info('connected');
-            this.startWebsocket();
-            this.setState(s => ({
-                settingNumber: d.currentSetting,
-                users: {...s.users, ...d.users }
-            }), () => console.info('users', this.state.users));
-        });
+        this.startWebsocket();
     }
 
     render() {
@@ -175,9 +174,11 @@ class App extends Component {
 export default function SoloedApp(props) {
 
     const [ solo, setSolo ] = useState(false);
-    const changeSolo = (isSolo) => setSolo(isSolo);
+    const [ isPerformer, setIsPerformer ] = useState(false);
+    const changeSolo = isSolo => setSolo(isSolo);
+    const changePerformerStatus = isPerformer => setIsPerformer(isPerformer);
 
-    return <Solo.Provider value={{ solo, changeSolo }}>
+    return <Solo.Provider value={{ solo, changeSolo, isPerformer, changePerformer }}>
         <SocketedApp {...props} />
     </Solo.Provider>;
 };

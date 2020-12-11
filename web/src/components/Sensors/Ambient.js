@@ -8,7 +8,6 @@ const Ambient = props => {
     console.info('Ambient sound: ', audio);
     if (!window.globalAudioContext || !props.sample) return;
     const p = new Play(audio, globalAudioContext, 1.0);
-    console.info('newPlay', p);
     p.loadAudio().then(() => p.startSample());
     return true;
 }

@@ -56,7 +56,6 @@ export default class Two extends Component {
                 <Sensor
                     name={this.name}
                     synth={Playgrain}
-                    active={this.props.active}
                     settings={this.settings}
                     onEnter={this.handleEnter}
                     onMove={this.handleMove}

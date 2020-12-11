@@ -33,7 +33,6 @@ export default function Zero(props) {
     return <Sensor
         name={name}
         synth={Playgroove}
-        active={props.active}
         settings={props.settings}
         onEnter={handleEnter}
         onMove={handleMove}

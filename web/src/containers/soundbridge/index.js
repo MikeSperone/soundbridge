@@ -21,28 +21,23 @@ const Soundbridge = props => {
         setSettingNumber(s);
     }
 
-    return (
-        <div class="soundbridge">
-
-            {props.solo &&
-                <div class="setting-number col-2">
-                    <SelectSetting
-                        value={settingNumber}
-                        handleChange={changeSettings}
-                    />
-                </div>
-            }
-
-            {settingNumber && (
-                <Sensors
-                    className={props.solo && "col-8"}
-                    isPerformer={props.isPerformer || props.solo}
-                    settingNumber={settingNumber}
+    return <div class="soundbridge">
+        {props.solo &&
+            <div class="setting-number col-2">
+                <SelectSetting
+                    value={settingNumber}
+                    handleChange={changeSettings}
                 />
-            )}
+            </div>
+        }
 
-        </div>
-    );
+        <Sensors
+            className={props.solo && "col-8"}
+            isPerformer={props.isPerformer || props.solo}
+            settingNumber={settingNumber}
+        />
+
+    </div>;
 }
 
 export default Soundbridge;
