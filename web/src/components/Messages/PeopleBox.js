@@ -9,9 +9,15 @@ import ListGroup from 'react-bootstrap/ListGroup';
 const People = forwardRef((props, ref) => {
 
     const { users } = props;
-    const User = props => <ListGroup.Item key={props.user.name + "people"} variant={props.variant}>
-        {props.user.name}
-    </ListGroup.Item>;
+    const User = props => {
+        if (props.user) {
+            <ListGroup.Item key={props.user.name + "people"} variant={props.variant}>
+                {props.user.name}
+            </ListGroup.Item>
+        } else {
+            console.warn('User not found.');
+        }
+    }
 
     const Performers = users.performer.map(u => <User variant="success" user={users.all[u]} />);
     const Audience = users.audience.map(u => <User variant="" user={users.all[u]} />);

@@ -52,6 +52,7 @@ class App extends Component {
 
     handleRoute(e) { this.currentUrl = e.url; }
     handleLogin({username, requestsPerformer, solo}) {
+        console.info('handling login');
         window.globalAudioContext = new window.AudioContext();
         this.props.solo.changeSolo(solo);
         this.setState(() => ({connected: this.ws.connected}),
@@ -77,7 +78,12 @@ class App extends Component {
             //TODO: I guess this should be fixed in the server:
             //    instead of this next line, the server should
             //    only emit loggedin to the user who logged in
-            if (this.state.loggedIn) return;
+            if (this.state.loggedIn) {
+                console.info('already logged in');
+                console.info('login info: ', n);
+                return;
+            }
+            console.info('logging in for the 1st time');
             const { currentSetting, user, users, solo } = n;
             this.props.solo.changePerformerStatus(user.type === 'performer');
             if (n.success) {
@@ -98,8 +104,10 @@ class App extends Component {
             }
         });
 
-        this.ws.on('user.login', this.refreshUsers);
-        this.ws.on('user.exited', this.refreshUsers);
+        // TODO: I think for some reason these are triggering a re-render of 
+        // the Sensors? or doing something to their state or in-component data.
+        // this.ws.on('user.login', this.refreshUsers);
+        // this.ws.on('user.exited', this.refreshUsers);
         this.ws.on('setting', this.updateSetting);
 
         this.ws.on('disconnect', () => {
@@ -117,7 +125,7 @@ class App extends Component {
 
     noConnectionLogin() {
         this.setState(() => ({
-            // loggedIn: true,
+            loggedIn: true,
             solo: true,
             self: {
                 id: 1,
