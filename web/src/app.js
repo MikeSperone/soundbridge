@@ -74,6 +74,10 @@ class App extends Component {
         });
 
         this.ws.on('loggedin', n => {
+            //TODO: I guess this should be fixed in the server:
+            //    instead of this next line, the server should
+            //    only emit loggedin to the user who logged in
+            if (this.state.loggedIn) return;
             const { currentSetting, user, users, solo } = n;
             this.props.solo.changePerformerStatus(user.type === 'performer');
             if (n.success) {
@@ -178,7 +182,7 @@ export default function SoloedApp(props) {
     const changeSolo = isSolo => setSolo(isSolo);
     const changePerformerStatus = isPerformer => setIsPerformer(isPerformer);
 
-    return <Solo.Provider value={{ solo, changeSolo, isPerformer, changePerformer }}>
+    return <Solo.Provider value={{ solo, changeSolo, isPerformer, changePerformerStatus }}>
         <SocketedApp {...props} />
     </Solo.Provider>;
 };
