@@ -16,6 +16,9 @@ import About from 'containers/About';
 
 class App extends Component {
 
+    //TODO:  I think the best thing to do would be to step through
+    //       all the events that are triggered and fired.
+    //       Then re-evaluate each event and what it does.
     constructor(props) {
         super(props);
         this.props = props;
@@ -68,6 +71,7 @@ class App extends Component {
 
     startWebsocket() {
         this.ws.on('connected', d => {
+            // TODO: investigate this.  I don't think this event fires
             this.setState(s => ({
                 settingNumber: d.currentSetting,
                 users: {...s.users, ...d.users }
