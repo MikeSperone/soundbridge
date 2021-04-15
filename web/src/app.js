@@ -70,13 +70,6 @@ class App extends Component {
     }
 
     startWebsocket() {
-        this.ws.on('connected', d => {
-            // TODO: investigate this.  I don't think this event fires
-            this.setState(s => ({
-                settingNumber: d.currentSetting,
-                users: {...s.users, ...d.users }
-            }), () => console.info('users', this.state.users));
-        });
 
         this.ws.on('loggedin', n => {
             //TODO: I guess this should be fixed in the server:
@@ -93,15 +86,13 @@ class App extends Component {
             if (n.success) {
                 this.setState(() => ({
                     loggedIn: true,
-                    settingNumber: currentSetting,
                     solo,
                     self: {
                         id: user.id,
                         name: user.name,
                         type: user.type,
                         isPerformer: user.type === 'performer',
-                    },
-                    users
+                    }
                 }), () => console.info('logged in, users: ', this.state.users));
             } else {
                 this.setState(() => ({solo: true, error: n.error}));
@@ -113,14 +104,15 @@ class App extends Component {
         // this.ws.on('user.login', this.refreshUsers);
         // this.ws.on('user.exited', this.refreshUsers);
         this.ws.on('setting', this.updateSetting);
+        this.ws.on('users-change', this.refreshUsers);
 
-        this.ws.on('disconnect', () => {
-            // TODO: I don't think this is necessary
-            this.ws.emit('user-left', {
-                userType: this.state.self.type,
-                name: this.state.self.name,
-            });
-        });
+        // this.ws.on('disconnect', () => {
+        //     // TODO: I don't think this is necessary
+        //     this.ws.emit('user-left', {
+        //         userType: this.state.self.type,
+        //         name: this.state.self.name,
+        //     });
+        // });
     }
 
     updateSetting(n) {
