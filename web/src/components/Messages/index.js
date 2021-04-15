@@ -13,6 +13,7 @@ import PeopleBox from './PeopleBox';
  * * * */
 const Messages = props => {
     const { audienceMembers, users } = props;
+    console.log('users: ', users);
     const style={"height":'300px', "max-height":'300px', "overflow-y": 'scroll'};
     return <Accordion as={Container} id='status-box'>
         <Card>
