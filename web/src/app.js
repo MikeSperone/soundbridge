@@ -170,7 +170,7 @@ class App extends Component {
                             <Login
                                 path="/"
                                 onLogin={this.handleLogin}
-                                availablePerformerSlots={this.state.users.availablePerformerSlots > 0}
+                                availablePerformerSlots={this.state.users.performer.length > 0}
                             />
                             <About />
                         </Fragment>
