@@ -150,6 +150,7 @@ class App extends Component {
             <Container fluid>
                 {this.state.connected &&
                     <MessageBox
+                        key="message-box"
                         solo={this.state.solo}
                         loggedIn={this.state.loggedIn}
                         users={this.state.users}
@@ -160,11 +161,12 @@ class App extends Component {
                     (this.state.connected || this.state.solo) ?
                         (<Soundbridge
                                 path="/"
+                                key="soundbridge"
                                 settingNumber={this.state.settingNumber}
                                 solo={this.state.solo} 
                                 isPerformer={this.state.self.isPerformer}
                         />) :
-                        <Fragment>
+                        <Fragment key="login-section">
                             <Login
                                 path="/"
                                 onLogin={this.handleLogin}

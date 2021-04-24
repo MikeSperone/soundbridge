@@ -1,9 +1,10 @@
 import { createContext } from 'preact';
 import { io } from 'socket.io-client';
 
-const theSocket = io.connect('wss://mikesperone.com/soundbridge', {
-        path: '/soundbridge/sbws/socket.io/'
-    });
+const debug = false;
+const wss = debug ? 'wss://localhost:9002' : 'wss://mikesperone.com/soundbridge';
+const path = '/soundbridge/sbws/socket.io/';
+const theSocket = io.connect(wss, { path });
 
 const Socket = createContext(theSocket);
 
