@@ -1,15 +1,29 @@
 import { h, Component } from 'preact';
-import { useState } from 'preact/hooks';
+import { useMemo, useState } from 'preact/hooks';
 import SelectSetting from './SelectSetting';
 import Sensors from 'components/Sensors';
 
 import styles from 'styles/bridge.scss';
 
-const Soundbridge = props => {
+class Soundbridge extends Component {
 
-    const [ settingNumber, setSettingNumber ] = useState(props.settingNumber);
+    constructor(props) {
+        super(props);
+        this.props = props;
+        this.solo = props.solo;
+        this.isPerformer = props.isPerformer;
 
-    function changeSettings(e) {
+        this.state = {
+            settingNumber: props.settingNumber,
+        }
+        this.changeSettings = this.changeSettings.bind(this);
+    }
+
+    shouldComponentUpdate(prevProps, nextProps) {
+        return prevProps.settingNumber !== nextProps.settingNumber;
+    }
+
+    changeSettings(e) {
         e.preventDefault();
         // 2, 8, 11 13 use bridgesound1.mp3 which is currently unavailable
         const settingsToAvoid = [-1, 2, 8, 11, 13];
@@ -18,26 +32,30 @@ const Soundbridge = props => {
             console.info(s, ' - getting new setting');
             s = Math.floor(Math.random() * 29);
         }
-        setSettingNumber(s);
+        this.setState(
+            () => ({settingNumber: s}),
+            () => console.info('settings changed')
+        );
     }
 
-    return <div class="soundbridge">
-        {props.solo &&
-            <div class="setting-number col-2">
-                <SelectSetting
-                    value={settingNumber}
-                    handleChange={changeSettings}
-                />
-            </div>
-        }
+    render() {
+        return <div class="soundbridge">
+            {this.solo &&
+                <div class="setting-number col-2">
+                    <SelectSetting
+                        value={this.state.settingNumber}
+                        handleChange={this.changeSettings}
+                    />
+                </div>
+            }
 
-        <Sensors
-            className={props.solo && "col-8"}
-            isPerformer={props.isPerformer || props.solo}
-            settingNumber={settingNumber}
-        />
-
-    </div>;
+            <Sensors
+                className={this.solo && "col-8"}
+                isPerformer={this.isPerformer || this.solo}
+                settingNumber={this.state.settingNumber}
+            />
+        </div>;
+    }
 }
 
 export default Soundbridge;
