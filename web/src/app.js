@@ -91,7 +91,7 @@ class App extends Component {
                         id: user.id,
                         name: user.name,
                         type: user.type,
-                        isPerformer: user.type === 'performer',
+                        isPerformer: user.type === 'performer' || user.type === 'solo',
                     }
                 }), () => console.info('logged in, users: ', this.state.users));
             } else {
@@ -170,7 +170,7 @@ class App extends Component {
                             <Login
                                 path="/"
                                 onLogin={this.handleLogin}
-                                availablePerformerSlots={this.state.users.availablePerformerSlots > 0}
+                                availablePerformerSlots={this.state.users.performer.length < 4}
                             />
                             <About />
                         </Fragment>
