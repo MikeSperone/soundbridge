@@ -1,5 +1,7 @@
 import { h, Component, Fragment } from 'preact';
 import { forwardRef  } from 'preact/compat';
+import { useContext } from 'preact/hooks';
+import Solo from 'context/Solo';
 import Hint from 'components/Messages/Hint';
 
 const Status = forwardRef((props, ref) => (
@@ -12,7 +14,8 @@ const Status = forwardRef((props, ref) => (
 ));
 
 const StatusBox = props => {
-    const { solo, isPerformer } = props;
+    const { isPerformer } = props;
+    const solo = useContext(Solo);
     const roleHint = "You are either a performer or audience member.  Performers have control of the instrument and can start and change the sounds.  Audience members can only listen and enjoy the music.";
     return <Fragment>
         { solo && <Status type='solo' display="SOLO" /> }

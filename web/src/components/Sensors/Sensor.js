@@ -113,6 +113,7 @@ class Sensor extends Component {
     }
 
     handleMouseEnter(e) {
+        console.info('isPerformer?', this.props.isPerformer);
         if (!this.props.isPerformer) return;
         this.handleEnter();
         this.emit('enter', this.sensorData);

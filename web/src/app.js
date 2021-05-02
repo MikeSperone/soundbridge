@@ -57,12 +57,18 @@ class App extends Component {
     handleLogin({username, requestsPerformer, solo}) {
         console.info('handling login');
         window.globalAudioContext = new window.AudioContext();
+        console.info('got global audio context: ', window.globalAudioContext);
         this.props.solo.changeSolo(solo);
+        console.info('changed solo to ', solo);
         this.setState(() => ({connected: this.ws.connected}),
-            () => this.ws.emit(
-                'login',
-                { username, requestsPerformer, solo }
-            ));
+            () => {
+                if (!this.ws.connected) {
+                    this.noConnectionLogin();
+                } else {
+                    this.ws.emit('login', { username, requestsPerformer, solo });
+                    console.info('emitted login');
+                }
+            });
     }
 
     refreshUsers({ users }) {
@@ -84,6 +90,7 @@ class App extends Component {
             const { currentSetting, user, users, solo } = n;
             this.props.solo.changePerformerStatus(user.type === 'performer');
             if (n.success) {
+                console.info('logged in and solo set to ', solo);
                 this.setState(() => ({
                     loggedIn: true,
                     solo,
@@ -95,6 +102,7 @@ class App extends Component {
                     }
                 }), () => console.info('logged in, users: ', this.state.users));
             } else {
+                console.info('NOT logged in and solo set to ', true);
                 this.setState(() => ({solo: true, error: n.error}));
             }
         });
@@ -120,6 +128,7 @@ class App extends Component {
     }
 
     noConnectionLogin() {
+        this.props.solo.changePerformerStatus(true);
         this.setState(() => ({
             loggedIn: true,
             solo: true,

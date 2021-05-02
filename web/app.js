@@ -13,9 +13,9 @@ app.get("/test", function(req, res) {
         .sendFile(path.join(build_path, 'test.html'));
 });
 
-app.get('/', function(req, res) {
+app.get('/soundbridge', function(req, res) {
     res.status(200)
-        .sendFile(path.join(build_path, 'soundbridge.html'));
+        .sendFile(path.join(build_path, 'index.html'));
 });
 
 
