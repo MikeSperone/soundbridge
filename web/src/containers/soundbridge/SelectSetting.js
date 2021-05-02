@@ -21,7 +21,7 @@ const RandomSetting = props => {
                 height={props.height}
                 readonly
             />
-            {solo ? (
+            {solo.solo ? (
                 <button className="row btn btn-primary btn-block" onClick={props.handleChange} type="button">
                     change
                 </button>
