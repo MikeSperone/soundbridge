@@ -5,7 +5,6 @@ import clip from '../utils/clip';
 "use strict";
 
 export default class Playgroove {
-    audio: string;
     context: AudioContext;
     src: AudioBufferSourceNode;
     delay: DelayNode;
@@ -14,7 +13,7 @@ export default class Playgroove {
     merge: ChannelMergerNode;
     panL: StereoPannerNode;
 
-    constructor(audio: string, context: AudioContext) {
+    constructor(context: AudioContext) {
 
         this.src = context.createBufferSource();
         this.delay = context.createDelay(1.0);
@@ -27,7 +26,6 @@ export default class Playgroove {
         this.panL.pan.value = -1;
 
         this.merge.connect(this.volume);
-        this.audio = audio;
         this.context = context;
 
         this._bind.call(this);
@@ -42,12 +40,12 @@ export default class Playgroove {
         this.pbRate = this.pbRate.bind(this);
     }
 
-    loadAudio() {
+    loadAudio(audio) {
         return new Promise(resolve => {
             let that = this;
 
             let req = new XMLHttpRequest();
-            req.open('GET', that.audio);
+            req.open('GET', audio);
             req.responseType = 'arraybuffer';
 
             req.onload = function() {
@@ -66,7 +64,7 @@ export default class Playgroove {
                         resolve("Audio loaded");
                     },
                     (e: any) => console.info("Error decoding audio data " + e.err, {
-                        audioFile: that.audio,
+                        audioFile: audio,
                         audioData
                     })
                 );
@@ -74,7 +72,7 @@ export default class Playgroove {
 
             req.onerror = function() {
                 console.info('Error loading audio data.', {
-                    audioFile: that.audio,
+                    audioFile: audio,
                     audioData
                 });
             }

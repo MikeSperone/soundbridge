@@ -6,13 +6,16 @@ import Play from '../play';
 
 export default class Loop {
 
-    audio: string;
     context: AudioContext;
     sensorPos: number;
+    play: Play;
+    startSample: Function;
+    changeVolume: Function;
+    loadAudio: Function;
+    stop: Function;
 
-    constructor(audio: string, context: AudioContext) {
-        this.play = new Play(audio, context);
-        this.audio = this.play.audio;
+    constructor(context: AudioContext) {
+        this.play = new Play(context);
         this.context = this.play.context;
         this.sensorPos = 0;
         this.startSample = this.play.startSample;

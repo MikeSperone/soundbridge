@@ -17,6 +17,10 @@ class Sensors extends Component {
         this.settings = getSettings(props.settingNumber);
     }
 
+    componentDidMount() {
+        console.info('Sensors mounted');
+    }
+
     shouldComponentUpdate(nextProps) {
         const shouldUpdate = (this.props.settingNumber !== nextProps.settingNumber) || nextProps.forceUpdate;
         console.info('previous settingNumber: ', this.props.settingNumber);

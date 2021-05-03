@@ -8,12 +8,16 @@ import Grainread from '../grainread';
 
 export default class Playgrain {
 
+    volume: number;
+    maximumVolume: number;
+    grainArray: Grainread[];
+    numberOfGrains: number;
+
     /**
      * Grain synthesis of an audio file
-     * @param {string} audio - path to audio file
      * @param {AudioContext} context - Web Audio Context
      */
-    constructor(audio: string, context: AudioContext, vol: number = 0) {
+    constructor(context: AudioContext, vol: number = 0) {
 
         this.volume = vol;
         this.maximumVolume = 1.0;
@@ -21,7 +25,7 @@ export default class Playgrain {
         const numberOfGrains = 10;
         let i = 0;
         for(i; i < numberOfGrains; i++) {
-            this.grainArray.push(new Grainread(audio, context, 1));
+            this.grainArray.push(new Grainread(context, 1));
         }
 
         this.setAllValues = this.setAllValues.bind(this);
@@ -38,9 +42,8 @@ export default class Playgrain {
         this.grainArray.forEach(g => g[fnName](...args));
     }
 
-    loadAudio() {
-        let promises = [];
-        this.grainArray.forEach(g => promises.push(g.loadAudio()));
+    loadAudio(audio) {
+        let promises = this.grainArray.map(g => g.loadAudio(audio));
         return Promise.all(promises);
     }
 

@@ -22,10 +22,9 @@ export default class Play {
      * @param {AudioContext} context - Web Audio Context
      * @param {number} vol - (optional) The starting volume.  Defaults to 0
      */
-    constructor(audio: string, context: AudioContext, vol: number = 0) {
+    constructor(context: AudioContext, vol: number = 0) {
 
         console.info('play constructor');
-        this.audio = audio;
         this.context = context;
         this.contextCreationTime = new Date();
         this.startTime = 0;
@@ -53,8 +52,9 @@ export default class Play {
         this.changeVolume = this.changeVolume.bind(this);
     }
 
-    loadAudio() {
+    loadAudio(audio) {
         console.info('Play() loading audio...');
+        this.audio = audio;
         return new Promise((resolve, reject) => {
 
             const handleAudioData = function(buffer) {
@@ -62,8 +62,6 @@ export default class Play {
                 this.buffer = buffer;
                 console.info('this.buffer: ', this.buffer);
                 this.stopped = true;
-                // TODO: this doesn't need to start here, right?
-                // this.startSample();
                 this.audioLoadTimeOffset = (new Date().getTime() - this.contextCreationTime.getTime()) / 1000;
                 resolve(this.buffer);
             }.bind(this);

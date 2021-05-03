@@ -18,7 +18,7 @@ export default function Three(props) {
         position = 0,
         timeout = null;
 
-    const handleLoadAudio = (s) => {
+    const handleLoadAudio = s => {
         log('audio loaded');
         synth = s;
         synth.scatter = settings.grain[0];
@@ -26,8 +26,8 @@ export default function Three(props) {
         synth.spread = settings.grain[2];
         synth.feedback = settings.grain[3];
 
-        holdSynth = new Play(`${audioPath}/hold/${settings.sample}_slow.mp3`, window.globalAudioContext);
-        holdSynth.loadAudio().then(() => holdSynthReady = true);
+        holdSynth = new Play(window.globalAudioContext);
+        holdSynth.loadAudio(`${audioPath}/hold/${settings.sample}_slow.mp3`).then(() => holdSynthReady = true);
     }
 
     const handleEnter = () => clearTimeout(timeout);

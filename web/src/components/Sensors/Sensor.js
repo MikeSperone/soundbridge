@@ -91,12 +91,12 @@ class Sensor extends Component {
         const audio = `${audioPath}/${this.props.settings.sample}.mp3`;
 
         // Set Synth
-        this.synth = new this.props.synth(audio, globalAudioContext);
+        this.synth = new this.props.synth(globalAudioContext);
         this.synth.mute = this.handleMute;
         this.synth.isMuted = () => this.state.isMuted;
 
         try {
-            this.synth.loadAudio()
+            this.synth.loadAudio(audio)
                 .then(() => {
                     this.setState(() => ({ audioLoaded: true }));
                     this.props.onLoadAudio(this.synth);

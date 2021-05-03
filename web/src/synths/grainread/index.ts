@@ -7,7 +7,6 @@ import clip from '../utils/clip';
  *
 */
 export default class Grainread {
-    audio:      string;
     context:    AudioContext;
     g_read:     number;
     g_multiply: number;
@@ -38,7 +37,7 @@ export default class Grainread {
     feedbackB: GainNode; 
     volume:    GainNode;
 
-    constructor(audio: string, context: AudioContext, g_read: number, g_multiply: number = 1, g_fade: number = 1, g_spread: number = 20, g_scatter: number = 28) {
+    constructor(context: AudioContext, g_read: number, g_multiply: number = 1, g_fade: number = 1, g_spread: number = 20, g_scatter: number = 28) {
 
         this.g_read = g_read;
         this.g_multiply = g_multiply;
@@ -52,7 +51,6 @@ export default class Grainread {
 
         this.len = 12;
 
-        this.audio = audio;
         this.context = context;
         this.buffer = null;
         this.duration = 0;
@@ -87,13 +85,13 @@ export default class Grainread {
         this.phasor = this.phasor.bind(this);
     }
 
-    loadAudio() {
+    loadAudio(audio) {
         console.info('grainread loadAudio()');
         return new Promise((resolve, reject) => {
             let that = this;
             let req = new XMLHttpRequest();
 
-            req.open('GET', this.audio);
+            req.open('GET', audio);
             req.responseType = 'arraybuffer';
 
             req.onload = () => {
@@ -222,7 +220,7 @@ export default class Grainread {
     }
 
     toString() {
-        return {"audio":this.audio,"context":this.context,"g_read":this.g_read, "g_speed": this.g_speed, "g_multiply":this.g_multiply, "g_fade": this.g_fade, "g_speedspread": this.g_speedspread, "g_spread": this.g_spread, "g_scatter":this.g_scatter};
+        return {"context":this.context,"g_read":this.g_read, "g_speed": this.g_speed, "g_multiply":this.g_multiply, "g_fade": this.g_fade, "g_speedspread": this.g_speedspread, "g_spread": this.g_spread, "g_scatter":this.g_scatter};
     }
 
     set read(gr) {
