@@ -88,7 +88,8 @@ class App extends Component {
             }
             console.info('logging in for the 1st time');
             const { currentSetting, user, users, solo } = n;
-            this.props.solo.changePerformerStatus(user.type === 'performer');
+            const isPerformer = user.type === 'performer' || user.type === 'solo';
+            this.props.solo.changePerformerStatus(isPerformer);
             if (n.success) {
                 console.info('logged in and solo set to ', solo);
                 this.setState(() => ({
@@ -98,7 +99,7 @@ class App extends Component {
                         id: user.id,
                         name: user.name,
                         type: user.type,
-                        isPerformer: user.type === 'performer' || user.type === 'solo',
+                        isPerformer,
                     }
                 }), () => console.info('logged in, users: ', this.state.users));
             } else {

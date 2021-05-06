@@ -15,6 +15,7 @@ class Sensors extends Component {
         this.props = props;
         this.settingNumber = props.settingNumber;
         this.settings = getSettings(props.settingNumber);
+        this.state = this.settings;
     }
 
     componentDidMount() {
@@ -22,22 +23,24 @@ class Sensors extends Component {
     }
 
     shouldComponentUpdate(nextProps) {
-        const shouldUpdate = (this.props.settingNumber !== nextProps.settingNumber) || nextProps.forceUpdate;
-        console.info('previous settingNumber: ', this.props.settingNumber);
-        console.info('next settingNumber: ', nextProps.settingNumber);
-        console.info('force update: ', nextProps.shouldUpdate);
+        const shouldUpdate = (this.props.settingNumber !== nextProps.settingNumber) ||
+            (typeof nextProps.forceUpdate !== "undefined" && nextProps.forceUpdate);
         console.info('should update... ', shouldUpdate);
         return shouldUpdate;
     }
 
     componentDidUpdate(prevProps) {
         this.settingNumber = this.props.settingNumber;
-        this.settings = getSettings(this.props.settingNumber);
+        if (this.settingNumber !== prevProps.settingNumber) {
+            this.settings = getSettings(this.props.settingNumber);
+            this.setState(() => this.settings);
+            console.info('component updated, settings: ', this.settings);
+        }
     }
 
     render() {
         return (<div id="sensors">
-            <Ambient sample={this.settings.samples["a"]} />
+            <Ambient sample={this.state.samples["a"]} />
             <Zero
                 settings={{
                     index: this.settingNumber,

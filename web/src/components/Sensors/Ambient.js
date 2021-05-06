@@ -15,19 +15,31 @@ class Ambient extends Component {
     }
 
     loadSynth() {
-        if (!this.sample) return;
+        console.info('Ambient - loading synth');
+        if (!this.sample) {
+            console.info('no sample');
+            return;
+        }
+        console.info('new sample found');
         const audio = `${audioPath}/${this.sample}.mp3`;
         console.info('Ambient sound: ', audio);
-        if (this.sample.length) {
-            this.p.loadAudio(audio).then(() => this.p.startSample());
-        }
+        this.p.loadAudio(audio).then(() => this.p.startSample());
     }
 
     componentDidUpdate(prevProps) {
         // Check if it's a new sample
-        if (this.props.sample !== prevProps.sample) {
+        if (prevProps.sample !== this.props.sample) {
+            console.info('checking if Ambient component sample changed');
+            console.info('this.props: ', this.props);
+            console.info('this.props.sample: ', this.props.sample);
+            console.info('this.sample: ', this.sample);
+            console.info('prevProps.sample: ', prevProps.sample);
+            console.info('Ambient component did update');
             this.sample = this.props.sample;
-            if (this.p.stop) this.p.stop();
+            if (this.p.stop) {
+                console.info('play.stop exists, stopping');
+                this.p.stop();
+            }
             this.loadSynth();
         }
     }
