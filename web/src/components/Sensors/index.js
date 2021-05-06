@@ -61,6 +61,7 @@ class Sensors extends Component {
                     delay: this.settings.delay[2],
                     grain: this.settings.grain
                 }}
+                volumeScaling={[0,0.8]}
             />
             <Three
                 settings={{

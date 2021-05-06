@@ -61,6 +61,7 @@ export default class Two extends Component {
                     onMove={this.handleMove}
                     onExit={this.handleExit}
                     onLoadAudio={this.handleLoadAudio}
+                    volumeScaling={this.props.volumeScaling}
                 /> :
                 null
         );

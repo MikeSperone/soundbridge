@@ -8,7 +8,7 @@ class Ambient extends Component {
         this.props = props;
         this.sample = this.props.sample;
         console.info('Ambient Sound loading');
-        if (!window.globalAudioContext || !props.sample) return;
+        if (!window.globalAudioContext) return;
         this.p = new Play(globalAudioContext, 1.0);
         this.loadSynth = this.loadSynth.bind(this);
         this.loadSynth();
@@ -27,7 +27,7 @@ class Ambient extends Component {
         // Check if it's a new sample
         if (this.props.sample !== prevProps.sample) {
             this.sample = this.props.sample;
-            this.p.stop();
+            if (this.p.stop) this.p.stop();
             this.loadSynth();
         }
     }

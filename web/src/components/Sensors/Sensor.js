@@ -25,6 +25,7 @@ class Sensor extends Component {
 
         this.width = 1;
 
+
         const userName = 'user';
         this.sensorData = { name: this.name, source: userName };
         this.state = {
@@ -38,6 +39,7 @@ class Sensor extends Component {
         };
 
         this._bind();
+        this.setVolumeScalar(this.props.volumeScalar[1]);
         this.on('data', d =>  (d.name === this.name) && this.handleMotion(d.position));
         this.on('enter', d => (d.name === this.name) && this.handleEnter());
         this.on('exit', d =>  (d.name === this.name) && this.handleExit());
