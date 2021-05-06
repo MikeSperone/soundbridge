@@ -39,7 +39,9 @@ class Sensor extends Component {
         };
 
         this._bind();
-        this.setVolumeScalar(this.props.volumeScalar[1]);
+        if (this.props.volumeScalar && this.props.volumeScalar.length) {
+            this.setVolumeScalar(this.props.volumeScalar[1]);
+        }
         this.on('data', d =>  (d.name === this.name) && this.handleMotion(d.position));
         this.on('enter', d => (d.name === this.name) && this.handleEnter());
         this.on('exit', d =>  (d.name === this.name) && this.handleExit());
