@@ -38,7 +38,7 @@ class Sensor extends Component {
             showSettings: false,
         };
 
-        this._bind();
+        this._bind.call(this);
         if (this.props.volumeScalar && this.props.volumeScalar.length) {
             this.setVolumeScalar(this.props.volumeScalar[1]);
         }
