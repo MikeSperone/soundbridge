@@ -9,7 +9,6 @@ export default class Two extends Component {
         this.props = props;
         this.name="two";
 
-        this.settings = this.props.settings;
 
         this.synth = null;
         this.timeout = null;
@@ -30,10 +29,10 @@ export default class Two extends Component {
 
     handleLoadAudio(synth) {
         this.synth = synth;
-        this.synth.scatter = this.settings.grain[0];
-        this.synth.fade = this.settings.grain[1];
-        this.synth.spread = this.settings.grain[2];
-        this.synth.feedback = this.settings.grain[3];
+        this.synth.scatter = this.props.settings.grain[0];
+        this.synth.fade = this.props.settings.grain[1];
+        this.synth.spread = this.props.settings.grain[2];
+        this.synth.feedback = this.props.settings.grain[3];
     }
 
     handleEnter() {
@@ -54,19 +53,15 @@ export default class Two extends Component {
     }
 
     render() {
-        return (
-            this.settings.sample ?
-                <Sensor
-                    name={this.name}
-                    synth={Playgrain}
-                    settings={this.settings}
-                    onEnter={this.handleEnter}
-                    onMove={this.handleMove}
-                    onExit={this.handleExit}
-                    onLoadAudio={this.handleLoadAudio}
-                    volumeScaling={this.props.volumeScaling}
-                /> :
-                null
-        );
+        return <Sensor
+            name={this.name}
+            synth={Playgrain}
+            settings={this.props.settings}
+            onEnter={this.handleEnter}
+            onMove={this.handleMove}
+            onExit={this.handleExit}
+            onLoadAudio={this.handleLoadAudio}
+            volumeScaling={this.props.volumeScaling}
+        />;
     }
 }
