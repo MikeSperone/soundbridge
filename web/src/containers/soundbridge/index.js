@@ -5,12 +5,14 @@ import Sensors from 'components/Sensors';
 import Solo from 'context/Solo';
 
 import styles from 'styles/bridge.scss';
+import getSettings from './settings';
 
 const Soundbridge = props => {
 
     const solo = useContext(Solo);
 
     const [settingNumber, setSettingNumber] = useState(props.settingNumber);
+    const [settings, setSettings] = useState(getSettings(settingNumber));
 
     function changeSettings(e) {
         e.preventDefault();
@@ -21,7 +23,9 @@ const Soundbridge = props => {
             console.info(s, ' - getting new setting');
             s = Math.floor(Math.random() * 29);
         }
+        console.info('setting number being set to ', s);
         setSettingNumber(s);
+        setSettings(getSettings(s));
     }
 
     return <div class="soundbridge">
@@ -35,6 +39,7 @@ const Soundbridge = props => {
         <Sensors
             className={solo.solo && "col-8"}
             settingNumber={settingNumber}
+            settings={settings}
         />
     </div>;
 }

@@ -13,6 +13,7 @@ const MessageBox = props => <div id="message-box">{props.message}</div>;
 const AudioError = props => <span className="audio-error" >
         {props.show ? "Error: Audio not loaded" : ""}
     </span>;
+const debug = true;
 
 
 class Sensor extends Component {
@@ -62,8 +63,14 @@ class Sensor extends Component {
         this.setVolumeScalar = this.setVolumeScalar.bind(this);
         this.emit = this.emit.bind(this);
         this.on = this.on.bind(this);
+        this.debugLog = this.debugLog.bind(this);
     }
 
+    debugLog(msg) {
+        if (!debug) return;
+        const prefix = `[sensor ${this.name}]`;
+        console.info(prefix, msg);
+    }
     componentDidMount() {
         if (!window.globalAudioContext) return;
         if (window && window.location.search && window.location.search.match(/(\?|&)settings/)) {
@@ -77,7 +84,9 @@ class Sensor extends Component {
 
     componentDidUpdate(prevProps) {
         // Check if it's a new sample
+        this.debugLog('component did update');
         if (this.props.settings.index !== prevProps.settings.index) {
+            this.debugLog('component found new settings');
             this.loadSynth();
         }
     }
@@ -93,6 +102,7 @@ class Sensor extends Component {
 
     loadSynth() {
         const audio = `${audioPath}/${this.props.settings.sample}.mp3`;
+        this.debugLog('loading synth with audio ' + audio);
 
         // Set Synth
         this.synth = new this.props.synth(globalAudioContext);

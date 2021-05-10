@@ -115,7 +115,7 @@ const settings: Settings = {
 Object.freeze(settings); 
 
 export default function getSettings(i: number) {
-    console.info('getting settings');
+    console.info('getting settings from setting number ' + i);
 
     const samples = settings.samples[i],
         grain = settings.grain[i],
