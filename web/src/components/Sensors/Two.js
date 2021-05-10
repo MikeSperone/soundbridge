@@ -37,15 +37,18 @@ export default class Two extends Component {
     }
 
     handleEnter() {
+        if (!this.synth) return;
         clearTimeout(this.timeout);
         this.synth.start();
     }
 
     handleExit() {
+        if (!this.synth) return;
         this.timeout = setTimeout(() => this.synth.stop(), 5000);
     }
 
     handleMove(value) {
+        if (!this.synth) return;
         // range: 0 - 1
         this.synth.read = value;
     }
