@@ -1,6 +1,5 @@
 import { h, Component } from 'preact';
 import Solo from 'context/Solo';
-import Ambient from './Ambient';
 import Zero from './Zero';
 import One from './One';
 import Two from './Two';
@@ -23,7 +22,6 @@ class Sensors extends Component {
 
     render() {
         return (<div id="sensors">
-            <Ambient sample={this.props.settings.samples["a"]} />
             <Zero
                 settings={{
                     index: this.props.settingNumber,
