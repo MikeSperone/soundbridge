@@ -73,7 +73,7 @@ export default class Playgroove {
             req.onerror = function() {
                 console.info('Error loading audio data.', {
                     audioFile: audio,
-                    audioData
+                    audioData: null
                 });
             }
             req.send();
