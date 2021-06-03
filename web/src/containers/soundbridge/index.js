@@ -17,7 +17,8 @@ const Soundbridge = props => {
 
     function changeSettings(e) {
         e.preventDefault();
-        var s = Math.floor(Math.random() * 29);
+        // 8 settings, 0-7
+        var s = Math.floor(Math.random() * 7);
         console.info('setting number being set to ', s);
         setSettingNumber(s);
         setSettings(settingsData[s]);
