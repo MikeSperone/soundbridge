@@ -26,6 +26,7 @@ export default class Test extends Component {
 
     test() {
         console.info('testing');
+        console.info('audio context: ', window.AudioContext);
         mocha.setup('bdd');
         mocha.checkLeaks();
         grainread_test();
@@ -38,15 +39,14 @@ export default class Test extends Component {
     }
 
     componentDidMount() {
-        const p = [];
         const expect = "https://cdn.rawgit.com/Automattic/expect.js/0.3.1/index.js"
         const chai = "https://cdnjs.cloudflare.com/ajax/libs/chai/4.1.1/chai.min.js"
         const mocha = "https://cdn.rawgit.com/mochajs/mocha/2.2.5/mocha.js";
-        p.push(this.injectScript(mocha));
-        p.push(this.injectScript(chai));
-        p.push(this.injectScript(expect));
-        Promise.all(p)
-            .then(this.test);
+        Promise.all([
+            this.injectScript(mocha),
+            this.injectScript(chai),
+            this.injectScript(expect),
+        ]).then(this.test);
     }
 
     render() {

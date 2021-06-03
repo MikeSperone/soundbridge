@@ -22,39 +22,10 @@ class Sensors extends Component {
 
     render() {
         return (<div id="sensors">
-            <Zero
-                settings={{
-                    index: this.props.settingNumber,
-                    sample: this.props.settings.samples[0],
-                    delay: this.props.settings.delay[0],
-                    grain: this.props.settings.grain
-                }}
-            />
-            <One
-                settings={{
-                    index: this.props.settingNumber,
-                    sample: this.props.settings.samples[1],
-                    delay: this.props.settings.delay[1],
-                    grain: this.props.settings.grain
-                }}
-            />
-            <Two
-                settings={{
-                    index: this.props.settingNumber,
-                    sample: this.props.settings.samples[2],
-                    delay: this.props.settings.delay[2],
-                    grain: this.props.settings.grain
-                }}
-                volumeScaling={[0,0.8]}
-            />
-            <Three
-                settings={{
-                    index: this.props.settingNumber,
-                    sample:this.props.settings.samples[3],
-                    delay: this.props.settings.delay[3],
-                    grain: this.props.settings.grain
-                }}
-            />
+            <Zero  settings={this.props.settings['zero']} />
+            <One   settings={this.props.settings['one']} />
+            <Two   settings={this.props.settings['two']} volumeScaling={[0,0.8]} />
+            <Three settings={this.props.settings['three']} />
         </div>);
     }
 };

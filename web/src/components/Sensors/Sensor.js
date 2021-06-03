@@ -26,6 +26,7 @@ class Sensor extends Component {
 
         this.width = 1;
 
+        console.info(`settings for ${this.name}: ${this.props.settings}`);
 
         const userName = 'user';
         this.sensorData = { name: this.name, source: userName };
@@ -85,7 +86,7 @@ class Sensor extends Component {
     componentDidUpdate(prevProps) {
         // Check if it's a new sample
         this.debugLog('component did update');
-        if (this.props.settings.index !== prevProps.settings.index) {
+        if (this.props.settings.sample !== prevProps.settings.sample) {
             this.debugLog('component found new settings');
             this.loadSynth();
         }

@@ -4,7 +4,7 @@ export default () => (
     describe('Grainread Class', function() {
 
         let audio = '/audio/arlene.mp3';
-        let context = new AudioContext();
+        let context = new window.AudioContext();
         let gr = new Grainread(audio, context, 1);
 
         before(function(done) {

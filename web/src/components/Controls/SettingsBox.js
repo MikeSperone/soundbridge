@@ -2,7 +2,7 @@ import { h, Component } from 'preact';
 
 const SettingsBox = props => {
 
-    const { sample, delay, grain } = props.settings;
+    const { sample, delay, grain } = props.settings || {};
     return props.show ? (
         <table className="settings-box">
             <tr>

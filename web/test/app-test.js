@@ -36,8 +36,8 @@ describe('App', function() {
             "badprinter2",
             "bartonsifter3",
             "boatreverse",
-            "bridgesound",
-            "bridgesound1",
+            // "bridgesound",
+            // "bridgesound1",
             "bridgesound3",
             "bridgesound4",
             "buttonholer",
@@ -91,7 +91,7 @@ describe('App', function() {
             "rightear12",
             "rightear15",
             "rhythmicdrips",
-            "rhythmicsdrips",
+            // "rhythmicsdrips",
             "sandwalk",
             "sax",
             "sculpture1",
@@ -110,7 +110,7 @@ describe('App', function() {
             "water3",
             "waterambient2",
             "waves",
-            "wavebangbuf",
+            // "wavebangbuf",
             "wavebangbuf2",
             "waveslapping"
         ];

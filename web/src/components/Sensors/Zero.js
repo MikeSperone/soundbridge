@@ -9,6 +9,7 @@ export default class Zero extends Component {
         this.props = props;
         this.name = "zero";
         this.synth = {};
+        console.info(`settings for ${this.name}: ${this.props.settings}`);
         this.state = {
             synthLoaded: false,
         };
