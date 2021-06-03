@@ -42,7 +42,7 @@ const settings: Setting[] = [
         zero:    { sample: "2_2_4_sheddrips", delay: true },
         one:   { sample: "sax", delay: true },
         two:   { sample: "elevator_old_mix", delay: false, grain: [28, 1, 2, 0.2] },
-        three: { sample: "sidcaesarone", delay: false, grain: [28, 1, 2, 0.2] },
+        three: { sample: "sidcaesar1", delay: false, grain: [28, 1, 2, 0.2] },
     },
     {
         zero:    { sample: "pno_pluck", delay: false },
@@ -52,7 +52,7 @@ const settings: Setting[] = [
     },
     {
         zero:    { sample:  "greyston4", delay: false },
-        "one":   { sample:  "rightearone2", delay: true },
+        "one":   { sample:  "rightear12", delay: true },
         "two":   { sample:  "sign+bell", delay: false, grain: [73, 3, 2, 0.2] },
         "three": { sample:  "arlene2", delay: false, grain: [73, 3, 2, 0.2] },
     },
