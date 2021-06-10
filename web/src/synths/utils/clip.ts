@@ -1,4 +1,4 @@
-export default function clip(num: number, m: object): number {
+export default function clip(num: number, m: {min: number; max: number;} = {min:0, max:1}): number {
     if (!m) {
         m = {
             min: 0,

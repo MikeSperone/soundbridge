@@ -38,7 +38,7 @@ class App extends Component {
                 isPerformer: false,
                 type: 'audience',
             },
-            settingNumber: Math.floor(Math.random() * 29),
+            settingNumber: Math.floor(Math.random() * 8),
             loggedIn: false,
         };
         this._bind();

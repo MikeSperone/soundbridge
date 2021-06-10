@@ -10,6 +10,7 @@ export default class Playgroove {
     delay: DelayNode;
     feedback: GainNode;
     volume: GainNode;
+    maximumVolume: number;
     merge: ChannelMergerNode;
     panL: StereoPannerNode;
 
@@ -140,6 +141,6 @@ export default class Playgroove {
 
     set volumeScalar(v) {
         this.maximumVolume = clip(v);
-        this.changeVolume(v);
+        this.changeVolume(v); //TODO: this sets max volume, maybe you weren't there.  Should save "v" from 'changeVolume' (or 'set vol')
     }
 }

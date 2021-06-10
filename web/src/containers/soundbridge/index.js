@@ -11,6 +11,7 @@ const Soundbridge = props => {
 
     const solo = useContext(Solo);
 
+    console.info('initialSetting is settingNumnber ', props.settingNumber);
     const initialSetting = props.settingNumber;
     const [settingNumber, setSettingNumber] = useState(initialSetting);
     const [settings, setSettings] = useState(settingsData[initialSetting]);
