@@ -1,12 +1,35 @@
 import { h, createRef, Component } from 'preact';
 import debounce from 'lodash.debounce';
+import throttle from 'lodash.throttle';
 import Socket from 'context/Socket';
 import Solo from 'context/Solo';
-// import PerformingState from 'context/PerformingState';
 import Button from 'components/Controls/Button';
 import SettingsBox from 'components/Controls/SettingsBox';
 import SensorControls from 'components/Controls/SensorControls';
 import audioPath from './audioPath';
+
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import Tooltip from 'react-bootstrap/Tooltip';
+
+const DataTooltip = props => {
+
+    const renderTooltip = (ttProps) => (
+        <Tooltip id="sensor-tooltip" {...ttProps}>
+        Here is a hint
+        </Tooltip>
+        
+    );
+
+    return (
+        <OverlayTrigger
+            placement="top"
+            delay={{ show: 250, hide: 400  }}
+            overlay={renderTooltip}
+        >
+            {props.children}
+        </OverlayTrigger>
+    );
+};
 
 const SensorContainer = props => <div className="sensor-container">{props.children}</div>;
 const MessageBox = props => <div id="message-box">{props.message}</div>;
@@ -57,6 +80,7 @@ class Sensor extends Component {
         this.handleMute = this.handleMute.bind(this);
         this.handleMotion = this.handleMotion.bind(this);
         this.handleMouseMove = this.handleMouseMove.bind(this);
+        this.handleThrottledMouseMove = throttle(this.handleThrottledMouseMove.bind(this),50);
         this.handleEnter = this.handleEnter.bind(this);
         this.handleMouseEnter = this.handleMouseEnter.bind(this);
         this.handleExit = this.handleExit.bind(this);
@@ -72,6 +96,7 @@ class Sensor extends Component {
         const prefix = `[sensor ${this.name}]`;
         console.info(prefix, msg);
     }
+
     componentDidMount() {
         if (!window.globalAudioContext) return;
         if (window && window.location.search && window.location.search.match(/(\?|&)settings/)) {
@@ -143,13 +168,17 @@ class Sensor extends Component {
 
     handleMouseMove(e) {
         if (!this.props.isPerformer) return;
-        const value = e.offsetX + 1;
+        this.handleThrottledMouseMove(e.offsetX);
+    }
+
+    handleThrottledMouseMove(offsetX) {
+        const value = offsetX + 1;
         const position = value / this.width;
         // dividing to get 0. - 1. position value, so that the
         // remote user can scale that to the width of their sensors.
         this.handleMotion(position);
         this.emit('data', { ...this.sensorData, position });
-    }
+    };
 
     on(name, func) {
         if (this.solo) return;

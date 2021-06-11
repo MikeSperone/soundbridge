@@ -50,15 +50,17 @@ export default class Playgroove {
             req.responseType = 'arraybuffer';
 
             req.onload = function() {
+                that.log('audio file xhr loaded');
                 const audioData = req.response;
 
                 that.context.decodeAudioData(audioData, buffer => {
+                        that.log('audio decoded');
 
                         that.src.buffer = buffer;
                         that.src.playbackRate.value = 1;
 
                         that.volume.connect(that.context.destination);
-                        that.volume.gain.value = 0;
+                        that.volume.gain.setValueAtTime(0, that.context.currentTime);
                         that.src.loop = true;
 
                         that.src.start(0);
@@ -99,6 +101,8 @@ export default class Playgroove {
                 this.src.connect(this.merge, 0, 0);
                 this.merge.connect(this.volume);
             }
+            this.delTime(0);
+            this.delFeedback(0);
         } else {
             this.src.connect(this.volume);
         }
@@ -106,19 +110,28 @@ export default class Playgroove {
 
     delTime(time: number) {
         // range of .125 - .825(s)
+        this.log('delTime incoming - ' + time);
         time = (clip(time) * 0.7) + 0.125;
+        this.log('delTime scaled value - ' + time);
         this.delay.delayTime.value = time;
     }
 
     delFeedback(fbk: number) {
         // range of .075 - .495
+        this.log('delFeedback incoming - ' + fbk);
         fbk = (clip(fbk) * 0.42) + 0.075;
+        this.log('delFeedback scaled value - ' + fbk);
         this.feedback.gain.value = fbk;
     }
 
+    log(v) {
+        console.info(`[Playgroove] ${v}`);
+    }
     pbRate(rate: number) {
         // should get a range of 0.225 to 1.485
+        this.log('pbRate incoming - ' + rate);
         rate = (clip(rate) * 1.26) + 0.225;
+        this.log('pbRate scaled value - ' + rate);
         this.src.playbackRate.value = rate;
     }
 
@@ -131,6 +144,7 @@ export default class Playgroove {
     }
 
     changeVolume(v: number, t: number = 0.001) {
+        this.log('changing volume to ' + v + ' in ' + t + ' seconds');
         const volume = this.maximumVolume * clip(v);
         this.volume.gain
             .cancelScheduledValues(this.context.currentTime);

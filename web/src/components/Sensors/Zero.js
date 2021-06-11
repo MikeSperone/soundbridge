@@ -30,8 +30,13 @@ export default class Zero extends Component {
     }
 
     handleEnter() {
-        return this.state.synthLoaded &&
-            (this.synth.isMuted() || this.synth.changeVolume(0.7, 1.5));
+        if (this.state.synthLoaded) {
+            if (!this.synth.isMuted()) {
+                return this.synth.changeVolume(0.7, 0.5);
+            }
+            console.info('synth is muted');
+        }
+        console.info('synth not loaded');
     }
 
     handleExit() {
