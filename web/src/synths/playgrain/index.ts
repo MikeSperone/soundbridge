@@ -47,65 +47,50 @@ export default class Playgrain {
         return Promise.all(promises);
     }
 
-    /**
-     * Sets the fade
-     *
-     *
-     */
+    set delays(d: number) {
+        this.setAllValues('delays', d);
+    }
+
+    /** Sets the fade */
     set fade(f: number) {
         this.setAllValues('fade', f);
     }
 
-    /**
-     * Sets the delay feedback
-     */
+    /** Sets the delay feedback */
     set feedback(f: number) {
         this.setAllValues('feedback', f);
     }
 
-    /**
-     * Sets the read point
-     */
+    /** Sets the read point */
     set read(gr: number) {
         this.setAllValues('read', gr);
     }
 
-    /**
-     * Sets the grain scatter amount
-     */
+    /** Sets the grain scatter amount */
     set scatter(s:number) {
         this.setAllValues('scatter', s);
     }
 
-    /**
-     * Sets the grain spread
-     */
+    /** Sets the grain spread */
     set spread(s:number) {
         this.setAllValues('spread', s);
     }
 
-    /**
-     *  Starts playing
-     */
+    /** Starts playing */
     start() {
         this.callAllFunctions('start');
     }
 
-    /**
-     * Stops playing
-     */
+    /** Stops playing */
     stop() {
         this.callAllFunctions('stop');
     }
 
-    f
     changeVolume(v: number, t: number) {
         this.callAllFunctions('changeVolume', [v, t]);
     }
 
-    /**
-     * Sets the volume
-     */
+    /** Sets the volume */
     set vol(v:number) {
         this.volume = this.maximumVolume * v;
         this.setAllValues('vol', v);

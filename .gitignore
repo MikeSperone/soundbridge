@@ -17,7 +17,7 @@ config.js
 tags
 tags.lock
 
-.swp
-.swo
+*.swp
+*.swo
 /.vs
 .DS_Store

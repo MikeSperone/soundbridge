@@ -10,6 +10,8 @@ import audioPath from './audioPath';
 
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
+import Form from 'react-bootstrap/Form';
+// import Form.Check from 'react-bootstrap/Form.Check';
 
 const DataTooltip = props => {
 
@@ -31,6 +33,7 @@ const DataTooltip = props => {
     );
 };
 
+
 const SensorContainer = props => <div className="sensor-container">{props.children}</div>;
 const MessageBox = props => <div id="message-box">{props.message}</div>;
 const AudioError = props => <span className="audio-error" >
@@ -47,6 +50,7 @@ class Sensor extends Component {
         this.ws = props.socket;
         this.solo = props.solo;
 
+        this.controls = props.controls || [];
         this.width = 1;
 
         console.info(`settings for ${this.name}: ${this.props.settings}`);
@@ -61,8 +65,14 @@ class Sensor extends Component {
             audioLoaded: false,
             audioError: false,
             showSettings: false,
+            showControls: false,
+            activeControls: {},
         };
 
+        this.setState(s => {
+            const activeControls = this.controls.reduce((acc,c) => ({...acc, [c]:false}), {});
+            return {activeControls};
+        });
         this._bind.call(this);
         if (this.props.volumeScalar && this.props.volumeScalar.length) {
             this.setVolumeScalar(this.props.volumeScalar[1]);
@@ -89,6 +99,8 @@ class Sensor extends Component {
         this.emit = this.emit.bind(this);
         this.on = this.on.bind(this);
         this.debugLog = this.debugLog.bind(this);
+
+        this.setControlState = this.setControlState.bind(this);
     }
 
     debugLog(msg) {
@@ -99,8 +111,13 @@ class Sensor extends Component {
 
     componentDidMount() {
         if (!window.globalAudioContext) return;
-        if (window && window.location.search && window.location.search.match(/(\?|&)settings/)) {
-            this.setState(() => ({ showSettings: true }));
+        if (window && window.location.search) {
+            if (window.location.search.match(/(\?|&)settings/)) {
+                this.setState(() => ({ showSettings: true }));
+            }
+            if (window.location.search.match(/(\?|&)control/)) {
+                this.setState(() => ({ showControls: true }));
+            }
         }
 
         window.addEventListener('resize', () => debounce(this.resize, 500));
@@ -163,7 +180,7 @@ class Sensor extends Component {
         // multiplying to scale the 0. - 1. to our sensor width.
         const value = position * this.width;
         this.setState(() => ( { value }));
-        this.props.onMove(position);
+        this.props.onMove(position, this.state.activeControls);
     }
 
     handleMouseMove(e) {
@@ -210,6 +227,10 @@ class Sensor extends Component {
         this.synth.volumeScalar = v;
     }
 
+    setControlState(name, checked) {
+        this.setState(() => ({ activeControls: { [name]: checked }}));
+    }
+
     render() {
         return (
             <SensorContainer active={this.state.audioLoaded}>
@@ -230,7 +251,22 @@ class Sensor extends Component {
                     handleMute={this.handleMute}
                     handleVolume={this.setVolumeScalar}
                 />
-                <SettingsBox show={this.state.showSettings} settings={this.props.settings} />
+                <SettingsBox
+                    show={this.state.showSettings}
+                    settings={this.props.settings}
+                />
+                {this.state.showControls && this.controls ?
+                    <Form>
+                         {this.controls.map(c => {
+                            return <Form.Check 
+                                type={'checkbox'}
+                                label={`${c}`}
+                                onChange={e => this.setControlState(c, e.currentTarget.checked)}
+                            />
+                        })}
+                    </Form> :
+                    null
+                }
             </SensorContainer>
         );
     }
