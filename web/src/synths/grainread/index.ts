@@ -263,7 +263,6 @@ export default class Grainread {
     }
 
     randomScatter() {
-        console.info('randomScatter, this.g_scatter= ', this.g_scatter);
         return (Math.random() * this.g_scatter) / 127;
     }
 
@@ -289,7 +288,6 @@ export default class Grainread {
 
             // Setting
             const position = (this.g_read + this.randomScatter()) * this.duration;
-            console.info('position: ', position);
             this.position = clip(position, { min: 0, max: this.duration });
 
             this.loopLength = ((this.g_read * 29) + 6) * 50;  // based on each sample

@@ -12,6 +12,7 @@ export default class Playgrain {
     maximumVolume: number;
     grainArray: Grainread[];
     numberOfGrains: number;
+    _isPlaying: boolean;
 
     /**
      * Grain synthesis of an audio file
@@ -78,11 +79,13 @@ export default class Playgrain {
 
     /** Starts playing */
     start() {
+        this._isPlaying = true;
         this.callAllFunctions('start');
     }
 
     /** Stops playing */
     stop() {
+        this._isPlaying = false;
         this.callAllFunctions('stop');
     }
 
@@ -98,6 +101,10 @@ export default class Playgrain {
     /** Returns the volume*/
     get vol() {
         return this.volume;
+    }
+
+    get isPlaying() {
+        return this._isPlaying;
     }
 
     set volumeScalar(v: number) {

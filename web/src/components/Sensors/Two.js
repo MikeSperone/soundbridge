@@ -2,9 +2,6 @@ import { h, Component } from 'preact';
 import Sensor from './Sensor';
 import Playgrain from 'synths/playgrain';
 
-const ManualControls = <div>
-    <h1>Manual Controls</h1>
-</div>;
 export default class Two extends Component {
 
     constructor(props) {
@@ -13,6 +10,7 @@ export default class Two extends Component {
         this.name="two";
         this.controlParameterNames = ['delays', 'spread','feedback','fade','scatter', 'scaleToSettings'];
         this.state = {
+            synthLoaded: false,
             useSpread: false,
             useFeedback: false,
             useFade: false,
@@ -42,28 +40,33 @@ export default class Two extends Component {
         this.synth.fade = this.props.settings.grain[1];
         this.synth.spread = this.props.settings.grain[2];
         this.synth.feedback = this.props.settings.grain[3];
+        this.setState(() => ({synthLoaded:true}));
     }
 
     handleEnter() {
-        if (!this.synth) return;
-        clearTimeout(this.timeout);
-        this.synth.start();
+        if (this.state.synthLoaded) {
+            clearTimeout(this.timeout);
+            this.synth.isPlaying || this.synth.start();
+            this.synth.isMuted() || this.synth.changeVolume(0.7, 0.5);
+        }
     }
 
     handleExit() {
         if (!this.synth) return;
-        this.timeout = setTimeout(() => this.synth.stop(), 5000);
+        this.synth.changeVolume(0, 5.0);
+        this.timeout = setTimeout(() => this.synth.stop(), 5010);
     }
 
     handleMove(value, activeControls) {
         if (!this.synth) return;
         // range: 0 - 1
         const setSynthValue = (controlName, g, offset=0) => {
-            console.info('controlName: ', controlName);
-            console.info('g:', g);
-            this.synth[controlName] = (activeControls[controlName]) ?
-                (value * (activeControls.scaleToSettings ? g : 1) + offset) :
-                g;
+            if (activeControls[controlName]) {
+                const scaledSetting = activeControls.scaleToSettings ? g : 1;
+                this.synth[controlName] = (value * scaledSetting) + offset;
+            } else {
+                this.synth[controlName] = g;
+            }
         };
         setSynthValue('spread', this.props.settings.grain[2]);
         setSynthValue('feedback', this.props.settings.grain[3]);

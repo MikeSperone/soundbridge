@@ -35,6 +35,8 @@ export default class Loop {
         //val 0 - 1
 
         if (val >= .3) {
+            // TODO: check on this, shouldn't the "val" be 0 - 1 
+            // inside this block of code??  I think it's just .3 to 1
 
             let x = Math.floor(val * 10) / 10;
 
