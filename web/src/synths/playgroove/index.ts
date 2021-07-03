@@ -155,6 +155,6 @@ export default class Playgroove {
 
     set volumeScalar(v) {
         this.maximumVolume = clip(v);
-        this.changeVolume(v); //TODO: this sets max volume, maybe you weren't there.  Should save "v" from 'changeVolume' (or 'set vol')
+        this.changeVolume(v);
     }
 }

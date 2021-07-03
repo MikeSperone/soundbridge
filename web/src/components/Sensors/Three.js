@@ -6,6 +6,9 @@ import audioPath from './audioPath';
 
 const log = m => console.log('[Three] ', m);
 
+const ONE_THIRD = 1 / 3;
+const TWO_THIRDS =  2 / 3;
+
 export default class Three extends Component {
 
     constructor(props) {
@@ -88,7 +91,6 @@ export default class Three extends Component {
             this.time = (this.position === 1) ?
                 this.synth.elapsedTime * 4 :
                 this.time;
-            // TODO: I guess I need this line, but it's breaking
             if (this.position !== 0) this.synth.stop();
             this.holdSynth.changeVolume(1);
             this.holdSynth.startSample(this.time);
@@ -101,16 +103,17 @@ export default class Three extends Component {
         this.stopHold();
         this.position = 3;
         // const scaledValue = (0.6 * value) - 0.9;
-        const scaledValue = (2 * value) - 1.035;
+        // const scaledValue = (2 * value) - 1.035;
+        const scaledValue = (3 * value) - 2;
         this.synth.changeVolume(1);
         this.synth.sensor(scaledValue);
     }
 
     handleMove(value) {
         if (!this.state.synthLoaded) return;
-        if (value > 0.666666666) {
+        if (value >= TWO_THIRDS) {
             this.thirdPosition(value);
-        } else if (value > 0.333333333) {
+        } else if (value >= ONE_THIRD) {
             this.secondPosition();
         } else {
             this.firstPosition();

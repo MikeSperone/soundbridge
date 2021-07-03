@@ -34,18 +34,13 @@ export default class Loop {
     sensor(val: number, time: number = 0) {
         //val 0 - 1
 
-        if (val >= .3) {
-            // TODO: check on this, shouldn't the "val" be 0 - 1 
-            // inside this block of code??  I think it's just .3 to 1
+        let x = Math.floor(val * 10) / 10;
 
-            let x = Math.floor(val * 10) / 10;
-
-            if (x !== this.sensorPos) {
-                this.sensorPos = x;
-                this.loop(x);
-            }
-
+        if (x !== this.sensorPos) {
+            this.sensorPos = x;
+            this.loop(x);
         }
+
     }
 
     playAll(time: number = 0) {
@@ -54,10 +49,7 @@ export default class Loop {
         this.startSample(time);
     }
 
-    set duration(d) {
-        this.play.duration = d;
-    }
-
+    // no set duration - read only property
     get duration() {
         return this.play.duration;
     }
