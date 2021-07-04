@@ -68,8 +68,10 @@ export default class Three extends Component {
         return (this.position === 2) && this.holdSynth.stop();
     }
 
-    firstPosition() {
+    firstPosition(value) {
         // Position 1
+        // TODO: need a better equation for a properly scaled filter
+        const filterValue = Math.pow((1.0 - (3 * value)), 1.8) * 15000 + 200;
         if (this.position !== 1) {
             log('entered 1.  From ' + this.position);
 
@@ -79,8 +81,13 @@ export default class Three extends Component {
             this.stopHold();
 
             this.position = 1;
+
+            this.synth.changeFilter(filterValue)
             this.synth.changeVolume(1);
+
             this.synth.playAll(this.time);
+        } else {
+            this.synth.changeFilter(filterValue);
         }
     }
 
@@ -88,9 +95,12 @@ export default class Three extends Component {
         // Position 2
         if (this.position !== 2) {
             log('You have entered 2.  From ' + this.position);
-            this.time = (this.position === 1) ?
-                this.synth.elapsedTime * 4 :
-                this.time;
+            if (this.position === 1) {
+                this.time = this.synth.elapsedTime * 4;
+                this.synth.changeFilter(0);
+            } else {
+                this.time = this.time;
+            }
             if (this.position !== 0) this.synth.stop();
             this.holdSynth.changeVolume(1);
             this.holdSynth.startSample(this.time);
@@ -100,6 +110,7 @@ export default class Three extends Component {
 
     thirdPosition(value) {
         if (this.position !== 3) log('entered 3.  From ' + this.position);
+        if (this.position === 1) this.synth.changeFilter(0);
         this.stopHold();
         this.position = 3;
         // const scaledValue = (0.6 * value) - 0.9;
@@ -116,7 +127,7 @@ export default class Three extends Component {
         } else if (value >= ONE_THIRD) {
             this.secondPosition();
         } else {
-            this.firstPosition();
+            this.firstPosition(value);
         }
     }
 

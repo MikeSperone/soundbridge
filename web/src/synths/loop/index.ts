@@ -10,6 +10,7 @@ export default class Loop {
     sensorPos: number;
     play: Play;
     startSample: Function;
+    changeFilter: Function;
     changeVolume: Function;
     loadAudio: Function;
     stop: Function;
@@ -19,6 +20,7 @@ export default class Loop {
         this.context = this.play.context;
         this.sensorPos = 0;
         this.startSample = this.play.startSample;
+        this.changeFilter = this.play.changeFilter;
         this.changeVolume = this.play.changeVolume;
         this.loadAudio = this.play.loadAudio;
         this.stop = this.play.stop;

@@ -14,6 +14,7 @@ export default class Play {
     loopEnd: number;
     stopped: boolean;
     src: AudioBufferSourceNode;
+    filtering: boolean;
     maximumVolume: number;
     volume: GainNode;
     lowPass: BiquadFilterNode;
@@ -39,6 +40,7 @@ export default class Play {
         this.loopEnd = 0;
         this.stopped = true;
         this.volume = this.context.createGain();
+        this.filtering = false;
         this.lowPass = this.context.createBiquadFilter();
         this.lowPass.type = 'lowpass';
         this.volume.gain.value = this.initialVol;
@@ -53,6 +55,9 @@ export default class Play {
         this.play = this.play.bind(this);
         this.stop = this.stop.bind(this);
         this.resize = this.resize.bind(this);
+        this.changeFilter = this.changeFilter.bind(this);
+        this.connectFilter = this.connectFilter.bind(this);
+        this.disconnectFilter = this.disconnectFilter.bind(this);
         this.changeVolume = this.changeVolume.bind(this);
     }
 
@@ -110,8 +115,8 @@ export default class Play {
         this.src.loopStart = this.loopStart;
         this.src.loopEnd = this.loopEnd;
 
-        this.src.connect(this.lowPass);
-        this.lowPass.connect(this.volume);
+        this.src.connect(this.volume);
+        this.filtering && this.connectFilter();
         this.volume.connect(this.context.destination);
         this.startTime = this.context.currentTime - offset;
 
@@ -185,6 +190,7 @@ export default class Play {
         this.volume.gain
             .linearRampToValueAtTime(v, this.context.currentTime + t);
     }
+
     /**
      * Get the current volume
      * @return {Number} volume
@@ -199,12 +205,39 @@ export default class Play {
         this.changeVolume(this.vol);
     }
 
-    get filter(): number {
-        return this.lowPass.frequency.value;
+    set filter(f: number) {
+        this.changeFilter(f, 0);
     }
 
-    set filter(f: number) {
-        this.lowPass.frequency.linearRampToValueAtTime(f, this.context.currentTime + 0.001);
+    connectFilter() {
+        this.src.disconnect(0);
+        this.src.connect(this.lowPass);
+        this.lowPass.connect(this.volume);
+        this.filtering = true;
+    }
+
+    disconnectFilter() {
+        this.src.disconnect(this.lowPass);
+        this.lowPass.disconnect(this.volume);
+        this.src.connect(this.volume);
+        this.filtering = false;
+    }
+
+    changeFilter(f: number, t: number = 0.001) {
+        if (f === 0 && this.filtering) {
+            console.info('disconnecting the filter');
+            this.disconnectFilter();
+            return;
+        }
+        if (!this.filtering) {
+            console.info('connecting the filter');
+            this.filtering = true;
+        }
+        console.info('setting the filter to ', f);
+        this.lowPass.frequency.linearRampToValueAtTime(f, this.context.currentTime + t);
+    }
+    get filter(): number {
+        return this.lowPass.frequency.value;
     }
 
     resize(x: number) {
