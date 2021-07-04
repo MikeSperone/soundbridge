@@ -5,8 +5,10 @@ export default () => (
 
         const audio = '/audio/arlene.mp3';
         let context = new AudioContext();
-        let pg = new Playgrain(audio, context);
+        let pg = new Playgrain(context);
         let grainArray = pg.grainArray;
+
+        pg.loadAudio(audio);
 
         console.log("playgrain: ", pg);
         const checkEqual = (property, value) => {

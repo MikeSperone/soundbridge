@@ -5,14 +5,14 @@ export default () => (
 
         let audio = '/audio/arlene.mp3';
         let context = new AudioContext();
-        let lp = new Loop(audio, context);
+        let lp = new Loop(context);
 
         it('should start a new instance', function() {
             expect(lp).to.exist;
         });
 
         it('should load the audio', function(done) {
-            lp.loadAudio().then((b) => {
+            lp.loadAudio(audio).then((b) => {
                 expect(lp.play.buffer).to.exist;
                 console.log('test buffer: ', lp.play.buffer);
                 expect(lp.play.duration).to.exist;

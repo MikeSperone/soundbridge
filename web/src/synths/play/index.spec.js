@@ -5,17 +5,13 @@ export default () => (
 
         const audio = '/audio/arlene.mp3';
         const context = new AudioContext();
-        var testing = new Play(audio, context);
+        var testing = new Play(context);
         var start = 0;
 
         describe('initial state', function() {
 
             it('starts a new instance', function() {
                 expect(testing).to.be.an("object");
-            });
-
-            it('names the audio file', function() {
-                expect(testing.audio).to.equal(audio);
             });
 
             it('starts with no audio', function() {
@@ -39,7 +35,7 @@ export default () => (
         describe('things', function() {
 
             it('loads the audio buffer', function(done) {
-                testing.loadAudio().then((buffer) => {
+                testing.loadAudio(audio).then((buffer) => {
                         expect(buffer).to.exist;
                         done();
                     });
@@ -88,6 +84,7 @@ export default () => (
                 expect(testing.loopLength).to.equal(5);
                 expect(testing.loopEnd - testing.loopStart).to.equal(5);
             });
+
             it('resize()', function() {
                 testing.resize(5);
                 expect(testing.loopLength).to.equal(5);
@@ -98,6 +95,12 @@ export default () => (
                 testing.position = 0;
                 testing.loopLength = 5000;
                 expect(testing.loopEnd).to.equal(testing.duration);
+            });
+
+            it('filter()', function() {
+                testing.filter(1000);
+                expect(testing.filter).to.equal(1000);
+                expect(testing.lowPass.frequency).to.equal(1000);
             });
 
             afterEach(function() {

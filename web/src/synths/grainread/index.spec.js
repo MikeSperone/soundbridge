@@ -5,20 +5,16 @@ export default () => (
 
         let audio = '/audio/arlene.mp3';
         let context = new window.AudioContext();
-        let gr = new Grainread(audio, context, 1);
+        let gr = new Grainread(context, 1);
 
         before(function(done) {
-            gr.loadAudio().then(() => done());
+            gr.loadAudio(audio).then(() => done());
         });
 
         describe('initial values', function() {
 
             it('starts a new grainread class', function() {
                 expect(gr).to.exist;
-            });
-
-            it('sets the audio', function() {
-                expect(gr.audio).to.equal('/audio/arlene.mp3');
             });
 
             it('fills the audio buffer', function() {

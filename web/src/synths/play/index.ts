@@ -14,7 +14,9 @@ export default class Play {
     loopEnd: number;
     stopped: boolean;
     src: AudioBufferSourceNode;
+    maximumVolume: number;
     volume: GainNode;
+    lowPass: BiquadFilterNode;
 
     /**
      * Plays an audio file
@@ -37,6 +39,8 @@ export default class Play {
         this.loopEnd = 0;
         this.stopped = true;
         this.volume = this.context.createGain();
+        this.lowPass = this.context.createBiquadFilter();
+        this.lowPass.type = 'lowpass';
         this.volume.gain.value = this.initialVol;
         this.src = this.context.createBufferSource();
 
@@ -106,7 +110,8 @@ export default class Play {
         this.src.loopStart = this.loopStart;
         this.src.loopEnd = this.loopEnd;
 
-        this.src.connect(this.volume);
+        this.src.connect(this.lowPass);
+        this.lowPass.connect(this.volume);
         this.volume.connect(this.context.destination);
         this.startTime = this.context.currentTime - offset;
 
@@ -193,6 +198,15 @@ export default class Play {
         // TODO: should I change the volume here?
         this.changeVolume(this.vol);
     }
+
+    get filter(): number {
+        return this.lowPass.frequency.value;
+    }
+
+    set filter(f: number) {
+        this.lowPass.frequency.linearRampToValueAtTime(f, this.context.currentTime + 0.001);
+    }
+
     resize(x: number) {
         this.loopLength = x;
         this.startSample();
