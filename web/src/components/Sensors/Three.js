@@ -7,7 +7,7 @@ import audioPath from './audioPath';
 const log = m => console.log('[Three] ', m);
 
 const ONE_THIRD = 1 / 3;
-const TWO_THIRDS =  2 / 3;
+const ONE_HALF =  1 / 2;
 
 export default class Three extends Component {
 
@@ -71,7 +71,7 @@ export default class Three extends Component {
     firstPosition(value) {
         // Position 1
         // TODO: need a better equation for a properly scaled filter
-        const filterValue = Math.pow((1.0 - (3 * value)), 1.8) * 15000 + 200;
+        const filterValue = Math.pow(1.0 - value, 1.8) * 15000 + 200;
         if (this.position !== 1) {
             log('entered 1.  From ' + this.position);
 
@@ -113,21 +113,18 @@ export default class Three extends Component {
         if (this.position === 1) this.synth.changeFilter(0);
         this.stopHold();
         this.position = 3;
-        // const scaledValue = (0.6 * value) - 0.9;
-        // const scaledValue = (2 * value) - 1.035;
-        const scaledValue = (3 * value) - 2;
         this.synth.changeVolume(1);
-        this.synth.sensor(scaledValue);
+        this.synth.sensor(value);
     }
 
     handleMove(value) {
         if (!this.state.synthLoaded) return;
-        if (value >= TWO_THIRDS) {
-            this.thirdPosition(value);
+        if (value >= ONE_HALF) {
+            this.thirdPosition((2 * value) - 2);
         } else if (value >= ONE_THIRD) {
             this.secondPosition();
         } else {
-            this.firstPosition(value);
+            this.firstPosition(3 * value);
         }
     }
 
