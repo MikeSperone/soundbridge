@@ -111,6 +111,7 @@ export default class Three extends Component {
     thirdPosition(value) {
         if (this.position !== 3) log('entered 3.  From ' + this.position);
         if (this.position === 1) this.synth.changeFilter(0);
+        console.info('Third Position value: ', value);
         this.stopHold();
         this.position = 3;
         this.synth.changeVolume(1);
@@ -120,7 +121,8 @@ export default class Three extends Component {
     handleMove(value) {
         if (!this.state.synthLoaded) return;
         if (value >= ONE_HALF) {
-            this.thirdPosition((2 * value) - 2);
+            // for some reason the 2nd half is scaling to just barely over 1.00, so I'm adding the extra .001 offset
+            this.thirdPosition((2 * value) - 1.001);
         } else if (value >= ONE_THIRD) {
             this.secondPosition();
         } else {
