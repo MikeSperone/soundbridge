@@ -1,8 +1,12 @@
 import { h, createRef, Component } from 'preact';
+import PropTypes from 'prop-types';
+
 import debounce from 'lodash.debounce';
 import throttle from 'lodash.throttle';
+
 import Socket from 'context/Socket';
 import Solo from 'context/Solo';
+
 import Button from 'components/Controls/Button';
 import SettingsBox from 'components/Controls/SettingsBox';
 import SensorControls from 'components/Controls/SensorControls';
@@ -271,6 +275,12 @@ class Sensor extends Component {
         );
     }
 }
+
+Sensor.propTypes = {
+    name: PropTypes.string,
+    settings: {},
+    isPerformer: PropTypes.bool,
+};
 
 export default function SocketedSensor(props) {
     return <Socket.Consumer>

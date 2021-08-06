@@ -7,7 +7,7 @@ export default class One extends Component{
     constructor(props)  {
         super(props);
         this.props = props;
-        this.name="one";
+        this.name = "one";
         this.synth = null;
         this.state = {
             synthLoaded: false,
@@ -34,7 +34,7 @@ export default class One extends Component{
     }
 
     handleExit() {
-        return this.synth.changeVolume(0, 5.0);
+        return this.synth.changeVolume(0.0, 5.0);
     }
 
     handleMove(value) {
