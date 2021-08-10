@@ -134,7 +134,10 @@ class Sensor extends Component {
         this.debugLog('component did update');
         if (this.props.settings.sample !== prevProps.settings.sample) {
             this.debugLog('component found new settings');
-            this.loadSynth();
+            this.setState(
+                () => ({ audioLoaded: false }),
+                this.loadSynth
+            );
         }
     }
 

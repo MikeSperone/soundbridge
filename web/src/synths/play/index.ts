@@ -1,9 +1,10 @@
+import clip from '../utils/clip';
 /**
  * Created by Mike on 8/30/16.
  */
+"use strict";
 
 export default class Play {
-    audio: string;
     context: AudioContext;
     contextCreationTime: Date;
     startTime: number;
@@ -21,7 +22,6 @@ export default class Play {
 
     /**
      * Plays an audio file
-     * @param {string} audio - path to audio file
      * @param {AudioContext} context - Web Audio Context
      * @param {number} vol - (optional) The starting volume.  Defaults to 0
      */
@@ -61,9 +61,12 @@ export default class Play {
         this.changeVolume = this.changeVolume.bind(this);
     }
 
+    /**
+     * Loads the audio file
+     * @param {string} audio - path to audio file
+     */
     loadAudio(audio) {
         console.info('Play() loading audio...');
-        this.audio = audio;
         return new Promise((resolve, reject) => {
 
             const handleAudioData = function(buffer) {
@@ -89,7 +92,7 @@ export default class Play {
 
             let req = new XMLHttpRequest();
 
-            req.open('GET', this.audio);
+            req.open('GET', audio);
             req.responseType = 'arraybuffer';
 
             req.onerror = () => reject('Error requesting audio data');
@@ -172,23 +175,20 @@ export default class Play {
         return this.loopEnd - this.loopStart;
     }
 
-    toString() {
-        return [{"audio": this.audio}, {"context": this.context}];
-    }
-
     /**
      * Set the volume
      * @param {number} v 0.0 to 1.0
      */
     set vol(v: number) {
-        this.changeVolume(this.maximumVolume * v, 0);
+        this.changeVolume(v);
     }
 
     changeVolume(v: number, t:number =0.001) {
+        const volume = this.maximumVolume * clip(v);
         this.volume.gain
             .cancelScheduledValues(this.context.currentTime);
         this.volume.gain
-            .linearRampToValueAtTime(v, this.context.currentTime + t);
+            .linearRampToValueAtTime(volume, this.context.currentTime + t);
     }
 
     /**
@@ -200,8 +200,7 @@ export default class Play {
     }
 
     set volumeScalar(v: number) {
-        this.maximumVolume = v;
-        // TODO: should I change the volume here?
+        this.maximumVolume = clip(v);
         this.changeVolume(this.vol);
     }
 

@@ -17,7 +17,7 @@ export default class Playgroove {
     constructor(context: AudioContext) {
 
         this.src = context.createBufferSource();
-        this.delay = context.createDelay(1.0);
+        this.delay = context.createDelay(0.9);
         this.feedback = context.createGain();
         this.volume = context.createGain();
         this.maximumVolume = 1.0;
@@ -110,19 +110,19 @@ export default class Playgroove {
         }
     }
 
-    delTime(time: number) {
+    delTime(time: number, t: number = 0.5) {
         // range of .125 - .825(s)
         this.log('delTime incoming - ' + time);
         time = (clip(time) * 0.7) + 0.125;
         this.log('delTime scaled value - ' + time);
-        this.delay.delayTime.setTargetAtTime(time, this.context.currentTime, 0.5);
-        // this.delay.delayTime
-        //     .cancelScheduledValues(this.context.currentTime);
-        // this.delay.delayTime
-        //     .linearRampToValueAtTime(time, this.context.currentTime + 0.04);
+        this.delay.delayTime
+            .cancelScheduledValues(this.context.currentTime);
+        this.delay.delayTime
+            .linearRampToValueAtTime(time, this.context.currentTime + t);
+        // this.delay.delayTime.setValueAtTime(time, this.context.currentTime + 0.05);
     }
 
-    delFeedback(fbk: number) {
+    delFeedback(fbk: number, t: number = 0.05) {
         // range of .075 - .495
         this.log('delFeedback incoming - ' + fbk);
         fbk = (clip(fbk) * 0.42) + 0.075;
@@ -130,21 +130,17 @@ export default class Playgroove {
         this.feedback.gain
             .cancelScheduledValues(this.context.currentTime);
         this.feedback.gain
-            .linearRampToValueAtTime(fbk, this.context.currentTime + 0.048);
+            .linearRampToValueAtTime(fbk, this.context.currentTime + t);
     }
 
     log(v) {
         console.info(`[Playgroove] ${v}`);
     }
-    pbRate(rate: number) {
+    pbRate(rate: number, t: number = 0.5) {
         // should get a range of 0.225 to 1.485
         rate = (clip(rate) * 1.26) + 0.225;
         this.log('pbRate scaled value - ' + rate);
-        // this.src.playbackRate.value = rate;
-        this.src.playbackRate
-            .cancelScheduledValues(this.context.currentTime);
-        this.src.playbackRate
-            .linearRampToValueAtTime(rate, this.context.currentTime + 0.048);
+        this.src.playbackRate.setValueAtTime(rate, this.context.currentTime + t);
     }
 
     get vol() {
@@ -155,7 +151,7 @@ export default class Playgroove {
         this.changeVolume(v);
     }
 
-    changeVolume(v: number, t: number = 0.048) {
+    changeVolume(v: number, t: number = 0.05) {
         this.log('changing volume to ' + v + ' in ' + t + ' seconds');
         const volume = this.maximumVolume * clip(v);
         this.log('volume: ' + volume);
@@ -168,6 +164,6 @@ export default class Playgroove {
 
     set volumeScalar(v) {
         this.maximumVolume = clip(v);
-        this.changeVolume(v);
+        this.changeVolume(this.vol);
     }
 }

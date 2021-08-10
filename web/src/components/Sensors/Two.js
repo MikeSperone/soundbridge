@@ -58,7 +58,7 @@ export default class Two extends Component {
         this.timeout = setTimeout(() => this.synth.stop(), 5010);
     }
 
-    setSynthValue(controlName, g, offset=0) {
+    setSynthValue(activeControls, value, controlName, g, offset=0) {
         if (activeControls[controlName]) {
             const scaledSetting = activeControls.scaleToSettings ? g : 1;
             this.synth[controlName] = (value * scaledSetting) + offset;
@@ -70,10 +70,10 @@ export default class Two extends Component {
     handleMove(value, activeControls) {
         if (!this.synth) return;
         // range: 0 - 1
-        this.setSynthValue('spread', this.props.settings.grain[2]);
-        this.setSynthValue('feedback', this.props.settings.grain[3]);
-        this.setSynthValue('fade', this.props.settings.grain[1]);
-        this.setSynthValue('scatter', this.props.settings.grain[0]);
+        this.setSynthValue(activeControls, value, 'spread', this.props.settings.grain[2]);
+        this.setSynthValue(activeControls, value, 'feedback', this.props.settings.grain[3]);
+        this.setSynthValue(activeControls, value, 'fade', this.props.settings.grain[1]);
+        this.setSynthValue(activeControls, value, 'scatter', this.props.settings.grain[0]);
         // setSynthValue('delays', 0.5, 0.05);
         this.synth.read = value;
     }
