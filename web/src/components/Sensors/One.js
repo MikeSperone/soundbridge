@@ -4,11 +4,11 @@ import Playgroove from 'synths/playgroove';
 
 export default class One extends Component{
 
-    constructor(props)  {
+    constructor(props) {
         super(props);
         this.props = props;
         this.name = "one";
-        this.synth = null;
+        this.synth = {};
         this.state = {
             synthLoaded: false,
         };
@@ -30,15 +30,16 @@ export default class One extends Component{
 
     handleEnter() {
         this.state.synthLoaded &&
-            (this.synth.isMuted() || this.synth.changeVolume(0.7, 1.5));
+            (this.synth.isMuted() || this.synth.changeVolume(0.7, 0.5));
     }
 
     handleExit() {
-        return this.synth.changeVolume(0.0, 5.0);
+        this.synth.changeVolume(0.0, 5.0);
     }
 
     handleMove(value) {
         if (this.state.synthLoaded) {
+            // Value is 0.0 - 1.0
             this.synth.pbRate(value);
             this.synth.delTime(value);
             this.synth.delFeedback(value);
@@ -47,13 +48,13 @@ export default class One extends Component{
 
     render() {
         return <Sensor
-                name={this.name}
-                synth={Playgroove}
-                settings={this.props.settings}
-                onEnter={this.handleEnter}
-                onMove={this.handleMove}
-                onExit={this.handleExit}
-                onLoadAudio={this.handleLoadAudio}
-            />;
+            name={this.name}
+            synth={Playgroove}
+            settings={this.props.settings}
+            onEnter={this.handleEnter}
+            onMove={this.handleMove}
+            onExit={this.handleExit}
+            onLoadAudio={this.handleLoadAudio}
+        />;
     }
 }

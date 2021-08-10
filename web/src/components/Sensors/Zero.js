@@ -9,7 +9,6 @@ export default class Zero extends Component {
         this.props = props;
         this.name = "zero";
         this.synth = {};
-        console.info(`settings for ${this.name}: ${this.props.settings}`);
         this.state = {
             synthLoaded: false,
         };
@@ -30,25 +29,20 @@ export default class Zero extends Component {
     }
 
     handleEnter() {
-        if (this.state.synthLoaded) {
-            if (!this.synth.isMuted()) {
-                return this.synth.changeVolume(0.7, 0.5);
-            }
-            console.info('synth is muted');
-        }
-        console.info('synth not loaded');
+        this.state.synthLoaded &&
+            (this.synth.isMuted() || this.synth.changeVolume(0.7, 0.5));
     }
 
     handleExit() {
-        return this.synth.changeVolume(0, 5.0);
+        this.synth.changeVolume(0.0, 5.0);
     }
 
     handleMove(value) {
         if (this.state.synthLoaded) {
             // Value is 0.0 - 1.0
             this.synth.pbRate(value);
-            this.synth.delTime(value);      // range of .125 - .825(s)
-            this.synth.delFeedback(value);  // range of .075 - .495
+            this.synth.delTime(value);
+            this.synth.delFeedback(value);
         }
     }
 
