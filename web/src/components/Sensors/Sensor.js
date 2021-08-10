@@ -94,7 +94,7 @@ class Sensor extends Component {
         this.handleMute = this.handleMute.bind(this);
         this.handleMotion = this.handleMotion.bind(this);
         this.handleMouseMove = this.handleMouseMove.bind(this);
-        this.handleThrottledMouseMove = throttle(this.handleThrottledMouseMove.bind(this),50);
+        this.handleThrottledMouseMove = throttle(this.handleThrottledMouseMove.bind(this),10);
         this.handleEnter = this.handleEnter.bind(this);
         this.handleMouseEnter = this.handleMouseEnter.bind(this);
         this.handleExit = this.handleExit.bind(this);

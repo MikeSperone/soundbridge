@@ -110,33 +110,34 @@ export default class Playgroove {
         }
     }
 
-    delTime(time: number, t: number = 0.5) {
+    delTime(time: number, t: number = 0.005) {
         // range of .125 - .825(s)
         this.log('delTime incoming - ' + time);
         time = (clip(time) * 0.7) + 0.125;
         this.log('delTime scaled value - ' + time);
-        this.delay.delayTime
-            .cancelScheduledValues(this.context.currentTime);
-        this.delay.delayTime
-            .linearRampToValueAtTime(time, this.context.currentTime + t);
-        // this.delay.delayTime.setValueAtTime(time, this.context.currentTime + 0.05);
+        // this.delay.delayTime
+        //     .cancelScheduledValues(this.context.currentTime);
+        // this.delay.delayTime
+        //     .linearRampToValueAtTime(time, this.context.currentTime + t);
+        this.delay.delayTime.setValueAtTime(time, this.context.currentTime + t);
     }
 
-    delFeedback(fbk: number, t: number = 0.05) {
+    delFeedback(fbk: number, t: number = 0.005) {
         // range of .075 - .495
         this.log('delFeedback incoming - ' + fbk);
         fbk = (clip(fbk) * 0.42) + 0.075;
         this.log('delFeedback scaled value - ' + fbk);
+        // this.feedback.gain
+        //     .cancelScheduledValues(this.context.currentTime);
         this.feedback.gain
-            .cancelScheduledValues(this.context.currentTime);
-        this.feedback.gain
-            .linearRampToValueAtTime(fbk, this.context.currentTime + t);
+            // .linearRampToValueAtTime(fbk, this.context.currentTime + t);
+            .setValueAtTime(fbk, this.context.currentTime + t);
     }
 
     log(v) {
         console.info(`[Playgroove] ${v}`);
     }
-    pbRate(rate: number, t: number = 0.5) {
+    pbRate(rate: number, t: number = 0.005) {
         // should get a range of 0.225 to 1.485
         rate = (clip(rate) * 1.26) + 0.225;
         this.log('pbRate scaled value - ' + rate);
