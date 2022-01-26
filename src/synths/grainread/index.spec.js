@@ -1,4 +1,4 @@
-import Grainread from '.';
+import Grainread from './index.ts';
 
 export default () => (
     describe('Grainread Class', function() {

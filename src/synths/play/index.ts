@@ -65,20 +65,20 @@ export default class Play {
      * Loads the audio file
      * @param {string} audio - path to audio file
      */
-    loadAudio(audio) {
+    loadAudio(audio: string) {
         console.info('Play() loading audio...');
         return new Promise((resolve, reject) => {
 
-            const handleAudioData = function(buffer) {
+            const handleAudioData = (buffer: AudioBuffer) => {
                 console.info('handleAudioData()');
                 this.buffer = buffer;
                 console.info('this.buffer: ', this.buffer);
                 this.stopped = true;
                 this.audioLoadTimeOffset = (new Date().getTime() - this.contextCreationTime.getTime()) / 1000;
                 resolve(this.buffer);
-            }.bind(this);
+            };
 
-            const decodeAudioData = function() {
+            const decodeAudioData = () => {
                 console.info('decodeAudioData()');
                 const audioData = req.response;
                 this.context.decodeAudioData(
@@ -88,7 +88,7 @@ export default class Play {
                         reject("Error decoding audio data" + e);
                     }
                 );
-            }.bind(this);
+            };
 
             let req = new XMLHttpRequest();
 

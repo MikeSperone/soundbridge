@@ -41,7 +41,7 @@ export default class Playgroove {
         this.pbRate = this.pbRate.bind(this);
     }
 
-    loadAudio(audio) {
+    loadAudio(audio: string) {
         return new Promise(resolve => {
             let that = this;
 
@@ -134,7 +134,7 @@ export default class Playgroove {
             .setValueAtTime(fbk, this.context.currentTime + t);
     }
 
-    log(v) {
+    log(v: string) {
         console.info(`[Playgroove] ${v}`);
     }
     pbRate(rate: number, t: number = 0.005) {
@@ -163,7 +163,7 @@ export default class Playgroove {
 
     }
 
-    set volumeScalar(v) {
+    set volumeScalar(v: number) {
         this.maximumVolume = clip(v);
         this.changeVolume(this.vol);
     }

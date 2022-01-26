@@ -13,8 +13,8 @@ export default class Grainread {
     g_fade:     number;
     g_spread:   number;
     g_scatter:  number;
-    g_speed:    number;
-    g_speedspread: number;
+    // g_speed:    number;
+    // g_speedspread: number;
 
     fb_amount:  number;
     fb_position: number;
@@ -22,7 +22,7 @@ export default class Grainread {
 
     len:       number;
 
-    buffer:    AudioBuffer;
+    buffer:    AudioBuffer | null;
     duration:  number;
     stopped:   boolean;
 
@@ -85,7 +85,7 @@ export default class Grainread {
         this.phasor = this.phasor.bind(this);
     }
 
-    loadAudio(audio) {
+    loadAudio(audio: string) {
         console.info('grainread loadAudio()');
         return new Promise((resolve, reject) => {
             let that = this;
@@ -137,6 +137,7 @@ export default class Grainread {
     }
 
     _connectIfPanner(a: any[], b:any=[]) {
+        // @ts-expect-error
         if (this.panner.empty !== true) {
             console.debug("connection panner");
             a[0].connect(a[1]);
@@ -220,7 +221,16 @@ export default class Grainread {
     }
 
     toString() {
-        return {"context":this.context,"g_read":this.g_read, "g_speed": this.g_speed, "g_multiply":this.g_multiply, "g_fade": this.g_fade, "g_speedspread": this.g_speedspread, "g_spread": this.g_spread, "g_scatter":this.g_scatter};
+        return {
+            "context":this.context,
+            "g_read":this.g_read,
+            // "g_speed": this.g_speed,
+            "g_multiply":this.g_multiply,
+            "g_fade": this.g_fade,
+            // "g_speedspread": this.g_speedspread,
+            "g_spread": this.g_spread,
+            "g_scatter":this.g_scatter
+        };
     }
 
     set read(gr) {
@@ -229,12 +239,12 @@ export default class Grainread {
     get read() {
         return this.g_read;
     }
-    set speed(gs) {
-        this.g_speed = gs;
-    }
-    get speed() {
-        return this.g_speed;
-    }
+    // set speed(gs) {
+    //     this.g_speed = gs;
+    // }
+    // get speed() {
+    //     return this.g_speed;
+    // }
 
     set fade(gf) {
         this.g_fade = gf;
@@ -242,12 +252,12 @@ export default class Grainread {
     get fade() {
         return this.g_fade;
     }
-    set speedspread(ss) {
-        this.g_speedspread = ss;
-    }
-    get speedspread() {
-        return this.g_speedspread;
-    }
+    // set speedspread(ss) {
+    //     this.g_speedspread = ss;
+    // }
+    // get speedspread() {
+    //     return this.g_speedspread;
+    // }
     set spread(gs) {
         this.g_spread = gs;
     }
@@ -267,11 +277,11 @@ export default class Grainread {
     }
 
     forwardInTime() {
-        const internalCallback = function() {
+        const internalCallback = () => {
             if (this.stopped) return;
             this.position = this.position + 0.1;
             window.setTimeout(() => window.requestAnimationFrame(internalCallback), 100);
-        }.bind(this);
+        };
         window.setTimeout(() => window.requestAnimationFrame(internalCallback), 100);
     }
 

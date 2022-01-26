@@ -1,0 +1,13 @@
+{
+    "extension": ["js", "ts"],
+    "loader": "ts-node/esm",
+    "spec": "src/**/*.spec.js",
+    "recursive": true,
+    "require": ["@babel/register", "chai"],
+    "node-option": [
+        "experimental-specifier-resolution=node",
+        "trace-warnings",
+        "loader=ts-node/esm"
+    ]
+}
+

@@ -1,5 +1,6 @@
 // import soundbridge from 'soundbridge';
-import getSettings from './settings';
+import settingsData from './settings.ts';
+import { expect } from 'chai';
 
 describe('Soundbridge', function() {
 	
@@ -11,8 +12,8 @@ describe('Soundbridge', function() {
 
 		it('should return the correct settings', function() {
 
-			const settings = getSettings(0);
-			expect(settings).to.eql({
+			const settings = settingsData[0];
+			chai.expect(settings).to.eql({
                 samples: {
                     "0": "water3",
                     "1": "drillingbursts",

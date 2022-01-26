@@ -40,8 +40,8 @@ export default class Test extends Component {
 
     componentDidMount() {
         const expect = "https://cdn.rawgit.com/Automattic/expect.js/0.3.1/index.js"
-        const chai = "https://cdnjs.cloudflare.com/ajax/libs/chai/4.1.1/chai.min.js"
-        const mocha = "https://cdn.rawgit.com/mochajs/mocha/2.2.5/mocha.js";
+        const chai = "https://cdnjs.cloudflare.com/ajax/libs/chai/4.3.5/chai.min.js";
+        const mocha = "https://cdnjs.cloudflare.com/ajax/libs/mocha/9.1.4/mocha.min.js";
         Promise.all([
             this.injectScript(mocha),
             this.injectScript(chai),
@@ -52,7 +52,7 @@ export default class Test extends Component {
     render() {
         return (
             <div id="test-div">
-                <link href="https://cdn.rawgit.com/mochajs/mocha/2.2.5/mocha.css" rel="stylesheet" />
+                <link href="https://cdn.rawgit.com/mochajs/mocha/9.1.4/mocha.css" rel="stylesheet" />
                 <div id="mocha"></div>
             </div>
         );

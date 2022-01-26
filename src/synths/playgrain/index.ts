@@ -11,7 +11,6 @@ export default class Playgrain {
     volume: number;
     maximumVolume: number;
     grainArray: Grainread[];
-    numberOfGrains: number;
     _isPlaying: boolean;
 
     /**
@@ -23,6 +22,7 @@ export default class Playgrain {
         this.volume = vol;
         this.maximumVolume = 1.0;
         this.grainArray = [];
+        this._isPlaying = false;
         const numberOfGrains = 10;
         let i = 0;
         for(i; i < numberOfGrains; i++) {
@@ -33,17 +33,19 @@ export default class Playgrain {
         this.callAllFunctions = this.callAllFunctions.bind(this);
     }
 
-    setAllValues(parameter: string, value) {
+    setAllValues(parameter: string, value: number) {
         this.grainArray.forEach(g => {
+            // @ts-expect-error
             g[parameter] = value;
         });
     }
 
     callAllFunctions(fnName: string, args=[]) {
+        // @ts-expect-error
         this.grainArray.forEach(g => g[fnName](...args));
     }
 
-    loadAudio(audio) {
+    loadAudio(audio: string) {
         let promises = this.grainArray.map(g => g.loadAudio(audio));
         return Promise.all(promises);
     }
@@ -90,6 +92,7 @@ export default class Playgrain {
     }
 
     changeVolume(v: number, t: number) {
+        // @ts-expect-error
         this.callAllFunctions('changeVolume', [v, t]);
     }
 
