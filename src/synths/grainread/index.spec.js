@@ -71,7 +71,7 @@ export default () => (
                 expect(gr.loopLength).to.equal(10);
                 expect(gr.src.loopEnd - gr.src.loopStart).to.equal(10);
             });
-            it('speed', function() {
+            it.skip('speed - skipped... appears unnecessary', function() {
                 gr.speed = 0.5;
                 expect(gr.speed).to.equal(0.5);
                 expect(gr.g_speed).to.equal(0.5);
@@ -86,7 +86,7 @@ export default () => (
                 expect(gr.read).to.equal(1);
                 expect(gr.g_read).to.equal(1);
             });
-            it('speedspread', function() {
+            it.skip('speedspread - skipped... appears unnecessary', function() {
                 gr.speedspread = 12;
                 expect(gr.speedspread).to.equal(12);
                 expect(gr.g_speedspread).to.equal(12);
