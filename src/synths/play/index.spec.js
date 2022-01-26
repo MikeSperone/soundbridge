@@ -49,7 +49,9 @@ export default () => (
 
             it('vol()', function() {
                 testing.vol = 0.5;
-                expect(testing.vol).to.equal(0.5);
+                setTimeout(function() {
+                    expect(testing.vol).to.equal(0.5);
+                }, 10);
             });
 
             it('startSample()', function() {
@@ -98,9 +100,11 @@ export default () => (
             });
 
             it('filter()', function() {
-                testing.filter(1000);
-                expect(testing.filter).to.equal(1000);
-                expect(testing.lowPass.frequency).to.equal(1000);
+                testing.filter = 1000;
+                setTimeout(function() {
+                    expect(testing.filter).to.equal(1000);
+                    expect(testing.lowPass.frequency).to.equal(1000);
+                }, 10);
             });
 
             afterEach(function() {
