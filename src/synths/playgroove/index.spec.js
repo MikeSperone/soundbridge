@@ -6,11 +6,11 @@ import Playgroove from '.';
 export default () => (
     describe('Playgroove Class', function() {
 
-        let audio = '/audio/arlene.mp3';
-        let context = new AudioContext();
+        const context = new AudioContext();
         let pg = new Playgroove(context);
 
         before(function(done) {
+            const audio = '/audio/arlene.mp3';
             pg.loadAudio(audio).then(() => done());
         });
 

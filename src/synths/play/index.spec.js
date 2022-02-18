@@ -99,11 +99,12 @@ export default () => (
                 expect(testing.loopEnd).to.equal(testing.duration);
             });
 
-            it('filter()', function() {
+            it('filter()', function(done) {
                 testing.filter = 1000;
                 setTimeout(function() {
                     expect(testing.filter).to.equal(1000);
-                    expect(testing.lowPass.frequency).to.equal(1000);
+                    expect(testing.lowPass.frequency.value).to.equal(1000);
+                    done();
                 }, 10);
             });
 

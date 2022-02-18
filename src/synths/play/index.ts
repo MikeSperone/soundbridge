@@ -208,6 +208,10 @@ export default class Play {
         this.changeFilter(f, 0);
     }
 
+    get filter(): number {
+        return this.lowPass.frequency.value;
+    }
+
     connectFilter() {
         this.src.disconnect(0);
         this.src.connect(this.lowPass);
@@ -234,9 +238,6 @@ export default class Play {
         }
         console.info('setting the filter to ', f);
         this.lowPass.frequency.linearRampToValueAtTime(f, this.context.currentTime + t);
-    }
-    get filter(): number {
-        return this.lowPass.frequency.value;
     }
 
     resize(x: number) {

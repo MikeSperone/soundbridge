@@ -16,7 +16,7 @@ export default function test() {
 			'__REACT_DEVTOOLS_BROWSER_THEME__'
         ],
         ui: 'bdd'
-    })
+    });
     mocha.growl();
     mocha.checkLeaks();
     grainread_test();
