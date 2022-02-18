@@ -23,7 +23,6 @@ export default class Grainread {
     len:       number;
 
     buffer:    AudioBuffer | null;
-    duration:  number;
     stopped:   boolean;
 
     src:       AudioBufferSourceNode;
@@ -53,7 +52,6 @@ export default class Grainread {
 
         this.context = context;
         this.buffer = null;
-        this.duration = 0;
         this.stopped = true;
 
         this.src = this.context.createBufferSource();
@@ -70,10 +68,10 @@ export default class Grainread {
         this.feedbackB.gain.value = 0.5;
         this.volume = this.context.createGain();
 
-        this.bind.call(this);
+        this._bind.call(this);
     }
 
-    bind() {
+    _bind() {
         this.loadAudio = this.loadAudio.bind(this);
         this.restartAtTime = this.restartAtTime.bind(this);
         this.play = this.play.bind(this);
@@ -89,18 +87,22 @@ export default class Grainread {
         console.info('grainread loadAudio()');
         return new Promise((resolve, reject) => {
             let that = this;
-            let req = new XMLHttpRequest();
+            const req = new XMLHttpRequest();
 
             req.open('GET', audio);
             req.responseType = 'arraybuffer';
 
             req.onload = () => {
-                let audioData = req.response;
+                console.info('grainread loadAudio onload');
+                const audioData = req.response;
 
-                this.context.decodeAudioData(audioData, buffer => {
-                        this.src.buffer = buffer;
+                this.context.decodeAudioData(audioData)
+                    .then(buffer => {
+                        console.info('grainread loadAudio decodeAudioData');
+                        // Cache the buffer, because we will have to 
+                        // re-load the src later.
                         this.buffer = buffer;
-                        this.duration = this.buffer.duration;
+                        this.src.buffer = buffer;
                         this.src.connect(this.envelope);
 
                         this.envelope.connect(this.delayA);
@@ -121,9 +123,10 @@ export default class Grainread {
                         this.volume.connect(this.context.destination);
                         // this.forwardInTime();
                         // this.phasor();
+                        console.info('returning from audioLoad thing');
                         return resolve({status: "success", message: ""});
-                    },
-                    e => reject({
+                    })
+                .catch(e => reject({
                         status: "error",
                         message: "Error decoding audio data" + e
                     })
@@ -191,6 +194,10 @@ export default class Grainread {
 
     get vol() {
         return this.volume.gain.value;
+    }
+
+    get duration() {
+        return this.buffer ? this.buffer.duration : 0;
     }
 
     set delays(d) {

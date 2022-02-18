@@ -3,22 +3,31 @@ import Grainread from './index.ts';
 export default () => (
     describe('Grainread Class', function() {
 
-        let audio = '/audio/arlene.mp3';
-        let context = new window.AudioContext();
-        let gr = new Grainread(context, 1);
+        const context = new window.AudioContext();
+        const gr = new Grainread(context, 1);
+        let loadAudioStatus = '';
 
-        before(function(done) {
-            gr.loadAudio(audio).then(() => done());
+        before((done) => {
+            const audio = '/audio/arlene.mp3';
+            gr.loadAudio(audio).then(msg => {
+                loadAudioStatus = msg.status;
+                console.info('grainread test, loadAudio done');
+                done();
+            });
         });
 
         describe('initial values', function() {
+
+            it('loadsAudio', function() {
+                expect(loadAudioStatus).to.equal('success');
+            });
 
             it('starts a new grainread class', function() {
                 expect(gr).to.exist;
             });
 
             it('fills the audio buffer', function() {
-                expect(gr.buffer.duration).to.be.within(90,91);
+                expect(gr.duration).to.be.within(90,91);
             });
 
             it('sets fb values', function() {
@@ -40,12 +49,12 @@ export default () => (
         describe('setters and getters', function() {
 
             it('volume', function(done) {
-                gr.vol = .75;
+                gr.vol = 0.75;
                 setTimeout(() => {
                     expect(gr.vol).to.equal(.75);
                     expect(gr.volume.gain.value).to.equal(.75);
                     done();
-                }, 10);
+                }, 80);
             });
 
             it('delays', function() {

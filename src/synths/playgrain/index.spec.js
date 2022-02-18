@@ -52,24 +52,15 @@ export default () => (
             checkEqual('spread', 2);
         });
 
-        it('sets the volume for playgrain', function(done) {
+        it('sets the volume for playgrain', function() {
             pg.vol = 0.5;
-            setTimeout(() => {
-                expect(pg.vol).to.equal(0.5);
-                done();
-            }, 50);
+            expect(pg.vol).to.equal(0.5);
         });
 
         it('sets the volume for all instances', function(done) {
-            pg.vol = 0.5;
+            pg.vol = 0.6;
             setTimeout(() => {
-                try {
-                    checkEqual('vol', 0.5);
-                }
-                catch (e) {
-                    console.error(e);
-                    return e;
-                }
+                checkEqual('vol', 0.6);
                 done();
             }, 100);
         });

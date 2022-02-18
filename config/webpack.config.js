@@ -24,6 +24,7 @@ module.exports = {
         new HtmlWebpackPlugin({
             title: "Soundbridge Test Suite",
             filename: 'test.html',
+            template: 'test/test.html',
             chunks: ['test']
         }),
         new MiniCssExtractPlugin(),

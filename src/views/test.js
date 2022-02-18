@@ -1,4 +1,3 @@
-import init from 'init';
-import Test from 'containers/test';
+import test from 'containers/test';
 
-init(Test);
+test();

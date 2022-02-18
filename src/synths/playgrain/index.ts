@@ -97,7 +97,7 @@ export default class Playgrain {
     }
 
     /** Sets the volume */
-    set vol(v:number) {
+    set vol(v: number) {
         this.volume = this.maximumVolume * v;
         this.setAllValues('vol', v);
     }
