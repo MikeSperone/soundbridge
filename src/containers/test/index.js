@@ -5,6 +5,7 @@ import play_test       from 'synths/play/index.spec.js';
 import playgroove_test from 'synths/playgroove/index.spec.js';
 import clip_test       from 'synths/utils/clip.spec.js';
 
+window.expect = chai.expect;
 export default function test() {
     mocha.setup({
         globals: [

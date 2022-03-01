@@ -15,7 +15,7 @@ export default () => (
             });
 
             it('starts with no audio', function() {
-                expect(testing.buffer).to.be(null);
+                expect(testing.buffer).to.be.null;
             })
 
             it('begins at position 0', function() {

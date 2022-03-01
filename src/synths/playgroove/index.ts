@@ -14,6 +14,12 @@ export default class Playgroove {
     merge: ChannelMergerNode;
     panL: StereoPannerNode;
 
+    static SCALING_FUNCTIONS = {
+        delTime: (t: number) => (t * 0.7) + 0.125,
+        delFeedback: (f: number) => (f * 0.42) + 0.075,
+        pbRate: (r: number) => (r * 1.26) + 0.225,
+    }
+
     constructor(context: AudioContext) {
 
         this.src = context.createBufferSource();
@@ -110,10 +116,11 @@ export default class Playgroove {
         }
     }
 
+
     delTime(time: number, t: number = 0.005) {
         // range of .125 - .825(s)
         this.log('delTime incoming - ' + time);
-        time = (clip(time) * 0.7) + 0.125;
+        time = Playgroove.SCALING_FUNCTIONS.delTime(clip(time));
         this.log('delTime scaled value - ' + time);
         // this.delay.delayTime
         //     .cancelScheduledValues(this.context.currentTime);
@@ -125,7 +132,7 @@ export default class Playgroove {
     delFeedback(fbk: number, t: number = 0.005) {
         // range of .075 - .495
         this.log('delFeedback incoming - ' + fbk);
-        fbk = (clip(fbk) * 0.42) + 0.075;
+        fbk = Playgroove.SCALING_FUNCTIONS.delFeedback(clip(fbk));
         this.log('delFeedback scaled value - ' + fbk);
         // this.feedback.gain
         //     .cancelScheduledValues(this.context.currentTime);
@@ -139,7 +146,7 @@ export default class Playgroove {
     }
     pbRate(rate: number, t: number = 0.005) {
         // should get a range of 0.225 to 1.485
-        rate = (clip(rate) * 1.26) + 0.225;
+        rate = Playgroove.SCALING_FUNCTIONS.pbRate(clip(rate));
         this.log('pbRate scaled value - ' + rate);
         this.src.playbackRate.setValueAtTime(rate, this.context.currentTime + t);
     }
