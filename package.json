@@ -4,7 +4,7 @@
     "description": "John Morton's Soundbridge",
     "scripts": {
         "lint": "eslint",
-        "build": "webpack --env.NODE_ENV=production --config config/webpack.config.js",
+        "build": "NODE_ENV='production' webpack --config config/webpack.config.js",
         "dev": "concurrently \"npm:dev:server\" \"npm:dev:frontend\" \"npm:type-check:watch\"",
         "dev:frontend": "NODE_ENV='development' webpack --watch --config config/webpack.config.js",
         "dev:server": "nodemon ./bin/www",
