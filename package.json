@@ -21,7 +21,7 @@
         "express": "^4.17.1",
         "lodash.debounce": "^4.0.8",
         "lodash.throttle": "^4.1.1",
-        "preact": "^10.4.4",
+        "preact": "^10.11",
         "preact-router": "^3.2.1",
         "react-audio-graph": "^0.0.3",
         "react-bootstrap": "^1.3.0",
