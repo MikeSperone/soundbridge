@@ -1,28 +1,24 @@
 import { h, createContext } from 'preact';
 import { useState } from 'preact/hooks';
 import settingData from './settingData.ts';
-// const Settings = createContext({settings: null, settingsNumber: null});
-const Settings = createContext(null);
+const Settings = createContext({settings: null, settingsNumber: null});
 
-export default function SettingsProvider(props) {
+const SettingsProvider = ({children}) => {
 
     const [ settingNumber, setSettingNumber ] = useState(0);
     const [ settings, setSettings ] = useState(settingData[settingNumber]);
 
-    const changeSettings =  () => {
+    const changeSettings = (n) => {
         console.info('changing settings');
-        setSettings(3); //TODO: change for real
-    }
+        setSettingNumber(n);
+        const s = settingData[settingNumber];
+        setSettings(s); //TODO: change for real
+    };
 
-    return <Settings.Provider value={{ settings, setSettings, settingNumber, setSettingNumber }}>
-        {props.children}
+    return <Settings.Provider value={{ settings, changeSettings, settingNumber }}>
+        {children}
     </Settings.Provider>;
 };
 
-export const withSettingsContext = Component => (
-  props => (
-    <Settings.Consumer>
-      {({settings, settingNumber }) => <Component settings={settings} settingNumber={settingNumber}  {...props} />}
-    </Settings.Consumer>
-  )
-);
+export default Settings;
+export { SettingsProvider };

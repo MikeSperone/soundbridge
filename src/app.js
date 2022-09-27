@@ -1,7 +1,7 @@
 import "preact/debug";
 import "./AudioContextMonkeyPatch.js";
 import { h, Fragment, Component } from 'preact';
-import { useState } from 'preact/compat';
+import { useState, useContext } from 'preact/compat';
 import { Router, Link } from 'preact-router';
 import Socket from 'context/Socket';
 import Solo from 'context/Solo';
@@ -108,7 +108,7 @@ class App extends Component {
             }
         });
 
-        // TODO: I think for some reason these are triggering a re-render of 
+        // TODO: I think for some reason these are triggering a re-render of
         // the Sensors? or doing something to their state or in-component data.
         // this.ws.on('user.login', this.refreshUsers);
         // this.ws.on('user.exited', this.refreshUsers);
@@ -173,7 +173,7 @@ class App extends Component {
                                 path="/"
                                 key="soundbridge"
                                 settingNumber={this.state.settingNumber}
-                                solo={this.state.solo} 
+                                solo={this.state.solo}
                                 isPerformer={this.state.self.isPerformer}
                         />) :
                         <Fragment key="login-section">
@@ -198,15 +198,11 @@ export default function SoloedApp(props) {
     const changeSolo = isSolo => setSolo(isSolo);
     const changePerformerStatus = isPerformer => setIsPerformer(isPerformer);
 
-    return <Solo.Provider value={{ solo, changeSolo, isPerformer, changePerformerStatus }}>
-        <SocketedApp {...props} />
-    </Solo.Provider>;
-};
+    const socket = useContext(Socket);
 
-function SocketedApp(props) {
-    return <Socket.Consumer>
-        {socket => <Solo.Consumer>
+    return <Solo.Provider value={{ solo, changeSolo, isPerformer, changePerformerStatus }}>
+        <Solo.Consumer>
             {solo => <App {...props} socket={socket} solo={solo} />}
-        </Solo.Consumer>}
-    </Socket.Consumer>;
+        </Solo.Consumer>
+    </Solo.Provider>;
 };
