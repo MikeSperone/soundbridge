@@ -14,6 +14,18 @@ import Soundbridge from 'containers/soundbridge';
 import Login from 'containers/login';
 import About from 'containers/About';
 
+const MainNav = () => {
+    const solo = useContext(Solo);
+    return <nav className="main-nav">
+        <h1>
+            <Link activeClassName="active" href="/">Soundbridge</Link>
+        </h1>
+        <div>
+            { solo.isPerformer ? 'Performer' : 'Audience Member' }
+        </div>
+    </nav>
+};
+
 class App extends Component {
 
     //TODO:  I think the best thing to do would be to step through
@@ -24,7 +36,6 @@ class App extends Component {
         this.props = props;
         this.ws = props.socket;
         this.getSocket = props.connectToSocket;
-        this.solo = props.solo.solo;
         this.state = {
             connected: false,
             users: {
@@ -35,7 +46,6 @@ class App extends Component {
             },
             self: {
                 id: 0,
-                isPerformer: false,
                 type: 'audience',
             },
             settingNumber: Math.floor(Math.random() * 8),
@@ -58,7 +68,7 @@ class App extends Component {
         console.info('handling login');
         window.globalAudioContext = new window.AudioContext();
         console.info('got global audio context: ', window.globalAudioContext);
-        this.props.solo.changeSolo(solo);
+        this.props.solo.setSolo(solo);
         console.info('changed solo to ', solo);
         this.setState(() => ({connected: this.ws.connected}),
             () => {
@@ -89,22 +99,20 @@ class App extends Component {
             console.info('logging in for the 1st time');
             const { currentSetting, user, users, solo } = n;
             const isPerformer = user.type === 'performer' || user.type === 'solo';
-            this.props.solo.changePerformerStatus(isPerformer);
+            this.props.solo.setIsPerformer(isPerformer);
             if (n.success) {
                 console.info('logged in and solo set to ', solo);
                 this.setState(() => ({
                     loggedIn: true,
-                    solo,
                     self: {
                         id: user.id,
                         name: user.name,
                         type: user.type,
-                        isPerformer,
                     }
                 }), () => console.info('logged in, users: ', this.state.users));
             } else {
                 console.info('NOT logged in and solo set to ', true);
-                this.setState(() => ({solo: true, error: n.error}));
+                this.setState(() => ({error: n.error}));
             }
         });
 
@@ -129,15 +137,13 @@ class App extends Component {
     }
 
     noConnectionLogin() {
-        this.props.solo.changePerformerStatus(true);
+        this.props.solo.setIsPerformer(true);
         this.setState(() => ({
             loggedIn: true,
-            solo: true,
             self: {
                 id: 1,
                 name: '--',
                 type: 'performer',
-                isPerformer: true,
             },
         }), () => console.info('not logged in, solo'));
     }
@@ -148,33 +154,22 @@ class App extends Component {
 
     render() {
         return <div id="app">
-            <nav className="main-nav">
-                <h1>
-                    <Link activeClassName="active" href="/">Soundbridge</Link>
-                </h1>
-                <div>{this.state.self.isPerformer ?
-                    'Performer' :
-                    'Audience Member'
-                }</div>
-            </nav>
+            <MainNav />
             <Container fluid>
                 {this.state.connected &&
                     <MessageBox
                         key="message-box"
-                        solo={this.state.solo}
                         loggedIn={this.state.loggedIn}
                         users={this.state.users}
                         self={this.state.self}
                     />
                 }
                 {
-                    (this.state.connected || this.state.solo) ?
+                    this.state.loggedIn ?
                         (<Soundbridge
                                 path="/"
                                 key="soundbridge"
                                 settingNumber={this.state.settingNumber}
-                                solo={this.state.solo}
-                                isPerformer={this.state.self.isPerformer}
                         />) :
                         <Fragment key="login-section">
                             <Login
@@ -195,12 +190,10 @@ export default function SoloedApp(props) {
 
     const [ solo, setSolo ] = useState(false);
     const [ isPerformer, setIsPerformer ] = useState(false);
-    const changeSolo = isSolo => setSolo(isSolo);
-    const changePerformerStatus = isPerformer => setIsPerformer(isPerformer);
 
     const socket = useContext(Socket);
 
-    return <Solo.Provider value={{ solo, changeSolo, isPerformer, changePerformerStatus }}>
+    return <Solo.Provider value={{ solo, setSolo, isPerformer, setIsPerformer }}>
         <Solo.Consumer>
             {solo => <App {...props} socket={socket} solo={solo} />}
         </Solo.Consumer>

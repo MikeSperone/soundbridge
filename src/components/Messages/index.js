@@ -7,6 +7,7 @@ import Row from 'react-bootstrap/Container';
 // import ChatBox from './ChatBox';
 import PeopleBox from './PeopleBox';
 
+// import Solo from 'context/Solo';
 
 /* * * * 
  * chat box disabled!!!
@@ -14,6 +15,9 @@ import PeopleBox from './PeopleBox';
 const Messages = props => {
     const { audienceMembers, users } = props;
     console.log('users: ', users);
+
+    // const solo = useContext(Solo);
+
     const style={"height":'300px', "max-height":'300px', "overflow-y": 'scroll'};
     return <Accordion as={Container} id='status-box'>
         <Card>
