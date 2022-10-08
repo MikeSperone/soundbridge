@@ -1,5 +1,7 @@
 import { h, Component } from 'preact';
-import { useState } from 'preact/hooks';
+import { useState, useContext } from 'preact/compat';
+import Socket from 'context/Socket';
+import Solo from 'context/Solo';
 import Button from 'react-bootstrap/button';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
@@ -8,18 +10,21 @@ import 'bootstrap/scss/bootstrap.scss';
 
 export default function Login(props) {
 
-    const [ solo, setSolo ] = useState(false);
-    const handleSolo = e => setSolo(e.target.checked);
+    const soloContext = useContext(Solo);
+    const socket = useContext(Socket);
+    const handleSolo = e => soloContext.setSolo(e.target.checked);
 
     const handleLogin = (e) => {
         e.preventDefault();
         const { username, performer, solo } = e.target;
-        props.onLogin({
+
+        socket.connected && socket.emit('login', {
             username: encodeURIComponent(username.value),
             requestsPerformer: performer.checked,
             solo: solo.checked
         });
-    }
+        props.onLogin();
+    };
 
     const availablePerformerSlots = props.availablePerformerSlots;
 
@@ -34,15 +39,15 @@ export default function Login(props) {
             </Form.Row>
             <Form.Check
                 active={props.connection}
-                checked={solo}
+                checked={soloContext.solo}
                 onClick={handleSolo}
                 name="solo"
                 type="checkbox"
                 label={"Solo"}
             />
             <Form.Check
-                disabled={solo}
-                checked={availablePerformerSlots && !solo}
+                disabled={soloContext.solo}
+                checked={availablePerformerSlots && !soloContext.solo}
                 name="performer"
                 type="checkbox"
                 label={"performer (" + ( availablePerformerSlots ? "if" : "not") + " available)"}
